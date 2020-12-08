@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DataCollectionTerminal</string>
+    <string name="caption_scanbarcode">Сканировать штрихкод</string>
+</resources>
