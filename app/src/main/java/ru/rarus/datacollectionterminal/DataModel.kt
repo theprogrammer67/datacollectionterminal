@@ -34,3 +34,8 @@ data class DctDocumentRow(
     val quantityActual: Double,
     val difference: Double
 )
+
+data class TestData(
+    val number: Int,
+    val string: String,
+)
