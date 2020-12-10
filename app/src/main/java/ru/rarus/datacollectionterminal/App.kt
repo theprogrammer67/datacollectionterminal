@@ -10,7 +10,7 @@ class App: Application() {
         super.onCreate()
         app = this
         _resources = resources
-//        _database = AppDatabase.getDatabase(this)
+        _database = AppDatabase.getInstance(this)
         _restserver = RestServer()
         _restserver.start(8118)
     }
@@ -18,8 +18,8 @@ class App: Application() {
     companion object {
         private lateinit var _resources: Resources
         private lateinit var app: App
-//        private lateinit var _database: AppDatabase
-//        val database get() = _database
+        private lateinit var _database: AppDatabase
+        val database get() = _database
         private lateinit var _restserver: RestServer
 
         val restserver get() = _restserver

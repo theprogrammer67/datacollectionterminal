@@ -11,24 +11,21 @@ import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 class DocumentActivity : AppCompatActivity() {
     private lateinit var viewModel: DocumentViewModel
     private lateinit var binding: ActivityDocumentBinding
-    val REQUEST_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDocumentBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(DocumentViewModel::class.java)
+        viewModel.activity = this
 
         binding.btnScanBarcode.setOnClickListener {
-            val integrator = IntentIntegrator(this)
-            integrator.setRequestCode(REQUEST_CODE)
-            integrator.setOrientationLocked(false)
-            integrator.initiateScan()
+            viewModel.scanBarcode()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != REQUEST_CODE) {
+        if (requestCode != viewModel.REQUEST_CODE) {
             super.onActivityResult(requestCode, resultCode, data)
             return
         }
