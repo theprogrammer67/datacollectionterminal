@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpServer
 import java.io.IOException
 import java.io.InputStream
 import java.net.InetSocketAddress
+import java.net.URI
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -23,8 +24,6 @@ class RestServer {
 
             mHttpServer!!.createContext("/", rootHandler)
             mHttpServer!!.createContext("/index", rootHandler)
-            // Handle /ping endpoint
-            mHttpServer!!.createContext("/ping", pingHandler)
             mHttpServer!!.createContext("/test", testHandler)
 
             mHttpServer!!.start()
@@ -43,43 +42,6 @@ class RestServer {
         }
     }
 
-    // Handler for root endpoint
-    private val rootHandler = HttpHandler { exchange ->
-        run {
-            // Get request method
-            when (exchange!!.requestMethod) {
-                "GET" -> {
-                    sendResponse(exchange, "Добро пожаловать!")
-                }
-            }
-        }
-    }
-
-    // Handler for ping endpoint
-    private val pingHandler = HttpHandler { exchange ->
-        run {
-            // Get request method
-            when (exchange!!.requestMethod) {
-                "GET" -> {
-                    sendResponse(exchange, "true")
-                }
-            }
-        }
-    }
-
-    // Handler for test endpoint
-    private val testHandler = HttpHandler { exchange ->
-        run {
-            // Get request method
-            when (exchange!!.requestMethod) {
-                "GET" -> {
-                    val data = TestData(123, "Test123")
-                    sendResponse<TestData>(exchange, data)
-                }
-            }
-        }
-    }
-
     private fun streamToString(inputStream: InputStream): String {
         val s = Scanner(inputStream).useDelimiter("\\A")
         return if (s.hasNext()) s.next() else ""
@@ -87,23 +49,60 @@ class RestServer {
 
     private fun sendResponse(httpExchange: HttpExchange, responseText: String) {
         val rawBody = responseText.toByteArray(Charsets.UTF_8)
-        httpExchange.responseHeaders.add("Content-Type","text/html")
-        httpExchange.responseHeaders.add("charset","utf-8")
+        httpExchange.responseHeaders.add("Content-Type", "text/html")
+        httpExchange.responseHeaders.add("charset", "utf-8")
+        httpExchange.responseHeaders.add("Accept-Language", "ru-RU")
         httpExchange.sendResponseHeaders(200, rawBody.size.toLong())
         val os = httpExchange.responseBody
         os.write(rawBody)
         os.close()
     }
 
-    private fun <T>sendResponse(httpExchange: HttpExchange, obj: T) {
+    private fun <T> sendResponse(httpExchange: HttpExchange, obj: T) {
         val jsonObj = gson.toJson(obj)
         val rawBody = jsonObj.toByteArray(Charsets.UTF_8)
-        httpExchange.responseHeaders.add("Content-Type","text/JSON")
-        httpExchange.responseHeaders.add("charset","utf-8")
+        httpExchange.responseHeaders.add("Content-Type", "text/JSON")
+        httpExchange.responseHeaders.add("charset", "utf-8")
         httpExchange.sendResponseHeaders(200, rawBody.size.toLong())
         val os = httpExchange.responseBody
         os.write(rawBody)
         os.close()
+    }
+
+    private fun URI.getFileName(): String {
+        var _path = this.path
+        while (_path.startsWith("/")) _path = _path.substring(1)
+        while (_path.endsWith("/")) _path = _path.substring(0, _path.length - 1);
+
+        val segments: List<String> = _path.split("/")
+        return if (segments.size > 1)
+            segments[1]
+        else
+            ""
+    }
+
+//---------- Endpoint handlers----------
+
+    // Handler for root endpoint
+    private val rootHandler = HttpHandler { exchange ->
+        when (exchange!!.requestMethod) {
+            "GET" -> {
+                val htmlResponse =
+                    "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head>" +
+                            "<body>Добро пожаловать!</body></html>"
+                sendResponse(exchange, htmlResponse)
+            }
+        }
+    }
+
+    // Handler for test endpoint
+    private val testHandler = HttpHandler { exchange ->
+        when (exchange!!.requestMethod) {
+            "GET" -> {
+                val data = TestData(exchange.requestURI.getFileName(), 123, "Test123")
+                sendResponse<TestData>(exchange, data)
+            }
+        }
     }
 
 }

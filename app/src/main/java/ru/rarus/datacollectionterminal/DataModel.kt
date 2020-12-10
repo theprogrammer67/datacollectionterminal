@@ -36,6 +36,7 @@ data class DctDocumentRow(
 )
 
 data class TestData(
+    val id: String,
     val number: Int,
     val string: String,
 )
