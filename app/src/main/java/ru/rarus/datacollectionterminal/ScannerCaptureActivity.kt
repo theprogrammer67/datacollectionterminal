@@ -1,14 +1,15 @@
 package ru.rarus.datacollectionterminal
 
-import android.os.Bundle
+import android.view.View
 import com.journeyapps.barcodescanner.CaptureActivity
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
 
 
 class ScannerCaptureActivity: CaptureActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        setContentView(R.layout.activity_scanner_capture)
+
+    override fun initializeContent(): DecoratedBarcodeView {
+        setContentView(R.layout.activity_scanner_capture)
+        return findViewById<View>(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
     }
 
 }

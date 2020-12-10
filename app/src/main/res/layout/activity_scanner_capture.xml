@@ -1,31 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:viewBindingIgnore="true">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/frameLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginRight="25dp">
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginBottom="150dp"
+        android:id="@+id/zxing_barcode_scanner"
+        app:zxing_use_texture_view="false"
+        app:zxing_preview_scaling_strategy="fitXY"/>
 
-        <FrameLayout
-            android:layout_width="510dp"
-            android:layout_height="310dp"
-            android:layout_gravity="center" >
-
-            <include
-                android:layout_width="750dp"
-                android:layout_height="450dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="50dp"
-                android:layout_marginRight="110dp"
-                layout="@layout/capture" />
-        </FrameLayout>
-    </RelativeLayout>
 </RelativeLayout>

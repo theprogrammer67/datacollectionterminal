@@ -14,7 +14,7 @@
         android:theme="@style/Theme.DataCollectionTerminal">
         <activity
             android:name=".ScannerCaptureActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
