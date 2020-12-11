@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -18,29 +17,34 @@ import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 class DocumentActivity : AppCompatActivity() {
     private lateinit var viewModel: DocumentViewModel
     private lateinit var binding: ActivityDocumentBinding
+    private lateinit var adapter: DocumentRowsAdapter
+    val REQUEST_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_document)
 
-        val listAdapter = DocomentRowsAdapter(applicationContext)
-        val list = mutableListOf<DctDocumentRow>()
-        for(n in 1..9) {
-            list.add(DctDocumentRow(n.toString()))
-        }
-        listAdapter.documentRows = list
-        binding.rvRows.adapter = listAdapter
-
         viewModel = ViewModelProvider(this).get(DocumentViewModel::class.java)
         viewModel.activity = this
+
+        adapter = DocumentRowsAdapter(viewModel.document.rows, applicationContext)
+        binding.rvRows.adapter = adapter
 
         binding.btnScanBarcode.setOnClickListener {
             viewModel.scanBarcode()
         }
     }
 
+    fun startScanActivity() {
+        val integrator = IntentIntegrator(this)
+        integrator.captureActivity = ScannerCaptureActivity::class.java
+        integrator.setRequestCode(REQUEST_CODE)
+        integrator.setOrientationLocked(false)
+        integrator.initiateScan()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != viewModel.REQUEST_CODE) {
+        if (requestCode != REQUEST_CODE) {
             super.onActivityResult(requestCode, resultCode, data)
             return
         }
@@ -48,19 +52,22 @@ class DocumentActivity : AppCompatActivity() {
         val result = IntentIntegrator.parseActivityResult(resultCode, data)
         if (result != null) {
             if (result.contents == null)
-                Toast.makeText(this, "Скнирование отменено", Toast.LENGTH_LONG).show()
-            else {
+                App.showMessage("Скнирование отменено")
+            else
                 viewModel.onScanBarcode(result.contents)
-                Toast.makeText(this, "Штрихкод: ${result.contents}", Toast.LENGTH_LONG).show()
-            }
         } else
             super.onActivityResult(requestCode, resultCode, data)
     }
 
+    fun refreshList() {
+        adapter.notifyDataSetChanged()
+    }
 }
 
-class DocomentRowsAdapter(private val context: Context) : BaseAdapter() {
-    var documentRows: List<DctDocumentRow> = emptyList()
+class DocumentRowsAdapter(
+    private val documentRows: List<DctDocumentRow>,
+    private val context: Context
+) : BaseAdapter() {
 
     override fun getCount(): Int = documentRows.size
 
@@ -70,12 +77,13 @@ class DocomentRowsAdapter(private val context: Context) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding: DocumentRowBinding
+
         if (convertView == null) {
             binding = DocumentRowBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
-        } else {
+        } else
             binding = convertView.tag as DocumentRowBinding
-        }
+
         binding.documentRow = getItem(position) as DctDocumentRow
 
         return binding.root
