@@ -40,6 +40,7 @@ class DctDocumentRow() {
 
     constructor(addBarcode: String) : this() {
         this.addBarcode = addBarcode
+        quantityActual = 1.0
     }
 }
 
