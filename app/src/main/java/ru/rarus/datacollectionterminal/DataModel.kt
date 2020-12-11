@@ -5,35 +5,43 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "document")
-data class DctDocument(
-    @PrimaryKey
-    val id: String = UUID.randomUUID().toString(),
-    val number: String,
-    val date: Long,
-    val source: Int,
-    val state: Int
+class DctFocument() {
+    val header = DctDocumentHeader()
+    val rows: MutableList<DctDocumentRow> =  ArrayList()
+}
 
-)
+@Entity(tableName = "document")
+class DctDocumentHeader() {
+    @PrimaryKey
+    var id: String = UUID.randomUUID().toString()
+    var number: String = ""
+    var date: Long = 0
+    var source: Int = 0
+    var state: Int = 0
+}
 
 @Entity(
     tableName = "document_row", foreignKeys = [ForeignKey(
-        entity = DctDocument::class,
+        entity = DctDocumentHeader::class,
         parentColumns = ["id"],
         childColumns = ["document"],
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class DctDocumentRow(
+class DctDocumentRow() {
     @PrimaryKey
-    val id: String = UUID.randomUUID().toString(),
-    val document: String,
-    val unit: String,
-    val addBarcode: String,
-    val quantityDoc: Double,
-    val quantityActual: Double,
-    val difference: Double
-)
+    var id: String = UUID.randomUUID().toString()
+    var document: String = ""
+    var unit: String = ""
+    var addBarcode: String = ""
+    var quantityDoc: Double = 0.0
+    var quantityActual: Double = 0.0
+    var difference: Double = 0.0
+
+    constructor(addBarcode: String) : this() {
+        this.addBarcode = addBarcode
+    }
+}
 
 data class TestData(
     val id: String,

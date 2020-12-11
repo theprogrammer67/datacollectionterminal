@@ -9,13 +9,13 @@ import androidx.room.Query
 @Dao
 interface DctDao {
     @Query("SELECT * FROM document ORDER BY date ASC")
-    fun getDocuments(): LiveData<List<DctDocument>>
+    fun getDocuments(): LiveData<List<DctDocumentHeader>>
 
     @Query("SELECT * FROM document WHERE id = :id")
-    fun getDocument(id: String): LiveData<DctDocument>
+    fun getDocument(id: String): LiveData<DctDocumentHeader>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDocument(document: DctDocument)
+    suspend fun insertDocument(documentHeader: DctDocumentHeader)
 
     @Query("DELETE FROM document WHERE id = :id")
     suspend fun deleteDocument(id: String)

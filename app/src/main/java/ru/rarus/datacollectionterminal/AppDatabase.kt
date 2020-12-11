@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [DctDocument::class, DctDocumentRow::class, ], version = 1, exportSchema = false)
+@Database(entities = [DctDocumentHeader::class, DctDocumentRow::class, ], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun dctDao(): DctDao
 
