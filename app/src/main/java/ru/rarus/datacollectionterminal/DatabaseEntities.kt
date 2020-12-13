@@ -63,7 +63,13 @@ class Unit() {
     var name: String = "шт"
     var conversionFactor: Double = 1.0
     var price: Double = 0.0
-    var baseinUnit: Boolean = false
+    var baseUnit: Boolean = false
+
+    constructor(barcode: String, good: Good, baseUnit: Boolean): this() {
+        this.barcode = barcode
+        this.good = good.id
+        this.baseUnit = baseUnit
+    }
 }
 
 data class ViewDocumentRow(
@@ -86,6 +92,27 @@ class DocumentAndRows {
         entity = DctDocumentRow::class
     )
     var rows: List<DctDocumentRow> = ArrayList()
+}
+
+class GoodAndUnits() {
+    @Embedded
+    var good: Good? = null
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "good",
+        entity = Unit::class
+    )
+    var units: List<Unit> = ArrayList()
+
+    constructor(good: Good, units: List<Unit>) : this() {
+        this.good = good
+        this.units = units
+    }
+    constructor(barcode: String) : this() {
+        this.good = Good()
+        this.units = listOf(Unit(barcode, good!!, true))
+    }
 }
 
 data class TestData(

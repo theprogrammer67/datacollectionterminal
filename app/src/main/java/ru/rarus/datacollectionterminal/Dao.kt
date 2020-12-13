@@ -4,28 +4,45 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
-interface DctDao {
+abstract class DctDao {
     @Query("SELECT * FROM document ORDER BY date ASC")
-    fun getDocuments(): LiveData<List<DctDocumentHeader>>
+    abstract fun getDocuments(): LiveData<List<DctDocumentHeader>>
 
     @Transaction
     @Query("SELECT * from document")
-    fun getDocumentAndRows(): LiveData<List<DocumentAndRows>>
+    abstract fun getDocumentAndRows(): LiveData<List<DocumentAndRows>>
 
     @Query("SELECT * FROM document WHERE id = :id")
-    fun getDocument(id: String): LiveData<DctDocumentHeader>
+    abstract fun getDocument(id: String): LiveData<DctDocumentHeader>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDocument(documentHeader: DctDocumentHeader)
+    abstract suspend fun insertDocument(documentHeader: DctDocumentHeader)
 
     @Query("DELETE FROM document WHERE id = :id")
-    suspend fun deleteDocument(id: String)
+    abstract suspend fun deleteDocument(id: String)
 
     @Query("DELETE FROM document")
-    suspend fun deleteDocuments()
+    abstract suspend fun deleteDocuments()
 
     @Query("SELECT * FROM unit WHERE barcode = :barcode")
-    fun getUnitByBarcode(barcode: String): LiveData<Unit>
+    abstract fun getUnitByBarcode(barcode: String): LiveData<Unit>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insertUnit(unit: Unit)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insertUnits(unit: List<Unit>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertGood(good: Good)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertGoodAndUnits(goodAndUnits: GoodAndUnits) {
+        if (goodAndUnits.good != null) {
+            insertGood(goodAndUnits.good!!)
+            insertUnits(goodAndUnits.units)
+        }
+    }
 
 //    @Query("SELECT * FROM unit WHERE barcode = :barcode")
 //    suspend fun getDocRowByCarcode(barcode: String)
