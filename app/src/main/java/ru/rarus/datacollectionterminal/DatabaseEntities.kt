@@ -57,13 +57,22 @@ class Good() {
 )
 class Unit(var good: String) {
     @PrimaryKey
-    var id: String = UUID.randomUUID().toString()
-    var name: String = "шт"
     var barcode: String = ""
+    var name: String = "шт"
     var conversionFactor: Double = 1.0
     var price: Double = 0.0
     var baseinUnit: Boolean = false
 }
+
+data class ViewDocumentRow(
+    var goodName: String,
+    var unitName: String,
+    var unitBarcode: String,
+    var addBarcode: String,
+    var quantityDoc: Double,
+    var quantityActual: Double,
+    var difference: Double
+)
 
 data class TestData(
     val id: String,

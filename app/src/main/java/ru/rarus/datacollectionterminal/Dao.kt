@@ -22,4 +22,10 @@ interface DctDao {
 
     @Query("DELETE FROM document")
     suspend fun deleteDocuments()
+
+    @Query("SELECT * FROM unit WHERE barcode = :barcode")
+    fun getUnitByBarcode(barcode: String): LiveData<Unit>
+
+//    @Query("SELECT * FROM unit WHERE barcode = :barcode")
+//    suspend fun getDocRowByCarcode(barcode: String)
 }

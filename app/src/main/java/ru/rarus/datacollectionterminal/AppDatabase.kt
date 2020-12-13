@@ -5,7 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [DctDocumentHeader::class, DctDocumentRow::class, ], version = 1, exportSchema = false)
+@Database(
+    entities = [DctDocumentHeader::class, DctDocumentRow::class, Good::class, Unit::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun dctDao(): DctDao
 
@@ -13,8 +17,8 @@ abstract class AppDatabase : RoomDatabase() {
         private var instance: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
-            return instance ?: Room.databaseBuilder(context, AppDatabase::class.java, "database.db").
-            build().also { instance = it }
+            return instance ?: Room.databaseBuilder(context, AppDatabase::class.java, "database.db")
+                .build().also { instance = it }
         }
     }
 }
