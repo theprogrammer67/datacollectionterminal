@@ -12,8 +12,16 @@ class DocumentViewModel : ViewModel() {
         activity?.startScanActivity()
     }
 
-    fun onScanBarcode(barcodeData: String){
+    fun onScanBarcode(barcodeData: String) {
+        if (activity == null) return
+
         document.rows.add(DctDocumentRow(barcodeData))
-        activity?.refreshList()
+        activity!!.refreshList()
+
+        val unit = App.database.dctDao().getUnitByBarcode(barcodeData)
+        unit.observe(activity!!, {
+            if (it == null)
+                App.showMessage("Штрихкод не найден")
+        })
     }
 }

@@ -1,15 +1,16 @@
 package ru.rarus.datacollectionterminal
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface DctDao {
     @Query("SELECT * FROM document ORDER BY date ASC")
     fun getDocuments(): LiveData<List<DctDocumentHeader>>
+
+    @Transaction
+    @Query("SELECT * from document")
+    fun getDocumentAndRows(): LiveData<List<DocumentAndRows>>
 
     @Query("SELECT * FROM document WHERE id = :id")
     fun getDocument(id: String): LiveData<DctDocumentHeader>

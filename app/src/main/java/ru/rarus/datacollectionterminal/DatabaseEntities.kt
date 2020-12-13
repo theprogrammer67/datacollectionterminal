@@ -1,8 +1,6 @@
 package ru.rarus.datacollectionterminal
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.util.*
 
 
@@ -27,6 +25,8 @@ class DctDocumentHeader() {
 class DctDocumentRow() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
+
+    @ColumnInfo(index = true)
     var document: String = ""
     var unit: String = ""
     var addBarcode: String = ""
@@ -55,9 +55,11 @@ class Good() {
         onDelete = ForeignKey.CASCADE
     )]
 )
-class Unit(var good: String) {
+class Unit() {
     @PrimaryKey
     var barcode: String = ""
+    @ColumnInfo(index = true)
+    var good: String = ""
     var name: String = "шт"
     var conversionFactor: Double = 1.0
     var price: Double = 0.0
@@ -73,6 +75,18 @@ data class ViewDocumentRow(
     var quantityActual: Double,
     var difference: Double
 )
+
+class DocumentAndRows {
+    @Embedded
+    var document: DctDocumentHeader? = null
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "document",
+        entity = DctDocumentRow::class
+    )
+    var rows: List<DctDocumentRow> = ArrayList()
+}
 
 data class TestData(
     val id: String,
