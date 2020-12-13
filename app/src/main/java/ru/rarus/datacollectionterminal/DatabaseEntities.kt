@@ -5,10 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.*
 
-class DctFocument() {
-    val header = DctDocumentHeader()
-    val rows: MutableList<DctDocumentRow> =  ArrayList()
-}
 
 @Entity(tableName = "document")
 class DctDocumentHeader() {
@@ -42,6 +38,31 @@ class DctDocumentRow() {
         this.addBarcode = addBarcode
         quantityActual = 1.0
     }
+}
+
+@Entity(tableName = "good")
+class Good() {
+    @PrimaryKey
+    var id: String = UUID.randomUUID().toString()
+    var name: String = "Неизвестный товар"
+}
+
+@Entity(
+    tableName = "unit", foreignKeys = [ForeignKey(
+        entity = Good::class,
+        parentColumns = ["id"],
+        childColumns = ["good"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
+class Unit(var good: String) {
+    @PrimaryKey
+    var id: String = UUID.randomUUID().toString()
+    var name: String = "шт"
+    var barcode: String = ""
+    var conversionFactor: Double = 1.0
+    var price: Double = 0.0
+    var baseinUnit: Boolean = false
 }
 
 data class TestData(
