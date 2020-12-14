@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="documentRow"
-            type="ru.rarus.datacollectionterminal.DctDocumentRow" />
+            name="viewDocumentRow"
+            type="ru.rarus.datacollectionterminal.ViewDocumentRow" />
     </data>
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@{documentRow.addBarcode}"
+            android:text="@{viewDocumentRow.unitBarcode}"
             android:textColor="@color/black"
             tools:text="1234567890" />
 
@@ -29,7 +29,7 @@
             android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="@{String.valueOf(documentRow.quantityActual)}"
+            android:text="@{String.valueOf(viewDocumentRow.quantityActual)}"
             android:textColor="@color/black"
             tools:text="999.99" />
     </LinearLayout>

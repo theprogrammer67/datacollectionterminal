@@ -1,8 +1,10 @@
 package ru.rarus.datacollectionterminal
 
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DocumentViewModel : ViewModel() {
     var activity: DocumentActivity? = null
@@ -17,16 +19,28 @@ class DocumentViewModel : ViewModel() {
     fun onScanBarcode(barcodeData: String) {
         if (activity == null) return
 
-        document.rows.add(DctDocumentRow(barcodeData))
-        activity!!.refreshList()
-
         val dao = App.database.dctDao()
-        val unit = dao.getUnitByBarcode(barcodeData)
-        unit.observe(activity!!, {
+        val goodAndUnit = dao.getGoodAndUnitByBarcode(barcodeData)
+        goodAndUnit.observeOnce(activity!!, {
             if (it == null) {
-                App.showMessage("Штрихкод не найден")
-                GlobalScope.launch { dao.insertGoodAndUnits(GoodAndUnits(barcodeData)) }
+                onBarcodeNotFound(barcodeData)
+            } else {
+                addDocumentRow(it)
             }
         })
+    }
+
+    private fun addDocumentRow(goodAndUnit: GoodAndUnit) {
+        document.rows.add(ViewDocumentRow(goodAndUnit))
+        activity!!.refreshList()
+    }
+
+    private fun onBarcodeNotFound(barcodeData: String) {
+        App.showMessage("Штрихкод не найден")
+        val goodAndUnit = GoodAndUnit(barcodeData)
+        GlobalScope.launch {
+            App.database.dctDao().insertGoodAndUnits(goodAndUnit)
+            withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit) }
+        }
     }
 }

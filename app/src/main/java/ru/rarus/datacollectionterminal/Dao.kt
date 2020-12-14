@@ -27,6 +27,9 @@ abstract class DctDao {
     @Query("SELECT * FROM unit WHERE barcode = :barcode")
     abstract fun getUnitByBarcode(barcode: String): LiveData<Unit>
 
+    @Query("SELECT * FROM good JOIN unit on(unit.good = good.id) WHERE unit.barcode = :barcode")
+    abstract fun getGoodAndUnitByBarcode(barcode: String): LiveData<GoodAndUnit>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insertUnit(unit: Unit)
 
@@ -36,14 +39,12 @@ abstract class DctDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertGood(good: Good)
 
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertGoodAndUnits(goodAndUnits: GoodAndUnits) {
-        if (goodAndUnits.good != null) {
-            insertGood(goodAndUnits.good!!)
-            insertUnits(goodAndUnits.units)
+    suspend fun insertGoodAndUnits(goodAndUnit: GoodAndUnit) {
+        if (goodAndUnit.good != null) {
+            insertGood(goodAndUnit.good!!)
+            insertUnits(goodAndUnit.units)
         }
     }
-
-//    @Query("SELECT * FROM unit WHERE barcode = :barcode")
-//    suspend fun getDocRowByCarcode(barcode: String)
 }

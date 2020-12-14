@@ -38,6 +38,11 @@ class DctDocumentRow() {
         this.addBarcode = addBarcode
         quantityActual = 1.0
     }
+    constructor(goodAndUnit: GoodAndUnit) : this() {
+        unit = goodAndUnit.units[0].barcode
+        addBarcode = goodAndUnit.units[0].barcode // !!!
+        quantityActual = 1.0
+    }
 }
 
 @Entity(tableName = "good")
@@ -72,16 +77,6 @@ class Unit() {
     }
 }
 
-data class ViewDocumentRow(
-    var goodName: String,
-    var unitName: String,
-    var unitBarcode: String,
-    var addBarcode: String,
-    var quantityDoc: Double,
-    var quantityActual: Double,
-    var difference: Double
-)
-
 class DocumentAndRows {
     @Embedded
     var document: DctDocumentHeader? = null
@@ -94,7 +89,7 @@ class DocumentAndRows {
     var rows: List<DctDocumentRow> = ArrayList()
 }
 
-class GoodAndUnits() {
+class GoodAndUnit() {
     @Embedded
     var good: Good? = null
 
@@ -105,10 +100,6 @@ class GoodAndUnits() {
     )
     var units: List<Unit> = ArrayList()
 
-    constructor(good: Good, units: List<Unit>) : this() {
-        this.good = good
-        this.units = units
-    }
     constructor(barcode: String) : this() {
         this.good = Good()
         this.units = listOf(Unit(barcode, good!!, true))
