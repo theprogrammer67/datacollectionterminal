@@ -12,9 +12,9 @@ class ViewDocumentRow() {
     var difference = 0.0
 
     constructor(goodAndUnit: GoodAndUnit) : this() {
-        goodName = goodAndUnit.good?.name.toString()
-        unitName = goodAndUnit.units[0].name
-        unitBarcode = goodAndUnit.units[0].barcode
+        goodName = goodAndUnit.good.name
+        unitName = goodAndUnit.unit.name
+        unitBarcode = goodAndUnit.unit.barcode
         quantityActual = 1.0
     }
 }

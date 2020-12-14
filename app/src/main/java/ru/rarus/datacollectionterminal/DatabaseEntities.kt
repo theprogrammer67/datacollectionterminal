@@ -34,13 +34,8 @@ class DctDocumentRow() {
     var quantityActual: Double = 0.0
     var difference: Double = 0.0
 
-    constructor(addBarcode: String) : this() {
-        this.addBarcode = addBarcode
-        quantityActual = 1.0
-    }
     constructor(goodAndUnit: GoodAndUnit) : this() {
-        unit = goodAndUnit.units[0].barcode
-        addBarcode = goodAndUnit.units[0].barcode // !!!
+        unit = goodAndUnit.unit.barcode
         quantityActual = 1.0
     }
 }
@@ -91,18 +86,18 @@ class DocumentAndRows {
 
 class GoodAndUnit() {
     @Embedded
-    var good: Good? = null
+    var good: Good = Good()
 
     @Relation(
         parentColumn = "id",
         entityColumn = "good",
         entity = Unit::class
     )
-    var units: List<Unit> = ArrayList()
+    var unit: Unit = Unit()
 
     constructor(barcode: String) : this() {
         this.good = Good()
-        this.units = listOf(Unit(barcode, good!!, true))
+        this.unit = Unit(barcode, good, true)
     }
 }
 

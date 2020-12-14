@@ -22,11 +22,10 @@ class DocumentViewModel : ViewModel() {
         val dao = App.database.dctDao()
         val goodAndUnit = dao.getGoodAndUnitByBarcode(barcodeData)
         goodAndUnit.observeOnce(activity!!, {
-            if (it == null) {
+            if (it == null)
                 onBarcodeNotFound(barcodeData)
-            } else {
+            else
                 addDocumentRow(it)
-            }
         })
     }
 
@@ -36,6 +35,7 @@ class DocumentViewModel : ViewModel() {
     }
 
     private fun onBarcodeNotFound(barcodeData: String) {
+        // Здесь в зависимости от настроек или добавляем или ругаемся
         App.showMessage("Штрихкод не найден")
         val goodAndUnit = GoodAndUnit(barcodeData)
         GlobalScope.launch {
