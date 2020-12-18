@@ -3,9 +3,7 @@ package ru.rarus.datacollectionterminal
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.BaseAdapter
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.zxing.integration.android.IntentIntegrator
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
+
 
 class DocumentActivity : AppCompatActivity() {
     private lateinit var viewModel: DocumentViewModel
@@ -31,11 +30,18 @@ class DocumentActivity : AppCompatActivity() {
         adapter = DocumentRowsAdapter(viewModel.document.rows, applicationContext)
         binding.lvRows.adapter = adapter
 
-        binding.btnDeleteSelected.setOnClickListener { viewModel.deleteSelectedRows() }
-
         binding.btnScanBarcode.setOnClickListener {
             viewModel.scanBarcode()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    fun onDeleteClick(menuItem: MenuItem) {
+        viewModel.deleteSelectedRows()
     }
 
     fun startScanActivity() {

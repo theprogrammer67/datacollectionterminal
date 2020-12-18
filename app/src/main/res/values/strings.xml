@@ -1,4 +1,6 @@
 <resources>
-    <string name="app_name">DataCollectionTerminal</string>
+    <string name="app_name">Терминал сбора данных</string>
     <string name="caption_scanbarcode">Сканировать штрихкод</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_delete_selected">Удалить выбранные</string>
 </resources>
