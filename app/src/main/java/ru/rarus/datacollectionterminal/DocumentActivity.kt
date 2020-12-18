@@ -29,9 +29,9 @@ class DocumentActivity : AppCompatActivity() {
         viewModel.activity = this
 
         adapter = DocumentRowsAdapter(viewModel.document.rows, applicationContext)
-        binding.rvRows.adapter = adapter
+        binding.lvRows.adapter = adapter
 
-//        binding.rvRows.setOnItemClickListener { parent, view, position, id -> view. }
+        binding.btnDeleteSelected.setOnClickListener { viewModel.deleteSelectedRows() }
 
         binding.btnScanBarcode.setOnClickListener {
             viewModel.scanBarcode()

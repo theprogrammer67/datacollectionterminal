@@ -43,4 +43,9 @@ class DocumentViewModel : ViewModel() {
             withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit) }
         }
     }
+
+    fun deleteSelectedRows() {
+        document.rows.filter { it.isSelected }.forEach { document.rows.remove(it) }
+        activity!!.refreshList()
+    }
 }
