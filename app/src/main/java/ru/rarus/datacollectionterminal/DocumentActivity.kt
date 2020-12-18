@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +30,8 @@ class DocumentActivity : AppCompatActivity() {
 
         adapter = DocumentRowsAdapter(viewModel.document.rows, applicationContext)
         binding.rvRows.adapter = adapter
+
+//        binding.rvRows.setOnItemClickListener { parent, view, position, id -> view. }
 
         binding.btnScanBarcode.setOnClickListener {
             viewModel.scanBarcode()
@@ -81,6 +84,9 @@ class DocumentRowsAdapter(
         if (convertView == null) {
             binding = DocumentRowBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
+            binding.chbSelected.setOnClickListener {
+                (getItem(position) as ViewDocumentRow).isSelected = (it as CheckBox).isChecked
+            }
         } else
             binding = convertView.tag as DocumentRowBinding
 

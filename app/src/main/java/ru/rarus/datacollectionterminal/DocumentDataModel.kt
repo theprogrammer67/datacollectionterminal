@@ -3,6 +3,7 @@ package ru.rarus.datacollectionterminal
 import java.util.*
 
 class ViewDocumentRow() {
+    var isSelected = false
     var goodName = ""
     var unitName = ""
     var unitBarcode = ""
