@@ -30,7 +30,7 @@ class DocumentViewModel : ViewModel() {
     }
 
     private fun addDocumentRow(goodAndUnit: GoodAndUnit) {
-        document.rows.add(ViewDocumentRow(goodAndUnit))
+        document.addRow(goodAndUnit)
         activity!!.refreshList()
     }
 
