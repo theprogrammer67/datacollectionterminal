@@ -94,7 +94,7 @@ class DocumentRowsAdapter(
             binding = DocumentRowBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
             binding.chbSelected.setOnClickListener {
-                (getItem(position) as ViewDocumentRow).isSelected = (it as CheckBox).isChecked
+                (getItem(position) as DctDocumentRow).isSelected = (it as CheckBox).isChecked
             }
         } else
             binding = convertView.tag as DocumentRowBinding

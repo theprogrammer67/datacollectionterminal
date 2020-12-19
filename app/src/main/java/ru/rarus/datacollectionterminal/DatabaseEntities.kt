@@ -57,15 +57,6 @@ class DctDocumentRow() {
         unit = goodAndUnit.unit.barcode
         quantityActual = 1.0
     }
-
-    constructor(viewDocumentRow: ViewDocumentRow, documentId: String) : this() {
-        document = documentId
-        unit = viewDocumentRow.unitBarcode
-        addBarcode = viewDocumentRow.addBarcode
-        quantityDoc = viewDocumentRow.quantityDoc
-        quantityActual = viewDocumentRow.quantityActual
-        difference = viewDocumentRow.difference
-    }
 }
 
 @Entity(tableName = "good")
@@ -111,12 +102,6 @@ class DocumentAndRows() {
         entity = DctDocumentRow::class
     )
     var rows: MutableList<DctDocumentRow> = ArrayList()
-
-    constructor(viewDocument: ViewDocument): this() {
-        document = viewDocument.header
-        rows.clear()
-        viewDocument.rows.forEach { rows.add(DctDocumentRow(it, document.id)) }
-    }
 
     fun addRow(goodAndUnit: GoodAndUnit) {
         val item = rows.find { it.unit == goodAndUnit.unit.barcode }
