@@ -77,7 +77,7 @@ class DocumentActivity : AppCompatActivity() {
 }
 
 class DocumentRowsAdapter(
-    private val documentRows: List<ViewDocumentRow>,
+    private val documentRows: List<DctDocumentRow>,
     private val context: Context
 ) : BaseAdapter() {
 
@@ -99,7 +99,7 @@ class DocumentRowsAdapter(
         } else
             binding = convertView.tag as DocumentRowBinding
 
-        binding.viewDocumentRow = getItem(position) as ViewDocumentRow
+        binding.dctDocumentRow = getItem(position) as DctDocumentRow
 
         return binding.root
     }

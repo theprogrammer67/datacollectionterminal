@@ -42,10 +42,22 @@ class DctDocumentRow() {
     var quantityActual: Double = 0.0
     var difference: Double = 0.0
 
-    constructor(goodAndUnit: GoodAndUnit) : this() {
+    // additional fields
+    @Ignore
+    var isSelected = false
+    @Ignore
+    var goodName = ""
+    @Ignore
+    var unitName = ""
+
+    constructor(goodAndUnit: GoodAndUnit, documentId: String) : this() {
+        document = documentId
+        goodName = goodAndUnit.good.name
+        unitName = goodAndUnit.unit.name
         unit = goodAndUnit.unit.barcode
         quantityActual = 1.0
     }
+
     constructor(viewDocumentRow: ViewDocumentRow, documentId: String) : this() {
         document = documentId
         unit = viewDocumentRow.unitBarcode
@@ -104,6 +116,19 @@ class DocumentAndRows() {
         document = viewDocument.header
         rows.clear()
         viewDocument.rows.forEach { rows.add(DctDocumentRow(it, document.id)) }
+    }
+
+    fun addRow(goodAndUnit: GoodAndUnit) {
+        val item = rows.find { it.unit == goodAndUnit.unit.barcode }
+        if (item != null)
+            item.quantityActual += 1
+        else
+            rows.add(DctDocumentRow(goodAndUnit, document.id))
+    }
+
+    fun clear() {
+        document.clear()
+        rows.clear()
     }
 }
 

@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 
 class DocumentViewModel : ViewModel() {
     var activity: DocumentActivity? = null
-    val document = ViewDocument()
+    val document = DocumentAndRows()
 
     fun scanBarcode() {
         // По-умолчанию используем zxing сканер
@@ -51,7 +51,7 @@ class DocumentViewModel : ViewModel() {
 
     fun saveDocument() {
         GlobalScope.launch {
-            App.database.dctDao().insertDocumentAndRows(DocumentAndRows(document))
+            App.database.dctDao().insertDocumentAndRows(document)
             document.clear()
             withContext(Dispatchers.Main) { activity!!.onChangeDocument() }
         }
