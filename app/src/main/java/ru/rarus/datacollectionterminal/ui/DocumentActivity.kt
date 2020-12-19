@@ -17,11 +17,11 @@ import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.db.DctDocumentRow
 
 
-class DocumentActivity : AppCompatActivity() {
+class DocumentActivity() : AppCompatActivity() {
     private lateinit var viewModel: DocumentViewModel
     private lateinit var binding: ActivityDocumentBinding
     private lateinit var adapter: DocumentRowsAdapter
-    val REQUEST_CODE = 1
+    private val REQUEST_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +33,8 @@ class DocumentActivity : AppCompatActivity() {
         adapter = DocumentRowsAdapter(viewModel.document.rows, applicationContext)
         binding.lvRows.adapter = adapter
 
-        binding.btnScanBarcode.setOnClickListener {
-            viewModel.scanBarcode()
-        }
-        binding.btnSaveDocument.setOnClickListener {
-            viewModel.saveDocument()
-        }
+        binding.btnScanBarcode.setOnClickListener { viewModel.scanBarcode() }
+        binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -67,7 +63,7 @@ class DocumentActivity : AppCompatActivity() {
         val result = IntentIntegrator.parseActivityResult(resultCode, data)
         if (result != null) {
             if (result.contents == null)
-                App.showMessage("Скнирование отменено")
+                App.showMessage("Сканирование отменено")
             else
                 viewModel.onScanBarcode(result.contents)
         } else
@@ -88,7 +84,7 @@ class DocumentRowsAdapter(
 
     override fun getItem(position: Int): Any = documentRows[position]
 
-    override fun getItemId(position: Int): Long = 0
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding: DocumentRowBinding

@@ -14,12 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DataCollectionTerminal">
         <activity
+            android:name=".ui.DocumentListActivity"
+            android:label="Список документов" />
+        <activity
             android:name=".ui.ScannerCaptureActivity"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".ui.DocumentActivity" />
+        <activity
+            android:name=".ui.DocumentActivity"
+            android:label="Документ" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -18,5 +18,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnDocument.setOnClickListener {
             startActivity(Intent(this, DocumentActivity::class.java))
         }
+
+        binding.btnDocumentList.setOnClickListener {
+            startActivity(Intent(this, DocumentListActivity::class.java))
+        }
     }
 }

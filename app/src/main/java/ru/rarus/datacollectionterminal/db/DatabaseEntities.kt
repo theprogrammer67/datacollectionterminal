@@ -9,9 +9,10 @@ class DctDocumentHeader() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
     var number: String = ""
-    var date: Long = 0
+    var date: Long = System.currentTimeMillis()
     var source: Int = 0
     var state: Int = 0
+    var description: String = "Новый документ"
 
     fun clear() {
         id = UUID.randomUUID().toString()
@@ -19,6 +20,7 @@ class DctDocumentHeader() {
         date = 0
         source = 0
         state = 0
+        description = ""
     }
 }
 
