@@ -1,4 +1,4 @@
-package ru.rarus.datacollectionterminal
+package ru.rarus.datacollectionterminal.ui
 
 import android.content.Intent
 import android.os.Bundle

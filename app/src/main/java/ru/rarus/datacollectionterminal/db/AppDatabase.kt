@@ -1,4 +1,4 @@
-package ru.rarus.datacollectionterminal
+package ru.rarus.datacollectionterminal.db
 
 import android.content.Context
 import androidx.room.Database

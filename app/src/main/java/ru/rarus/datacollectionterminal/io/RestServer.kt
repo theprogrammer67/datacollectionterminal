@@ -1,9 +1,10 @@
-package ru.rarus.datacollectionterminal
+package ru.rarus.datacollectionterminal.io
 
 import com.google.gson.Gson
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer
+import ru.rarus.datacollectionterminal.db.TestData
 import java.io.IOException
 import java.io.InputStream
 import java.net.InetSocketAddress

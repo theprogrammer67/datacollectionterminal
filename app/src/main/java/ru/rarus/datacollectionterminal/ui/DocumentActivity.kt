@@ -1,4 +1,4 @@
-package ru.rarus.datacollectionterminal
+package ru.rarus.datacollectionterminal.ui
 
 import android.content.Context
 import android.content.Intent
@@ -10,8 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.zxing.integration.android.IntentIntegrator
+import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
+import ru.rarus.datacollectionterminal.db.DctDocumentRow
 
 
 class DocumentActivity : AppCompatActivity() {

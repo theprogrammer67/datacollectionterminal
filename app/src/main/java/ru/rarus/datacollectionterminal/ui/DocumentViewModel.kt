@@ -1,10 +1,14 @@
-package ru.rarus.datacollectionterminal
+package ru.rarus.datacollectionterminal.ui
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.db.DocumentAndRows
+import ru.rarus.datacollectionterminal.db.GoodAndUnit
+import ru.rarus.datacollectionterminal.observeOnce
 
 class DocumentViewModel : ViewModel() {
     var activity: DocumentActivity? = null

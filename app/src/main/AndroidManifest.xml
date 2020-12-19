@@ -14,13 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DataCollectionTerminal">
         <activity
-            android:name=".ScannerCaptureActivity"
+            android:name=".ui.ScannerCaptureActivity"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".DocumentActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.DocumentActivity" />
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

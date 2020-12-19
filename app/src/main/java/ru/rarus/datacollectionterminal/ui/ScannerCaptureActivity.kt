@@ -1,8 +1,9 @@
-package ru.rarus.datacollectionterminal
+package ru.rarus.datacollectionterminal.ui
 
 import android.view.View
 import com.journeyapps.barcodescanner.CaptureActivity
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import ru.rarus.datacollectionterminal.R
 
 
 class ScannerCaptureActivity: CaptureActivity() {

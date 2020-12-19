@@ -1,4 +1,4 @@
-package ru.rarus.datacollectionterminal
+package ru.rarus.datacollectionterminal.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.res.Resources
 import android.util.Log
 import android.widget.Toast
+import ru.rarus.datacollectionterminal.db.AppDatabase
+import ru.rarus.datacollectionterminal.io.RestServer
 
 class App: Application() {
     override fun onCreate() {
