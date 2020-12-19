@@ -33,6 +33,9 @@ class DocumentActivity : AppCompatActivity() {
         binding.btnScanBarcode.setOnClickListener {
             viewModel.scanBarcode()
         }
+        binding.btnSaveDocument.setOnClickListener {
+            viewModel.saveDocument()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -68,7 +71,7 @@ class DocumentActivity : AppCompatActivity() {
             super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun refreshList() {
+    fun onChangeDocument() {
         adapter.notifyDataSetChanged()
     }
 }

@@ -18,6 +18,16 @@ abstract class DctDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insertDocument(documentHeader: DctDocumentHeader)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insertDocumentRows(documentRows: List<DctDocumentRow>)
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertDocumentAndRows(documentAndRows: DocumentAndRows) {
+        insertDocument(documentAndRows.document)
+        insertDocumentRows(documentAndRows.rows)
+    }
+
     @Query("DELETE FROM document WHERE id = :id")
     abstract suspend fun deleteDocument(id: String)
 
@@ -42,7 +52,7 @@ abstract class DctDao {
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertGoodAndUnits(goodAndUnit: GoodAndUnit) {
+    suspend fun insertGoodAndUnit(goodAndUnit: GoodAndUnit) {
         insertGood(goodAndUnit.good)
         insertUnit(goodAndUnit.unit)
     }

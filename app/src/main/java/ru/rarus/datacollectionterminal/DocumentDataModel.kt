@@ -20,7 +20,7 @@ class ViewDocumentRow() {
     }
 }
 
-class DctFocument() {
+class ViewDocument() {
     val header = DctDocumentHeader()
     val rows: MutableList<ViewDocumentRow> =  ArrayList()
 
@@ -31,4 +31,10 @@ class DctFocument() {
         else
             rows.add(ViewDocumentRow(goodAndUnit))
     }
+
+    fun clear() {
+        header.clear()
+        rows.clear()
+    }
+
 }

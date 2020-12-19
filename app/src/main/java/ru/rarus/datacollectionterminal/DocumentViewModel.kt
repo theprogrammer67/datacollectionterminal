@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 
 class DocumentViewModel : ViewModel() {
     var activity: DocumentActivity? = null
-    val document = DctFocument()
+    val document = ViewDocument()
 
     fun scanBarcode() {
         // По-умолчанию используем zxing сканер
@@ -31,7 +31,7 @@ class DocumentViewModel : ViewModel() {
 
     private fun addDocumentRow(goodAndUnit: GoodAndUnit) {
         document.addRow(goodAndUnit)
-        activity!!.refreshList()
+        activity!!.onChangeDocument()
     }
 
     private fun onBarcodeNotFound(barcodeData: String) {
@@ -39,13 +39,21 @@ class DocumentViewModel : ViewModel() {
         App.showMessage("Штрихкод не найден")
         val goodAndUnit = GoodAndUnit(barcodeData)
         GlobalScope.launch {
-            App.database.dctDao().insertGoodAndUnits(goodAndUnit)
+            App.database.dctDao().insertGoodAndUnit(goodAndUnit)
             withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit) }
         }
     }
 
     fun deleteSelectedRows() {
         document.rows.filter { it.isSelected }.forEach { document.rows.remove(it) }
-        activity!!.refreshList()
+        activity!!.onChangeDocument()
+    }
+
+    fun saveDocument() {
+        GlobalScope.launch {
+            App.database.dctDao().insertDocumentAndRows(DocumentAndRows(document))
+            document.clear()
+            withContext(Dispatchers.Main) { activity!!.onChangeDocument() }
+        }
     }
 }

@@ -12,6 +12,14 @@ class DctDocumentHeader() {
     var date: Long = 0
     var source: Int = 0
     var state: Int = 0
+
+    fun clear() {
+        id = UUID.randomUUID().toString()
+        number = ""
+        date = 0
+        source = 0
+        state = 0
+    }
 }
 
 @Entity(
@@ -38,6 +46,14 @@ class DctDocumentRow() {
         unit = goodAndUnit.unit.barcode
         quantityActual = 1.0
     }
+    constructor(viewDocumentRow: ViewDocumentRow, documentId: String) : this() {
+        document = documentId
+        unit = viewDocumentRow.unitBarcode
+        addBarcode = viewDocumentRow.addBarcode
+        quantityDoc = viewDocumentRow.quantityDoc
+        quantityActual = viewDocumentRow.quantityActual
+        difference = viewDocumentRow.difference
+    }
 }
 
 @Entity(tableName = "good")
@@ -58,6 +74,7 @@ class Good() {
 class Unit() {
     @PrimaryKey
     var barcode: String = ""
+
     @ColumnInfo(index = true)
     var good: String = ""
     var name: String = "шт"
@@ -65,23 +82,29 @@ class Unit() {
     var price: Double = 0.0
     var baseUnit: Boolean = false
 
-    constructor(barcode: String, good: Good, baseUnit: Boolean): this() {
+    constructor(barcode: String, good: Good, baseUnit: Boolean) : this() {
         this.barcode = barcode
         this.good = good.id
         this.baseUnit = baseUnit
     }
 }
 
-class DocumentAndRows {
+class DocumentAndRows() {
     @Embedded
-    var document: DctDocumentHeader? = null
+    var document: DctDocumentHeader = DctDocumentHeader()
 
     @Relation(
         parentColumn = "id",
         entityColumn = "document",
         entity = DctDocumentRow::class
     )
-    var rows: List<DctDocumentRow> = ArrayList()
+    var rows: MutableList<DctDocumentRow> = ArrayList()
+
+    constructor(viewDocument: ViewDocument): this() {
+        document = viewDocument.header
+        rows.clear()
+        viewDocument.rows.forEach { rows.add(DctDocumentRow(it, document.id)) }
+    }
 }
 
 class GoodAndUnit() {
