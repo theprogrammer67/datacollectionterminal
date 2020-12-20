@@ -6,9 +6,16 @@ import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.DctDocumentHeader
 
+
 class Handlers(private val server: RestServer) {
 
     annotation class RequestHandler(val path: String)
+
+    data class HandlerError(val code: Int, val message: String)
+
+    private fun makeNotImplementedError(): HandlerError {
+        return HandlerError(404, "Метод не поддерживается");
+    }
 
     // root endpoint
     @RequestHandler("/")
@@ -43,6 +50,7 @@ class Handlers(private val server: RestServer) {
                             "$softInfo</body></html>"
                 server.sendResponse(exchange, htmlResponse)
             }
+            else -> server.sendResponse(exchange, makeNotImplementedError(), 406)
         }
     }
 
@@ -57,6 +65,7 @@ class Handlers(private val server: RestServer) {
                     server.sendResponse<List<DctDocumentHeader>>(exchange, documents)
                 }
             }
+            else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError(), 406)
         }
     }
 }

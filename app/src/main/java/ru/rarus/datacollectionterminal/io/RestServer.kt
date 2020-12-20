@@ -45,23 +45,23 @@ class RestServer {
         return if (s.hasNext()) s.next() else ""
     }
 
-    fun sendResponse(httpExchange: HttpExchange, responseText: String) {
+    fun sendResponse(httpExchange: HttpExchange, responseText: String, code: Int = 200) {
         val rawBody = responseText.toByteArray(Charsets.UTF_8)
         httpExchange.responseHeaders.add("Content-Type", "text/html")
         httpExchange.responseHeaders.add("charset", "utf-8")
         httpExchange.responseHeaders.add("Accept-Language", "ru-RU")
-        httpExchange.sendResponseHeaders(200, rawBody.size.toLong())
+        httpExchange.sendResponseHeaders(code, rawBody.size.toLong())
         val os = httpExchange.responseBody
         os.write(rawBody)
         os.close()
     }
 
-    fun <T> sendResponse(httpExchange: HttpExchange, obj: T) {
+    fun <T> sendResponse(httpExchange: HttpExchange, obj: T, code: Int = 200) {
         val jsonObj = gson.toJson(obj)
         val rawBody = jsonObj.toByteArray(Charsets.UTF_8)
         httpExchange.responseHeaders.add("Content-Type", "text/JSON")
         httpExchange.responseHeaders.add("charset", "utf-8")
-        httpExchange.sendResponseHeaders(200, rawBody.size.toLong())
+        httpExchange.sendResponseHeaders(code, rawBody.size.toLong())
         val os = httpExchange.responseBody
         os.write(rawBody)
         os.close()
