@@ -10,7 +10,7 @@ import ru.rarus.datacollectionterminal.io.RestServer
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
-        app = this
+        _context = this
         _resources = resources
         _database = AppDatabase.getInstance(this)
         _restserver = RestServer()
@@ -19,7 +19,8 @@ class App: Application() {
 
     companion object {
         private lateinit var _resources: Resources
-        private lateinit var app: App
+        private lateinit var _context: App
+        val context get() = _context
         private lateinit var _database: AppDatabase
         val database get() = _database
         private lateinit var _restserver: RestServer
@@ -44,7 +45,7 @@ class App: Application() {
 
 
         fun showMessage(data: String?) {
-            Toast.makeText(app, data, Toast.LENGTH_SHORT).show()
+            Toast.makeText(_context, data, Toast.LENGTH_SHORT).show()
         }
     }
 }

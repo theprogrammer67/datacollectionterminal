@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer
-import ru.rarus.datacollectionterminal.db.TestData
 import java.io.IOException
 import java.io.InputStream
 import java.net.InetSocketAddress
@@ -70,10 +69,10 @@ class RestServer {
 
     private fun addHandlers() {
         val handlerProps =
-            Handlers::class.memberProperties.filter { it.findAnnotation<RequestHandler>() != null }
+            Handlers::class.memberProperties.filter { it.findAnnotation<Handlers.RequestHandler>() != null }
         handlerProps.forEach { handler ->
             mHttpServer!!.createContext(
-                handler.findAnnotation<RequestHandler>()!!.path,
+                handler.findAnnotation<Handlers.RequestHandler>()!!.path,
                 handler.get(handlers) as HttpHandler
             )
         }
@@ -91,33 +90,3 @@ fun URI.getFileName(): String {
     else
         ""
 }
-
-//---------- Endpoint handlers----------
-class Handlers(private val server: RestServer) {
-
-    // root endpoint
-    @RequestHandler("/")
-    val rootHandler = HttpHandler { exchange ->
-        when (exchange!!.requestMethod) {
-            "GET" -> {
-                val htmlResponse =
-                    "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head>" +
-                            "<body>Добро пожаловать!</body></html>"
-                server.sendResponse(exchange, htmlResponse)
-            }
-        }
-    }
-
-    // test endpoint
-    @RequestHandler("/test")
-    val testHandler = HttpHandler { exchange ->
-        when (exchange!!.requestMethod) {
-            "GET" -> {
-                val data = TestData(exchange.requestURI.getFileName(), 123, "Test123")
-                server.sendResponse<TestData>(exchange, data)
-            }
-        }
-    }
-}
-
-annotation class RequestHandler(val path: String)
