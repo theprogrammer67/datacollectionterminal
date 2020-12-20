@@ -6,13 +6,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
-import ru.rarus.datacollectionterminal.db.DocumentAndRows
 import ru.rarus.datacollectionterminal.db.GoodAndUnit
+import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.observeOnce
 
 class DocumentViewModel : ViewModel() {
     var activity: DocumentActivity? = null
-    var document = DocumentAndRows()
+    var document = ViewDocument()
 
     fun scanBarcode() {
         // По-умолчанию используем zxing сканер
@@ -54,25 +54,24 @@ class DocumentViewModel : ViewModel() {
     }
 
     fun saveDocument() {
-        GlobalScope.launch {
-            if (document.saved)
-                App.database.getDao().updateDocumentAndRows(document)
-            else
-                App.database.getDao().insertDocumentAndRows(document)
-
-            document.saved = true
-            withContext(Dispatchers.Main) { App.showMessage("Документ сохранен") }
-        }
+//        GlobalScope.launch {
+//            if (document.saved)
+//                App.database.getDao().updateDocumentAndRows(document)
+//            else
+//                App.database.getDao().insertDocumentAndRows(document)
+//
+//            document.saved = true
+//            withContext(Dispatchers.Main) { App.showMessage("Документ сохранен") }
+//        }
     }
 
     fun getData(documentId: String?) {
         if (documentId == null) return
-
-        val liveData = App.database.getDao().getDocumentAndRows(documentId)
-        liveData.observe(activity!!, {
-            it?.saved = true
-            document = it ?: DocumentAndRows()
-            activity!!.setDocument(document)
-        })
+        GlobalScope.launch {
+            var document = App.database.getDao().getViewDocument(documentId)
+            if (document == null) document = ViewDocument()
+            document.saved = true
+            withContext(Dispatchers.Main) { activity!!.setDocument(document) }
+        }
     }
 }

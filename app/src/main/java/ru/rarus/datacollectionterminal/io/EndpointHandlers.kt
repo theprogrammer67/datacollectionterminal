@@ -5,7 +5,7 @@ import android.os.Build
 import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.DctDocumentHeader
-import ru.rarus.datacollectionterminal.db.DocumentAndRows
+import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 
 
 class Handlers(private val server: RestServer) {
@@ -70,9 +70,9 @@ class Handlers(private val server: RestServer) {
                     val documents = App.database.getDao().getDocumentsSync()
                     server.sendResponse<List<DctDocumentHeader>>(exchange, documents)
                 } else {
-                    val document = App.database.getDao().getDocumentAndRowsSync(documentID)
+                    val document = App.database.getDao().getViewDocumentRowsSync(documentID)
                     if (document != null)
-                        server.sendResponse<DocumentAndRows>(exchange, document)
+                        server.sendResponse<List<ViewDocumentRow>>(exchange, document)
                     else
                         server.sendResponse<HandlerError>(exchange, makeNotFoundError())
                 }

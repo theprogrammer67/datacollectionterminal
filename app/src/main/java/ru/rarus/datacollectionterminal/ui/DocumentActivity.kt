@@ -16,7 +16,8 @@ import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.db.DctDocumentRow
-import ru.rarus.datacollectionterminal.db.DocumentAndRows
+import ru.rarus.datacollectionterminal.db.ViewDocument
+import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 
 
 class DocumentActivity() : AppCompatActivity() {
@@ -80,7 +81,7 @@ class DocumentActivity() : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    fun setDocument(document: DocumentAndRows) {
+    fun setDocument(document: ViewDocument) {
         adapter.documentRows = document.rows
     }
 }
@@ -103,12 +104,12 @@ class DocumentRowsAdapter(
             binding = DocumentRowBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
             binding.chbSelected.setOnClickListener {
-                (getItem(position) as DctDocumentRow).isSelected = (it as CheckBox).isChecked
+                (getItem(position) as ViewDocumentRow).isSelected = (it as CheckBox).isChecked
             }
         } else
             binding = convertView.tag as DocumentRowBinding
 
-        binding.dctDocumentRow = getItem(position) as DctDocumentRow
+        binding.viewDocumentRow = getItem(position) as ViewDocumentRow
 
         return binding.root
     }

@@ -1,7 +1,6 @@
 package ru.rarus.datacollectionterminal.db
 
 import androidx.room.*
-import com.google.gson.annotations.Expose
 import java.util.*
 
 
@@ -33,7 +32,7 @@ class DctDocumentHeader() {
         onDelete = ForeignKey.CASCADE
     )]
 )
-class DctDocumentRow() {
+open class DctDocumentRow() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
 
@@ -45,21 +44,22 @@ class DctDocumentRow() {
     var quantityActual: Double = 0.0
     var difference: Double = 0.0
 
-    // additional fields
-    @Ignore
-    var isSelected = false
-    @Ignore
-    var goodName = ""
-    @Ignore
-    var unitName = ""
-
-    constructor(goodAndUnit: GoodAndUnit, documentId: String) : this() {
-        document = documentId
-        goodName = goodAndUnit.good.name
-        unitName = goodAndUnit.unit.name
-        unit = goodAndUnit.unit.barcode
-        quantityActual = 1.0
-    }
+//    // additional fields
+//    @Ignore
+//    @Expose
+//    var isSelected = false
+//    @Ignore
+//    var goodName = ""
+//    @Ignore
+//    var unitName = ""
+//
+//    constructor(goodAndUnit: GoodAndUnit, documentId: String) : this() {
+//        document = documentId
+//        goodName = goodAndUnit.good.name
+//        unitName = goodAndUnit.unit.name
+//        unit = goodAndUnit.unit.barcode
+//        quantityActual = 1.0
+//    }
 }
 
 @Entity(tableName = "good")
@@ -95,33 +95,34 @@ class Unit() {
     }
 }
 
-class DocumentAndRows() {
-    @Embedded
-    var document: DctDocumentHeader = DctDocumentHeader()
-
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "document",
-        entity = DctDocumentRow::class
-    )
-    var rows: MutableList<DctDocumentRow> = ArrayList()
-    @Ignore
-    @Expose
-    var saved: Boolean = false
-
-    fun addRow(goodAndUnit: GoodAndUnit) {
-        val item = rows.find { it.unit == goodAndUnit.unit.barcode }
-        if (item != null)
-            item.quantityActual += 1
-        else
-            rows.add(DctDocumentRow(goodAndUnit, document.id))
-    }
-
-    fun clear() {
-        document.clear()
-        rows.clear()
-    }
-}
+//class DocumentAndRows() {
+//    @Embedded
+//    var document: DctDocumentHeader = DctDocumentHeader()
+//
+//    @Relation(
+//        parentColumn = "id",
+//        entityColumn = "document",
+//        entity = DctDocumentRow::class
+//    )
+//    var rows: MutableList<DctDocumentRow> = ArrayList()
+//
+//    @Ignore
+//    @Expose
+//    var saved: Boolean = false
+//
+//    fun addRow(goodAndUnit: GoodAndUnit) {
+//        val item = rows.find { it.unit == goodAndUnit.unit.barcode }
+//        if (item != null)
+//            item.quantityActual += 1
+//        else
+//            rows.add(DctDocumentRow(goodAndUnit, document.id))
+//    }
+//
+//    constructor(document: DctDocumentHeader, rows: List<DctDocumentRow>) : this() {
+//        this.document = document
+//        this.rows = rows.toMutableList()
+//    }
+//}
 
 class GoodAndUnit() {
     @Embedded
@@ -137,5 +138,42 @@ class GoodAndUnit() {
     constructor(barcode: String) : this() {
         this.good = Good()
         this.unit = Unit(barcode, good, true)
+    }
+}
+
+class ViewDocument() {
+    var document: DctDocumentHeader = DctDocumentHeader()
+    var rows: MutableList<ViewDocumentRow> = ArrayList()
+    var saved: Boolean = false
+
+        fun addRow(goodAndUnit: GoodAndUnit) {
+        val item = rows.find { it.unit == goodAndUnit.unit.barcode }
+        if (item != null)
+            item.quantityActual += 1
+        else
+            rows.add(ViewDocumentRow(goodAndUnit, document.id))
+    }
+
+    constructor(document: DctDocumentHeader, rows: List<ViewDocumentRow>): this() {
+        this.document = document
+        this.rows = rows.toMutableList()
+    }
+//    val subList: List<ViewDocumentRow> = listOf(ViewDocumentRow())
+//    var baseList: List<DctDocumentRow> = subList
+}
+
+class ViewDocumentRow() : DctDocumentRow() {
+    var good = ""
+    var goodName = ""
+    var unitName = ""
+    @Ignore
+    var isSelected = false
+
+    constructor(goodAndUnit: GoodAndUnit, documentId: String) : this() {
+        document = documentId
+        goodName = goodAndUnit.good.name
+        unitName = goodAndUnit.unit.name
+        unit = goodAndUnit.unit.barcode
+        quantityActual = 1.0
     }
 }
