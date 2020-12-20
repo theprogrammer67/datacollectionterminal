@@ -1,6 +1,7 @@
 package ru.rarus.datacollectionterminal.db
 
 import androidx.room.*
+import com.google.gson.annotations.Expose
 import java.util.*
 
 
@@ -105,6 +106,7 @@ class DocumentAndRows() {
     )
     var rows: MutableList<DctDocumentRow> = ArrayList()
     @Ignore
+    @Expose
     var saved: Boolean = false
 
     fun addRow(goodAndUnit: GoodAndUnit) {
