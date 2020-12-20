@@ -5,6 +5,7 @@ import android.os.Build
 import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.DctDocumentHeader
+import ru.rarus.datacollectionterminal.db.DocumentAndRows
 
 
 class Handlers(private val server: RestServer) {
@@ -14,8 +15,13 @@ class Handlers(private val server: RestServer) {
     data class HandlerError(val code: Int, val message: String)
 
     private fun makeNotImplementedError(): HandlerError {
-        return HandlerError(404, "Метод не поддерживается");
+        return HandlerError(406, "Метод не поддерживается");
     }
+
+    private fun makeNotFoundError(): HandlerError {
+        return HandlerError(404, "Ресурс не найден");
+    }
+
 
     // root endpoint
     @RequestHandler("/")
@@ -50,7 +56,7 @@ class Handlers(private val server: RestServer) {
                             "$softInfo</body></html>"
                 server.sendResponse(exchange, htmlResponse)
             }
-            else -> server.sendResponse(exchange, makeNotImplementedError(), 406)
+            else -> server.sendResponse(exchange, makeNotImplementedError())
         }
     }
 
@@ -63,9 +69,15 @@ class Handlers(private val server: RestServer) {
                 if (documentID == "") {
                     val documents = App.database.getDao().getDocumentsSync()
                     server.sendResponse<List<DctDocumentHeader>>(exchange, documents)
+                } else {
+                    val document = App.database.getDao().getDocumentAndRowsSync(documentID)
+                    if (document != null)
+                        server.sendResponse<DocumentAndRows>(exchange, document)
+                    else
+                        server.sendResponse<HandlerError>(exchange, makeNotFoundError())
                 }
             }
-            else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError(), 406)
+            else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError())
         }
     }
 }

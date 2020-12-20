@@ -15,6 +15,10 @@ abstract class DctDao {
     @Query("SELECT * from document WHERE id = :id")
     abstract fun getDocumentAndRows(id: String): LiveData<DocumentAndRows>
 
+    @Transaction
+    @Query("SELECT * from document WHERE id = :id")
+    abstract fun getDocumentAndRowsSync(id: String): DocumentAndRows
+
     @Query("SELECT * FROM document WHERE id = :id")
     abstract fun getDocument(id: String): LiveData<DctDocumentHeader>
 
