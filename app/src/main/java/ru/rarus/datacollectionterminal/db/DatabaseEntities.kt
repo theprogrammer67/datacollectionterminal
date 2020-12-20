@@ -104,6 +104,8 @@ class DocumentAndRows() {
         entity = DctDocumentRow::class
     )
     var rows: MutableList<DctDocumentRow> = ArrayList()
+    @Ignore
+    var saved: Boolean = false
 
     fun addRow(goodAndUnit: GoodAndUnit) {
         val item = rows.find { it.unit == goodAndUnit.unit.barcode }

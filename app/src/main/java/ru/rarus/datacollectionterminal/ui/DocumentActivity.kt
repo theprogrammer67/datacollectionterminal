@@ -11,10 +11,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.zxing.integration.android.IntentIntegrator
 import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.db.DctDocumentRow
+import ru.rarus.datacollectionterminal.db.DocumentAndRows
 
 
 class DocumentActivity() : AppCompatActivity() {
@@ -35,6 +37,10 @@ class DocumentActivity() : AppCompatActivity() {
 
         binding.btnScanBarcode.setOnClickListener { viewModel.scanBarcode() }
         binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
+
+        if (intent.extras != null) {
+            viewModel.getData(intent.extras?.getString(DOCUMENTID_TAG))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,10 +79,14 @@ class DocumentActivity() : AppCompatActivity() {
     fun onChangeDocument() {
         adapter.notifyDataSetChanged()
     }
+
+    fun setDocument(document: DocumentAndRows) {
+        adapter.documentRows = document.rows
+    }
 }
 
 class DocumentRowsAdapter(
-    private val documentRows: List<DctDocumentRow>,
+    var documentRows: List<DctDocumentRow>,
     private val context: Context
 ) : BaseAdapter() {
 

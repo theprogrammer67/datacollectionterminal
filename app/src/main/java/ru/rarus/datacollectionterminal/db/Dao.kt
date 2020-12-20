@@ -9,8 +9,8 @@ abstract class DctDao {
     abstract fun getDocuments(): LiveData<List<DctDocumentHeader>>
 
     @Transaction
-    @Query("SELECT * from document")
-    abstract fun getDocumentAndRows(): LiveData<List<DocumentAndRows>>
+    @Query("SELECT * from document WHERE id = :id")
+    abstract fun getDocumentAndRows(id: String): LiveData<DocumentAndRows>
 
     @Query("SELECT * FROM document WHERE id = :id")
     abstract fun getDocument(id: String): LiveData<DctDocumentHeader>
@@ -28,11 +28,24 @@ abstract class DctDao {
         insertDocumentRows(documentAndRows.rows)
     }
 
+    @Transaction
+    open suspend fun updateDocumentAndRows(documentAndRows: DocumentAndRows) {
+        deleteDocumentRows(documentAndRows.document.id)
+        updateDocument(documentAndRows.document)
+        insertDocumentRows(documentAndRows.rows)
+    }
+
+    @Update
+    abstract fun updateDocument(document: DctDocumentHeader)
+
     @Query("DELETE FROM document WHERE id = :id")
     abstract suspend fun deleteDocument(id: String)
 
     @Query("DELETE FROM document")
     abstract suspend fun deleteDocuments()
+
+    @Query("DELETE FROM document_row WHERE document = :id")
+    abstract suspend fun deleteDocumentRows(id: String)
 
     @Query("SELECT * FROM unit WHERE barcode = :barcode")
     abstract fun getUnitByBarcode(barcode: String): LiveData<Unit>
@@ -51,8 +64,7 @@ abstract class DctDao {
     abstract fun insertGood(good: Good)
 
     @Transaction
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertGoodAndUnit(goodAndUnit: GoodAndUnit) {
+    open suspend fun insertGoodAndUnit(goodAndUnit: GoodAndUnit) {
         insertGood(goodAndUnit.good)
         insertUnit(goodAndUnit.unit)
     }

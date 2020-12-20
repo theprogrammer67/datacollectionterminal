@@ -1,14 +1,17 @@
 package ru.rarus.datacollectionterminal.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentListBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentItemBinding
@@ -30,6 +33,14 @@ class DocumentListActivity : AppCompatActivity() {
 
         adapter = DocumentListAdapter(viewModel.documents, applicationContext)
         binding.lvDocuments.adapter = adapter
+
+        binding.lvDocuments.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val item = parent.getItemAtPosition(position) as DctDocumentHeader
+                val intent = Intent(this, DocumentActivity::class.java)
+                intent.putExtra(DOCUMENTID_TAG, item.id)
+                startActivity(intent)
+            }
 
         if (savedInstanceState == null) viewModel.getData()
     }

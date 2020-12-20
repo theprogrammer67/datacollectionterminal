@@ -12,7 +12,7 @@ import ru.rarus.datacollectionterminal.observeOnce
 
 class DocumentViewModel : ViewModel() {
     var activity: DocumentActivity? = null
-    val document = DocumentAndRows()
+    var document = DocumentAndRows()
 
     fun scanBarcode() {
         // По-умолчанию используем zxing сканер
@@ -55,9 +55,24 @@ class DocumentViewModel : ViewModel() {
 
     fun saveDocument() {
         GlobalScope.launch {
-            App.database.dctDao().insertDocumentAndRows(document)
-            document.clear()
-            withContext(Dispatchers.Main) { activity!!.onChangeDocument() }
+            if (document.saved)
+                App.database.dctDao().updateDocumentAndRows(document)
+            else
+                App.database.dctDao().insertDocumentAndRows(document)
+
+            document.saved = true
+            withContext(Dispatchers.Main) { App.showMessage("Документ сохранен") }
         }
+    }
+
+    fun getData(documentId: String?) {
+        if (documentId == null) return
+
+        val liveData = App.database.dctDao().getDocumentAndRows(documentId)
+        liveData.observe(activity!!, {
+            it?.saved = true
+            document = it ?: DocumentAndRows()
+            activity!!.setDocument(document)
+        })
     }
 }
