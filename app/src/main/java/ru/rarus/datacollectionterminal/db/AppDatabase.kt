@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun dctDao(): DctDao
+    abstract fun getDao(): DctDao
 
     companion object {
         private var instance: AppDatabase? = null

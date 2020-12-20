@@ -4,7 +4,7 @@ import android.content.pm.PackageInfo
 import android.os.Build
 import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
-import ru.rarus.datacollectionterminal.db.TestData
+import ru.rarus.datacollectionterminal.db.DctDocumentHeader
 
 class Handlers(private val server: RestServer) {
 
@@ -21,7 +21,7 @@ class Handlers(private val server: RestServer) {
                 hardInfo.append("Производитель: " + Build.MANUFACTURER + "</br>")
                 hardInfo.append("Плата: " + Build.BOARD + "</br>")
                 hardInfo.append("Марка: " + Build.BRAND + "</br>")
-                hardInfo.append("Серийный номер: " + Build.SERIAL + "</br>");
+                hardInfo.append("Серийный номер: " + Build.SERIAL + "</br>")
 
                 val softInfo = StringBuffer()
                 try {
@@ -46,13 +46,16 @@ class Handlers(private val server: RestServer) {
         }
     }
 
-    // test endpoint
-    @RequestHandler("/test")
-    val testHandler = HttpHandler { exchange ->
+    // documents endpoint
+    @RequestHandler("/document")
+    val documentHandler = HttpHandler { exchange ->
         when (exchange!!.requestMethod) {
             "GET" -> {
-                val data = TestData(exchange.requestURI.getFileName(), 123, "Test123")
-                server.sendResponse<TestData>(exchange, data)
+                val documentID = exchange.requestURI.getFileName()
+                if (documentID == "") {
+                    val documents = App.database.getDao().getDocumentsSync()
+                    server.sendResponse<List<DctDocumentHeader>>(exchange, documents)
+                }
             }
         }
     }

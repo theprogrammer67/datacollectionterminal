@@ -11,7 +11,7 @@ class DocumentListViewModel() : ViewModel() {
     fun getData() {
         if (activity == null) return
 
-        val liveData = App.database.dctDao().getDocuments()
+        val liveData = App.database.getDao().getDocuments()
         liveData.observe(activity!!, {
             documents = it ?: ArrayList()
             activity!!.setDocumentList(documents)

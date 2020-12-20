@@ -8,6 +8,9 @@ abstract class DctDao {
     @Query("SELECT * FROM document ORDER BY date ASC")
     abstract fun getDocuments(): LiveData<List<DctDocumentHeader>>
 
+    @Query("SELECT * FROM document ORDER BY date ASC")
+    abstract fun getDocumentsSync(): List<DctDocumentHeader>
+
     @Transaction
     @Query("SELECT * from document WHERE id = :id")
     abstract fun getDocumentAndRows(id: String): LiveData<DocumentAndRows>

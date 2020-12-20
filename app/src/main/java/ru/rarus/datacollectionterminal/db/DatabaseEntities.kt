@@ -137,9 +137,3 @@ class GoodAndUnit() {
         this.unit = Unit(barcode, good, true)
     }
 }
-
-data class TestData(
-    val id: String,
-    val number: Int,
-    val string: String,
-)

@@ -23,7 +23,7 @@ class DocumentViewModel : ViewModel() {
     fun onScanBarcode(barcodeData: String) {
         if (activity == null) return
 
-        val dao = App.database.dctDao()
+        val dao = App.database.getDao()
         val goodAndUnit = dao.getGoodAndUnitByBarcode(barcodeData)
         goodAndUnit.observeOnce(activity!!, {
             if (it == null)
@@ -43,7 +43,7 @@ class DocumentViewModel : ViewModel() {
         App.showMessage("Штрихкод не найден")
         val goodAndUnit = GoodAndUnit(barcodeData)
         GlobalScope.launch {
-            App.database.dctDao().insertGoodAndUnit(goodAndUnit)
+            App.database.getDao().insertGoodAndUnit(goodAndUnit)
             withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit) }
         }
     }
@@ -56,9 +56,9 @@ class DocumentViewModel : ViewModel() {
     fun saveDocument() {
         GlobalScope.launch {
             if (document.saved)
-                App.database.dctDao().updateDocumentAndRows(document)
+                App.database.getDao().updateDocumentAndRows(document)
             else
-                App.database.dctDao().insertDocumentAndRows(document)
+                App.database.getDao().insertDocumentAndRows(document)
 
             document.saved = true
             withContext(Dispatchers.Main) { App.showMessage("Документ сохранен") }
@@ -68,7 +68,7 @@ class DocumentViewModel : ViewModel() {
     fun getData(documentId: String?) {
         if (documentId == null) return
 
-        val liveData = App.database.dctDao().getDocumentAndRows(documentId)
+        val liveData = App.database.getDao().getDocumentAndRows(documentId)
         liveData.observe(activity!!, {
             it?.saved = true
             document = it ?: DocumentAndRows()
