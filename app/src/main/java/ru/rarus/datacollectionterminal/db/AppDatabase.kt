@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [DctDocumentHeader::class, DctDocumentRow::class, Good::class, Unit::class],
+    entities = [DocumentHeader::class, DocumentRow::class, Good::class, Unit::class],
     version = 1,
     exportSchema = false
 )

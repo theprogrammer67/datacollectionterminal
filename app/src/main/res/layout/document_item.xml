@@ -6,7 +6,7 @@
 
         <variable
             name="dctDocument"
-            type="ru.rarus.datacollectionterminal.db.DctDocumentHeader" />
+            type="ru.rarus.datacollectionterminal.db.DocumentHeader" />
         <variable
             name="docDate"
             type="String" />

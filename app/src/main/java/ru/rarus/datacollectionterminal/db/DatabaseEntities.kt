@@ -5,7 +5,7 @@ import java.util.*
 
 
 @Entity(tableName = "document")
-class DctDocumentHeader() {
+class DocumentHeader() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
     var number: String = ""
@@ -13,26 +13,17 @@ class DctDocumentHeader() {
     var source: Int = 0
     var state: Int = 0
     var description: String = "Новый документ"
-
-    fun clear() {
-        id = UUID.randomUUID().toString()
-        number = ""
-        date = 0
-        source = 0
-        state = 0
-        description = ""
-    }
 }
 
 @Entity(
     tableName = "document_row", foreignKeys = [ForeignKey(
-        entity = DctDocumentHeader::class,
+        entity = DocumentHeader::class,
         parentColumns = ["id"],
         childColumns = ["document"],
         onDelete = ForeignKey.CASCADE
     )]
 )
-open class DctDocumentRow() {
+open class DocumentRow() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
 
@@ -43,23 +34,6 @@ open class DctDocumentRow() {
     var quantityDoc: Double = 0.0
     var quantityActual: Double = 0.0
     var difference: Double = 0.0
-
-//    // additional fields
-//    @Ignore
-//    @Expose
-//    var isSelected = false
-//    @Ignore
-//    var goodName = ""
-//    @Ignore
-//    var unitName = ""
-//
-//    constructor(goodAndUnit: GoodAndUnit, documentId: String) : this() {
-//        document = documentId
-//        goodName = goodAndUnit.good.name
-//        unitName = goodAndUnit.unit.name
-//        unit = goodAndUnit.unit.barcode
-//        quantityActual = 1.0
-//    }
 }
 
 @Entity(tableName = "good")
@@ -95,34 +69,7 @@ class Unit() {
     }
 }
 
-//class DocumentAndRows() {
-//    @Embedded
-//    var document: DctDocumentHeader = DctDocumentHeader()
-//
-//    @Relation(
-//        parentColumn = "id",
-//        entityColumn = "document",
-//        entity = DctDocumentRow::class
-//    )
-//    var rows: MutableList<DctDocumentRow> = ArrayList()
-//
-//    @Ignore
-//    @Expose
-//    var saved: Boolean = false
-//
-//    fun addRow(goodAndUnit: GoodAndUnit) {
-//        val item = rows.find { it.unit == goodAndUnit.unit.barcode }
-//        if (item != null)
-//            item.quantityActual += 1
-//        else
-//            rows.add(DctDocumentRow(goodAndUnit, document.id))
-//    }
-//
-//    constructor(document: DctDocumentHeader, rows: List<DctDocumentRow>) : this() {
-//        this.document = document
-//        this.rows = rows.toMutableList()
-//    }
-//}
+/* additional classes */
 
 class GoodAndUnit() {
     @Embedded
@@ -142,7 +89,7 @@ class GoodAndUnit() {
 }
 
 class ViewDocument() {
-    var document: DctDocumentHeader = DctDocumentHeader()
+    var document: DocumentHeader = DocumentHeader()
     var rows: MutableList<ViewDocumentRow> = ArrayList()
     var saved: Boolean = false
 
@@ -154,19 +101,19 @@ class ViewDocument() {
             rows.add(ViewDocumentRow(goodAndUnit, document.id))
     }
 
-    constructor(document: DctDocumentHeader, rows: List<ViewDocumentRow>): this() {
+    constructor(document: DocumentHeader, rows: List<ViewDocumentRow>): this() {
         this.document = document
         this.rows = rows.toMutableList()
     }
-//    val subList: List<ViewDocumentRow> = listOf(ViewDocumentRow())
-//    var baseList: List<DctDocumentRow> = subList
 }
 
-class ViewDocumentRow() : DctDocumentRow() {
+class ViewDocumentRow() : DocumentRow() {
     var good = ""
     var goodName = ""
     var unitName = ""
+
     @Ignore
+    @Transient
     var isSelected = false
 
     constructor(goodAndUnit: GoodAndUnit, documentId: String) : this() {

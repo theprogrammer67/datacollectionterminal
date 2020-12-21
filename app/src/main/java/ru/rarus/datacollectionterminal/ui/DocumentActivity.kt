@@ -15,7 +15,7 @@ import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
-import ru.rarus.datacollectionterminal.db.DctDocumentRow
+import ru.rarus.datacollectionterminal.db.DocumentRow
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 
@@ -87,7 +87,7 @@ class DocumentActivity() : AppCompatActivity() {
 }
 
 class DocumentRowsAdapter(
-    var documentRows: List<DctDocumentRow>,
+    var documentRows: List<DocumentRow>,
     private val context: Context
 ) : BaseAdapter() {
 

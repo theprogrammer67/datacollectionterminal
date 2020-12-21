@@ -4,7 +4,7 @@ import android.content.pm.PackageInfo
 import android.os.Build
 import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
-import ru.rarus.datacollectionterminal.db.DctDocumentHeader
+import ru.rarus.datacollectionterminal.db.DocumentHeader
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 
 
@@ -68,7 +68,7 @@ class Handlers(private val server: RestServer) {
                 val documentID = exchange.requestURI.getFileName()
                 if (documentID == "") {
                     val documents = App.database.getDao().getDocumentsSync()
-                    server.sendResponse<List<DctDocumentHeader>>(exchange, documents)
+                    server.sendResponse<List<DocumentHeader>>(exchange, documents)
                 } else {
                     val document = App.database.getDao().getViewDocumentRowsSync(documentID)
                     if (document != null)

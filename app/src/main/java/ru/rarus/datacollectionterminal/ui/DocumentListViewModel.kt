@@ -2,11 +2,11 @@ package ru.rarus.datacollectionterminal.ui
 
 import androidx.lifecycle.ViewModel
 import ru.rarus.datacollectionterminal.App
-import ru.rarus.datacollectionterminal.db.DctDocumentHeader
+import ru.rarus.datacollectionterminal.db.DocumentHeader
 
 class DocumentListViewModel() : ViewModel() {
     var activity: DocumentListActivity? = null
-    var documents: List<DctDocumentHeader> = ArrayList()
+    var documents: List<DocumentHeader> = ArrayList()
 
     fun getData() {
         if (activity == null) return

@@ -1,5 +1,6 @@
 package ru.rarus.datacollectionterminal.ui
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -54,24 +55,32 @@ class DocumentViewModel : ViewModel() {
     }
 
     fun saveDocument() {
-//        GlobalScope.launch {
-//            if (document.saved)
-//                App.database.getDao().updateDocumentAndRows(document)
-//            else
-//                App.database.getDao().insertDocumentAndRows(document)
-//
-//            document.saved = true
-//            withContext(Dispatchers.Main) { App.showMessage("Документ сохранен") }
-//        }
+        GlobalScope.launch {
+            if (document.saved)
+                App.database.getDao().updateViewDocument(document)
+            else
+                App.database.getDao().insertViewDocument(document)
+
+            document.saved = true
+            withContext(Dispatchers.Main) { App.showMessage("Документ сохранен") }
+        }
     }
 
     fun getData(documentId: String?) {
         if (documentId == null) return
+
+        val liveData = MutableLiveData<ViewDocument>()
         GlobalScope.launch {
-            var document = App.database.getDao().getViewDocument(documentId)
-            if (document == null) document = ViewDocument()
-            document.saved = true
-            withContext(Dispatchers.Main) { activity!!.setDocument(document) }
+            val document = App.database.getDao().getViewDocument(documentId)
+            liveData.postValue(document)
         }
+
+        liveData.observeOnce(activity!!, {
+            if (it != null) {
+                document = it
+                document.saved = true
+                activity!!.setDocument(document)
+            }
+        })
     }
 }

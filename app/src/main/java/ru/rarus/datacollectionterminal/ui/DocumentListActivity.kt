@@ -15,7 +15,7 @@ import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentListBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentItemBinding
-import ru.rarus.datacollectionterminal.db.DctDocumentHeader
+import ru.rarus.datacollectionterminal.db.DocumentHeader
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,7 +36,7 @@ class DocumentListActivity : AppCompatActivity() {
 
         binding.lvDocuments.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
-                val item = parent.getItemAtPosition(position) as DctDocumentHeader
+                val item = parent.getItemAtPosition(position) as DocumentHeader
                 val intent = Intent(this, DocumentActivity::class.java)
                 intent.putExtra(DOCUMENTID_TAG, item.id)
                 startActivity(intent)
@@ -45,13 +45,13 @@ class DocumentListActivity : AppCompatActivity() {
         if (savedInstanceState == null) viewModel.getData()
     }
 
-    fun setDocumentList(documents: List<DctDocumentHeader>) {
+    fun setDocumentList(documents: List<DocumentHeader>) {
         adapter.documents = documents
     }
 }
 
 class DocumentListAdapter(
-    var documents: List<DctDocumentHeader>,
+    var documents: List<DocumentHeader>,
     private val context: Context
 ) : BaseAdapter() {
 
@@ -67,12 +67,12 @@ class DocumentListAdapter(
         if (convertView == null) {
             binding = DocumentItemBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
-            val currentItem = getItem(position) as DctDocumentHeader
+            val currentItem = getItem(position) as DocumentHeader
             binding.docDate = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date(currentItem.date))
         } else
             binding = convertView.tag as DocumentItemBinding
 
-        binding.dctDocument = getItem(position) as DctDocumentHeader
+        binding.dctDocument = getItem(position) as DocumentHeader
 
         return binding.root
     }
