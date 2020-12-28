@@ -1,4 +1,4 @@
-package ru.rarus.datacollectionterminal.ui
+package ru.rarus.datacollectionterminal.ui.document
 
 import android.content.Context
 import android.content.Intent
@@ -18,6 +18,7 @@ import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.db.DocumentRow
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
+import ru.rarus.datacollectionterminal.ui.ScannerCaptureActivity
 
 
 class DocumentActivity() : AppCompatActivity() {

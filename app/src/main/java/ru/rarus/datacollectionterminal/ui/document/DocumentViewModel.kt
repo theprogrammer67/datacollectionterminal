@@ -1,11 +1,6 @@
-package ru.rarus.datacollectionterminal.ui
+package ru.rarus.datacollectionterminal.ui.document
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.ViewDocument
@@ -14,6 +9,7 @@ import ru.rarus.datacollectionterminal.observeOnce
 class DocumentViewModel : ViewModel() {
     var activity: DocumentActivity? = null
     var document = ViewDocument()
+    var model = DocumentModel()
 
     fun scanBarcode() {
         // По-умолчанию используем zxing сканер
@@ -24,9 +20,7 @@ class DocumentViewModel : ViewModel() {
     fun onScanBarcode(barcodeData: String) {
         if (activity == null) return
 
-        val dao = App.database.getDao()
-        val goodAndUnit = dao.getGoodAndUnitByBarcode(barcodeData)
-        goodAndUnit.observeOnce(activity!!, {
+        model.getGoodAndUnitByBarcode(barcodeData).observeOnce(activity!!, {
             if (it == null)
                 onBarcodeNotFound(barcodeData)
             else
@@ -42,11 +36,7 @@ class DocumentViewModel : ViewModel() {
     private fun onBarcodeNotFound(barcodeData: String) {
         // Здесь в зависимости от настроек или добавляем или ругаемся
         App.showMessage("Штрихкод не найден")
-        val goodAndUnit = GoodAndUnit(barcodeData)
-        GlobalScope.launch {
-            App.database.getDao().insertGoodAndUnit(goodAndUnit)
-            withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit) }
-        }
+        model.insertGoodAndUnit(GoodAndUnit(barcodeData)) { addDocumentRow(it) }
     }
 
     fun deleteSelectedRows() {
@@ -55,27 +45,16 @@ class DocumentViewModel : ViewModel() {
     }
 
     fun saveDocument() {
-        GlobalScope.launch {
-            if (document.saved)
-                App.database.getDao().updateViewDocument(document)
-            else
-                App.database.getDao().insertViewDocument(document)
-
-            document.saved = true
-            withContext(Dispatchers.Main) { App.showMessage("Документ сохранен") }
+        model.saveDocument(document) {
+            it.saved = true
+            App.showMessage("Документ сохранен")
         }
     }
 
     fun getData(documentId: String?) {
         if (documentId == null) return
 
-        val liveData = MutableLiveData<ViewDocument>()
-        GlobalScope.launch {
-            val document = App.database.getDao().getViewDocument(documentId)
-            liveData.postValue(document)
-        }
-
-        liveData.observeOnce(activity!!, {
+        model.getData(documentId).observeOnce(activity!!, {
             if (it != null) {
                 document = it
                 document.saved = true

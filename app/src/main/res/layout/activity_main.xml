@@ -29,6 +29,14 @@
                 android:layout_height="wrap_content"
                 android:padding="20dp"
                 android:text="Список документов" />
+
+            <Button
+                android:id="@+id/btnGoods"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="Номенклатура" />
+
             <Button
                 android:id="@+id/btnSettings"
                 android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package ru.rarus.datacollectionterminal.ui
+package ru.rarus.datacollectionterminal.ui.documentlist
 
 import androidx.lifecycle.ViewModel
 import ru.rarus.datacollectionterminal.App

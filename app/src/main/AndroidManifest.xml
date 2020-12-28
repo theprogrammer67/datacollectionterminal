@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DataCollectionTerminal">
         <activity
-            android:name=".ui.DocumentListActivity"
+            android:name=".ui.documentlist.DocumentListActivity"
             android:label="Список документов" />
         <activity
             android:name=".ui.ScannerCaptureActivity"
@@ -23,7 +23,7 @@
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".ui.DocumentActivity"
+            android:name=".ui.document.DocumentActivity"
             android:label="Документ" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>

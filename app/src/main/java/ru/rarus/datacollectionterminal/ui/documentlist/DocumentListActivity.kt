@@ -1,4 +1,4 @@
-package ru.rarus.datacollectionterminal.ui
+package ru.rarus.datacollectionterminal.ui.documentlist
 
 import android.content.Context
 import android.content.Intent
@@ -16,6 +16,7 @@ import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentListBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentItemBinding
 import ru.rarus.datacollectionterminal.db.DocumentHeader
+import ru.rarus.datacollectionterminal.ui.document.DocumentActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
