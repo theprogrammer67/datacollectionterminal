@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="dctDocument"
+            type="ru.rarus.datacollectionterminal.db.DocumentHeader" />
+        <variable
+            name="docDate"
+            type="String" />
+    </data>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow android:padding="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/caption_docnum" />
+
+            <EditText
+                android:id="@+id/docnum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@{dctDocument.number}"
+                android:hint="@string/caption_docnum"
+                android:importantForAutofill="no"
+                android:inputType="number" />
+        </TableRow>
+    </TableLayout>
+
+
+</layout>

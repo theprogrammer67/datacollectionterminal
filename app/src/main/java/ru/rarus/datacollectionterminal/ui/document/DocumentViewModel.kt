@@ -1,15 +1,21 @@
 package ru.rarus.datacollectionterminal.ui.document
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.ViewDocument
+import ru.rarus.datacollectionterminal.notifyObserver
 import ru.rarus.datacollectionterminal.observeOnce
 
 class DocumentViewModel : ViewModel() {
     var activity: DocumentActivity? = null
-    var document = ViewDocument()
+    var document = MutableLiveData<ViewDocument>()
     var model = DocumentModel()
+
+    init {
+        document.value = ViewDocument()
+    }
 
     fun scanBarcode() {
         // По-умолчанию используем zxing сканер
@@ -29,8 +35,8 @@ class DocumentViewModel : ViewModel() {
     }
 
     private fun addDocumentRow(goodAndUnit: GoodAndUnit) {
-        document.addRow(goodAndUnit)
-        activity!!.onChangeDocument()
+        document.value?.addRow(goodAndUnit)
+        document.notifyObserver()
     }
 
     private fun onBarcodeNotFound(barcodeData: String) {
@@ -40,15 +46,19 @@ class DocumentViewModel : ViewModel() {
     }
 
     fun deleteSelectedRows() {
-        document.rows.filter { it.isSelected }.forEach { document.rows.remove(it) }
-        activity!!.onChangeDocument()
+        if (document.value != null) {
+            document.value!!.rows.filter { it.isSelected }
+                .forEach { document.value!!.rows.remove(it) }
+            document.notifyObserver()
+        }
     }
 
     fun saveDocument() {
-        model.saveDocument(document) {
-            it.saved = true
-            App.showMessage("Документ сохранен")
-        }
+        if (document.value != null)
+            model.saveDocument(document.value!!) {
+                it.saved = true
+                App.showMessage("Документ сохранен")
+            }
     }
 
     fun getData(documentId: String?) {
@@ -56,9 +66,8 @@ class DocumentViewModel : ViewModel() {
 
         model.getData(documentId).observeOnce(activity!!, {
             if (it != null) {
-                document = it
-                document.saved = true
-                activity!!.setDocument(document)
+                it.saved = true
+                document.value = it
             }
         })
     }

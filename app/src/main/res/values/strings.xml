@@ -5,4 +5,9 @@
     <string name="action_delete_selected">Удалить выбранные</string>
     <string name="caption_save">Сохранить</string>
     <string name="caption_scanner">Сканер</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="caption_docnum">Номер документа</string>
+    <string name="caption_docrows">Строки документа</string>
+    <string name="caption_docheader">Шапка документа</string>
 </resources>
