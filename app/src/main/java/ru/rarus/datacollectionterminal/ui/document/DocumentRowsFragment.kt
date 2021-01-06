@@ -48,6 +48,7 @@ class DocumentRowsFragment : Fragment() {
 
 class DocumentRowsAdapter(private val context: Context?) : BaseAdapter() {
     var documentRows: List<DocumentRow> = ArrayList()
+    var selectedRow: Int = -1
 
     override fun getCount(): Int = documentRows.size
 
@@ -59,15 +60,29 @@ class DocumentRowsAdapter(private val context: Context?) : BaseAdapter() {
         val binding: DocumentRowBinding
 
         if (convertView == null) {
+            val viewDocumentRow = getItem(position) as ViewDocumentRow
             binding = DocumentRowBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
             binding.chbSelected.setOnClickListener {
-                (getItem(position) as ViewDocumentRow).isSelected = (it as CheckBox).isChecked
+                viewDocumentRow.isSelected = (it as CheckBox).isChecked
             }
+            binding.rowMaster.setOnClickListener {
+                selectedRow = if (selectedRow == position)
+                    -1
+                else
+                    position
+                notifyDataSetChanged()
+            }
+
+            binding.lyEditQuantity.tvQuantity.text = viewDocumentRow.quantityActual.toString()
         } else
             binding = convertView.tag as DocumentRowBinding
 
         binding.viewDocumentRow = getItem(position) as ViewDocumentRow
+        if (position == selectedRow)
+            binding.rowDetail.visibility = View.VISIBLE
+        else
+            binding.rowDetail.visibility = View.GONE
 
         return binding.root
     }
