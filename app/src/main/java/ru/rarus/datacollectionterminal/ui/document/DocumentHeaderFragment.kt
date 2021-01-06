@@ -4,20 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import ru.rarus.datacollectionterminal.R
+import ru.rarus.datacollectionterminal.databinding.FragmentDocumentHeaderBinding
 
 
 class DocumentHeaderFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var binding: FragmentDocumentHeaderBinding
+    private lateinit var viewModel: DocumentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_document_header, container, false)
+    ): View {
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_document_header, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity()).get(DocumentViewModel::class.java)
     }
 }

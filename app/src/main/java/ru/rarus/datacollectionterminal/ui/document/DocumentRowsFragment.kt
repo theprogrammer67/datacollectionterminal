@@ -9,18 +9,18 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentRowsBinding
 import ru.rarus.datacollectionterminal.db.DocumentRow
-import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 
 
 class DocumentRowsFragment : Fragment() {
     private lateinit var binding: FragmentDocumentRowsBinding
     private lateinit var adapter: DocumentRowsAdapter
+    private lateinit var viewModel: DocumentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,24 +29,25 @@ class DocumentRowsFragment : Fragment() {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_document_rows, container, false)
 
-        adapter = DocumentRowsAdapter((activity as DocumentActivity).viewModel.document, this)
+        adapter = DocumentRowsAdapter(this.context)
         binding.lvRows.adapter = adapter
 
         return binding.root
     }
-}
 
-class DocumentRowsAdapter() : BaseAdapter() {
-    private var context: Context? = null
-    private var documentRows: List<DocumentRow> = ArrayList()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity()).get(DocumentViewModel::class.java)
 
-    constructor(document: LiveData<ViewDocument>, fragment: Fragment) : this() {
-        this.context = fragment.context
-        document.observe(fragment, {
-            documentRows = it.rows
-            notifyDataSetChanged()
+        viewModel.document.observe(this, {
+            adapter.documentRows = it.rows
+            adapter.notifyDataSetChanged()
         })
     }
+}
+
+class DocumentRowsAdapter(private val context: Context?) : BaseAdapter() {
+    var documentRows: List<DocumentRow> = ArrayList()
 
     override fun getCount(): Int = documentRows.size
 
