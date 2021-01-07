@@ -58,9 +58,9 @@ class DocumentRowsAdapter(private val context: Context?) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding: DocumentRowBinding
+        val viewDocumentRow = getItem(position) as ViewDocumentRow
 
         if (convertView == null) {
-            val viewDocumentRow = getItem(position) as ViewDocumentRow
             binding = DocumentRowBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
             binding.chbSelected.setOnClickListener {
@@ -73,12 +73,18 @@ class DocumentRowsAdapter(private val context: Context?) : BaseAdapter() {
                     position
                 notifyDataSetChanged()
             }
-
-            binding.lyEditQuantity.tvQuantity.text = viewDocumentRow.quantityActual.toString()
+            binding.lyEditQuantity.btnDec.setOnClickListener {
+                viewDocumentRow.quantityActual--
+                notifyDataSetChanged()
+            }
+            binding.lyEditQuantity.btnInc.setOnClickListener {
+                viewDocumentRow.quantityActual++
+                notifyDataSetChanged()
+            }
         } else
             binding = convertView.tag as DocumentRowBinding
 
-        binding.viewDocumentRow = getItem(position) as ViewDocumentRow
+        binding.viewDocumentRow = viewDocumentRow
         if (position == selectedRow)
             binding.rowDetail.visibility = View.VISIBLE
         else

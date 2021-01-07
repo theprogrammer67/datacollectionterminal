@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewDocumentRow"
+            type="ru.rarus.datacollectionterminal.db.ViewDocumentRow" />
+    </data>
+
     <LinearLayout
         android:id="@+id/edit_count"
         android:layout_width="wrap_content"
@@ -25,6 +32,7 @@
             android:background="@color/white"
             android:gravity="center"
             android:textSize="16dp"
+            android:text="@{String.valueOf(viewDocumentRow.quantityActual)}"
             tools:text="32" />
 
         <Button
