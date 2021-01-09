@@ -10,4 +10,7 @@
     <string name="caption_docnum">Номер документа</string>
     <string name="caption_docrows">Строки документа</string>
     <string name="caption_docheader">Шапка документа</string>
+    <string name="caption_docdate">Дата документа</string>
+    <string name="caption_docdescription">Описание документа</string>
+    <string name="caption_docid">Идентификатор документа</string>
 </resources>

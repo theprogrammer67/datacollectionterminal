@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentHeaderBinding
+import java.text.SimpleDateFormat
 
 
 class DocumentHeaderFragment : Fragment() {
@@ -27,5 +28,11 @@ class DocumentHeaderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(DocumentViewModel::class.java)
+
+        if (viewModel.document.value != null) {
+            binding.dctDocument = viewModel.document.value!!.document
+            binding.docDate =
+                SimpleDateFormat("dd.MM.yyyy HH:mm").format(viewModel.document.value!!.document.date)
+        }
     }
 }

@@ -32,7 +32,7 @@ class DocumentListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(DocumentListViewModel::class.java)
         viewModel.activity = this
 
-        adapter = DocumentListAdapter(viewModel.documents, applicationContext)
+        adapter = DocumentListAdapter(applicationContext)
         binding.lvDocuments.adapter = adapter
 
         binding.lvDocuments.onItemClickListener =
@@ -43,18 +43,19 @@ class DocumentListActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-        if (savedInstanceState == null) viewModel.getData()
-    }
+        viewModel.documents.observe(this, {
+            adapter.documents = it
+            adapter.notifyDataSetChanged()
+        })
 
-    fun setDocumentList(documents: List<DocumentHeader>) {
-        adapter.documents = documents
+        if (savedInstanceState == null) viewModel.getData()
     }
 }
 
 class DocumentListAdapter(
-    var documents: List<DocumentHeader>,
     private val context: Context
 ) : BaseAdapter() {
+    var documents: List<DocumentHeader> = ArrayList()
 
     override fun getCount(): Int = documents.size
 

@@ -2,9 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="dctDocument"
             type="ru.rarus.datacollectionterminal.db.DocumentHeader" />
+
         <variable
             name="docDate"
             type="String" />
@@ -12,14 +14,35 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TableRow android:padding="5dp">
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:layout_weight="1"
+                android:text="@string/caption_docid" />
+
+            <EditText
+                android:id="@+id/docid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="@string/caption_docid"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:text="@{dctDocument.id}" />
+        </TableRow>
+
+        <TableRow android:padding="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text="@string/caption_docnum" />
 
             <EditText
@@ -27,10 +50,50 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="@{dctDocument.number}"
                 android:hint="@string/caption_docnum"
                 android:importantForAutofill="no"
-                android:inputType="number" />
+                android:inputType="number"
+                android:text="@={dctDocument.number}" />
+        </TableRow>
+
+        <TableRow android:padding="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/caption_docdate" />
+
+            <EditText
+                android:id="@+id/docdate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="@string/caption_docdate"
+                android:importantForAutofill="no"
+                android:inputType="date"
+                android:text="@{docDate}" />
+        </TableRow>
+
+        <TableRow android:padding="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/caption_docdescription" />
+
+            <EditText
+                android:id="@+id/docdescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="@string/caption_docdescription"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:text="@={dctDocument.description}" />
         </TableRow>
     </TableLayout>
 
