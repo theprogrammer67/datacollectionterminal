@@ -20,6 +20,7 @@
                 android:id="@+id/btnDocument"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:padding="20dp"
                 android:text="Новый документ" />
 
@@ -27,6 +28,7 @@
                 android:id="@+id/btnDocumentList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:padding="20dp"
                 android:text="Список документов" />
 
@@ -34,6 +36,7 @@
                 android:id="@+id/btnGoods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:padding="20dp"
                 android:text="Номенклатура" />
 
@@ -41,6 +44,7 @@
                 android:id="@+id/btnSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:padding="20dp"
                 android:text="Настройки" />
 

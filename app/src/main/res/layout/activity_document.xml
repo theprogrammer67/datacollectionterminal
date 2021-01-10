@@ -40,7 +40,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:padding="10dp"
             android:orientation="horizontal">
 
@@ -55,21 +55,22 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:paddingLeft="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:paddingBottom="5dp"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnClear"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_button"
                         app:backgroundTint="@null"
@@ -78,7 +79,7 @@
                     <Button
                         android:id="@+id/btnDeleteSelected"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_button"
                         app:backgroundTint="@null"
@@ -88,14 +89,15 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:paddingTop="5dp"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnContinuousScanning"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_button"
                         app:backgroundTint="@null"
@@ -104,7 +106,7 @@
                     <Button
                         android:id="@+id/btnSaveDocument"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_button"
                         app:backgroundTint="@null"
