@@ -33,7 +33,7 @@
                 android:text="Список документов" />
 
             <Button
-                android:id="@+id/btnGoods"
+                android:id="@+id/btnGoodList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"

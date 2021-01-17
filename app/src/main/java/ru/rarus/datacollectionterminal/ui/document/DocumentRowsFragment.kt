@@ -63,6 +63,7 @@ class DocumentRowsAdapter(private val context: Context?) : BaseAdapterEx() {
         if (convertView == null) {
             binding = DocumentRowBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
+
             binding.chbSelected.setOnClickListener {
                 viewDocumentRow.isSelected = (it as CheckBox).isChecked
             }
@@ -81,6 +82,7 @@ class DocumentRowsAdapter(private val context: Context?) : BaseAdapterEx() {
                 viewDocumentRow.quantityActual++
                 notifyDataSetChanged()
             }
+
             setItemBgColor(position, binding.root)
         } else
             binding = convertView.tag as DocumentRowBinding

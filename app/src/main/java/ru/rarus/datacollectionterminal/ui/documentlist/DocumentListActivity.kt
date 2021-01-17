@@ -30,7 +30,6 @@ class DocumentListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_document_list)
 
         viewModel = ViewModelProvider(this).get(DocumentListViewModel::class.java)
-        viewModel.activity = this
 
         adapter = DocumentListAdapter(applicationContext)
         binding.lvDocuments.adapter = adapter
@@ -48,7 +47,7 @@ class DocumentListActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         })
 
-        if (savedInstanceState == null) viewModel.getData()
+        if (savedInstanceState == null) viewModel.getData(this)
     }
 }
 
@@ -61,21 +60,20 @@ class DocumentListAdapter(
 
     override fun getItem(position: Int): Any = documents[position]
 
-    override fun getItemId(position: Int): Long = position.toLong()
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding: DocumentItemBinding
 
         if (convertView == null) {
             binding = DocumentItemBinding.inflate(LayoutInflater.from(context), parent, false)
             binding.root.tag = binding
-            val currentItem = getItem(position) as DocumentHeader
-            binding.docDate = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date(currentItem.date))
+
             setItemBgColor(position, binding.root)
         } else
             binding = convertView.tag as DocumentItemBinding
 
-        binding.dctDocument = getItem(position) as DocumentHeader
+        val currentItem = getItem(position) as DocumentHeader
+        binding.dctDocument = currentItem
+        binding.docDate = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date(currentItem.date))
 
         return binding.root
     }

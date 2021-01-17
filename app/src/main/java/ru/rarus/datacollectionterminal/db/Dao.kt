@@ -87,4 +87,7 @@ abstract class DctDao {
         insertGood(goodAndUnit.good)
         insertUnit(goodAndUnit.unit)
     }
+
+    @Query("SELECT * FROM good ORDER BY name ASC")
+    abstract fun getGoods(): LiveData<List<Good>>
 }

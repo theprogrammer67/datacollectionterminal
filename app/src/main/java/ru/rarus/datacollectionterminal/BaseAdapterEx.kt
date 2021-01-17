@@ -8,6 +8,8 @@ abstract class BaseAdapterEx : BaseAdapter() {
     var evenBgColor: Int = Color.parseColor("#C0DAFF")
     var oddBgColor: Int = Color.parseColor("#DAE8FC")
 
+    override fun getItemId(position: Int): Long = position.toLong()
+
     fun setItemBgColor(position: Int, itemView: View) {
         if (position % 2 == 0) // Раскрасим фон
             itemView.setBackgroundColor(evenBgColor)

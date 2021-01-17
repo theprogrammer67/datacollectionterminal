@@ -7,6 +7,7 @@ import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.databinding.ActivityMainBinding
 import ru.rarus.datacollectionterminal.ui.document.DocumentActivity
 import ru.rarus.datacollectionterminal.ui.documentlist.DocumentListActivity
+import ru.rarus.datacollectionterminal.ui.goodlist.GoodListActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +25,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnDocumentList.setOnClickListener {
             startActivity(Intent(this, DocumentListActivity::class.java))
+        }
+
+        binding.btnGoodList.setOnClickListener {
+            startActivity(Intent(this, GoodListActivity::class.java))
         }
 
         binding.swServerStart.isChecked = App.restserver.started
