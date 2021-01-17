@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.CheckBox
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import ru.rarus.datacollectionterminal.BaseAdapterEx
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentRowsBinding
@@ -46,7 +46,7 @@ class DocumentRowsFragment : Fragment() {
     }
 }
 
-class DocumentRowsAdapter(private val context: Context?) : BaseAdapter() {
+class DocumentRowsAdapter(private val context: Context?) : BaseAdapterEx() {
     var documentRows: List<DocumentRow> = ArrayList()
     var selectedRow: Int = -1
 
@@ -81,6 +81,7 @@ class DocumentRowsAdapter(private val context: Context?) : BaseAdapter() {
                 viewDocumentRow.quantityActual++
                 notifyDataSetChanged()
             }
+            setItemBgColor(position, binding.root)
         } else
             binding = convertView.tag as DocumentRowBinding
 

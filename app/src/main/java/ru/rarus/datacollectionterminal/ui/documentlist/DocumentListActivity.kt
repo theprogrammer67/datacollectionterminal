@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import ru.rarus.datacollectionterminal.BaseAdapterEx
 import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentListBinding
@@ -54,7 +54,7 @@ class DocumentListActivity : AppCompatActivity() {
 
 class DocumentListAdapter(
     private val context: Context
-) : BaseAdapter() {
+) : BaseAdapterEx() {
     var documents: List<DocumentHeader> = ArrayList()
 
     override fun getCount(): Int = documents.size
@@ -71,6 +71,7 @@ class DocumentListAdapter(
             binding.root.tag = binding
             val currentItem = getItem(position) as DocumentHeader
             binding.docDate = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date(currentItem.date))
+            setItemBgColor(position, binding.root)
         } else
             binding = convertView.tag as DocumentItemBinding
 
