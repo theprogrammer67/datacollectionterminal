@@ -88,6 +88,11 @@ class GoodAndUnit() {
     }
 }
 
+class ViewGood() {
+    var good: Good = Good()
+    var units: MutableList<Unit> = ArrayList()
+}
+
 class ViewDocument() {
     var document: DocumentHeader = DocumentHeader()
     var rows: MutableList<ViewDocumentRow> = ArrayList()
