@@ -13,4 +13,5 @@
     <string name="caption_docdate">Дата документа</string>
     <string name="caption_docdescription">Описание документа</string>
     <string name="caption_docid">Идентификатор документа</string>
+    <string name="caption_goodname">Наименование товара</string>
 </resources>

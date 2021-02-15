@@ -90,4 +90,18 @@ abstract class DctDao {
 
     @Query("SELECT * FROM good ORDER BY name ASC")
     abstract fun getGoods(): LiveData<List<Good>>
+
+    @Query("SELECT * FROM good WHERE id = :id")
+    abstract fun getGoodSync(id: String): Good
+
+    @Query("SELECT * FROM unit WHERE good = :id")
+    abstract fun getGoodUnitsSync(id: String): List<Unit>
+
+    @Transaction
+    open suspend fun getViewGood(id: String): ViewGood {
+        val units = getGoodUnitsSync(id)
+        val good = getGoodSync(id)
+        return ViewGood(good, units)
+    }
+
 }

@@ -91,6 +91,12 @@ class GoodAndUnit() {
 class ViewGood() {
     var good: Good = Good()
     var units: MutableList<Unit> = ArrayList()
+    var saved: Boolean = false
+
+    constructor(good: Good, units: List<Unit>) : this() {
+        this.good = good
+        this.units = units.toMutableList()
+    }
 }
 
 class ViewDocument() {
@@ -98,7 +104,7 @@ class ViewDocument() {
     var rows: MutableList<ViewDocumentRow> = ArrayList()
     var saved: Boolean = false
 
-        fun addRow(goodAndUnit: GoodAndUnit) {
+    fun addRow(goodAndUnit: GoodAndUnit) {
         val item = rows.find { it.unit == goodAndUnit.unit.barcode }
         if (item != null)
             item.quantityActual += 1
@@ -106,7 +112,7 @@ class ViewDocument() {
             rows.add(ViewDocumentRow(goodAndUnit, document.id))
     }
 
-    constructor(document: DocumentHeader, rows: List<ViewDocumentRow>): this() {
+    constructor(document: DocumentHeader, rows: List<ViewDocumentRow>) : this() {
         this.document = document
         this.rows = rows.toMutableList()
     }
