@@ -1,18 +1,22 @@
 package ru.rarus.datacollectionterminal.ui.goodlist
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import ru.rarus.datacollectionterminal.BaseAdapterEx
+import ru.rarus.datacollectionterminal.GOODID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityGoodsListBinding
 import ru.rarus.datacollectionterminal.databinding.GoodItemBinding
 import ru.rarus.datacollectionterminal.db.Good
+import ru.rarus.datacollectionterminal.ui.good.GoodActivity
 import java.util.*
 
 class GoodListActivity : AppCompatActivity() {
@@ -35,6 +39,14 @@ class GoodListActivity : AppCompatActivity() {
         })
 
         if (savedInstanceState == null) viewModel.getData(this)
+
+        binding.lvGoods.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val item = parent.getItemAtPosition(position) as Good
+                val intent = Intent(this, GoodActivity::class.java)
+                intent.putExtra(GOODID_TAG, item.id)
+                startActivity(intent)
+            }
     }
 }
 
