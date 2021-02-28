@@ -41,6 +41,10 @@ class Good() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
     var name: String = "Неизвестный товар"
+
+    constructor(barcode: String) : this() {
+        name = "Товар $barcode"
+    }
 }
 
 @Entity(
@@ -83,7 +87,7 @@ class GoodAndUnit() {
     var unit: Unit = Unit()
 
     constructor(barcode: String) : this() {
-        this.good = Good()
+        this.good = Good(barcode)
         this.unit = Unit(barcode, good, true)
     }
 }
