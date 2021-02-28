@@ -2,18 +2,24 @@ package ru.rarus.datacollectionterminal.ui.good
 
 import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import ru.rarus.datacollectionterminal.BaseAdapterEx
 import ru.rarus.datacollectionterminal.GOODID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityGoodBinding
+import ru.rarus.datacollectionterminal.databinding.UnitItemBinding
+import ru.rarus.datacollectionterminal.db.Unit
+import java.util.*
 
 class GoodActivity : AppCompatActivity() {
     lateinit var viewModel: GoodViewModel
     private lateinit var binding: ActivityGoodBinding
+    private lateinit var adapter: UnitListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,16 +28,43 @@ class GoodActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(GoodViewModel::class.java)
         viewModel.activity = this
 
-        if (intent.extras != null) {
-            viewModel.getData(intent.extras?.getString(GOODID_TAG))
-        }
-
         if (viewModel.viewGood.value != null) {
             binding.good = viewModel.viewGood.value!!.good
         }
-    }
 
-    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        return super.onCreateView(name, context, attrs)
+        adapter = UnitListAdapter(applicationContext)
+        binding.lvUnits.adapter = adapter
+
+        viewModel.viewGood.observe(this, {
+            adapter.units = it.units
+            adapter.notifyDataSetChanged()
+        })
+
+        if (intent.extras != null) {
+            viewModel.getData(intent.extras?.getString(GOODID_TAG))
+        }
+    }
+}
+
+class UnitListAdapter(private val context: Context) : BaseAdapterEx() {
+    var units: List<Unit> = ArrayList()
+    override fun getCount(): Int = units.size
+
+    override fun getItem(position: Int): Any = units[position]
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val binding: UnitItemBinding
+
+        if (convertView == null) {
+            binding = UnitItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            binding.root.tag = binding
+
+            setItemBgColor(position, binding.root)
+        } else
+            binding = convertView.tag as UnitItemBinding
+
+        binding.unit = getItem(position) as Unit
+
+        return binding.root
     }
 }
