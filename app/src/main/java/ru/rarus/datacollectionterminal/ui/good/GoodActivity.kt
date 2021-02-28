@@ -17,7 +17,7 @@ import ru.rarus.datacollectionterminal.db.Unit
 import java.util.*
 
 class GoodActivity : AppCompatActivity() {
-    lateinit var viewModel: GoodViewModel
+    private lateinit var viewModel: GoodViewModel
     private lateinit var binding: ActivityGoodBinding
     private lateinit var adapter: UnitListAdapter
 
@@ -28,14 +28,11 @@ class GoodActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(GoodViewModel::class.java)
         viewModel.activity = this
 
-        if (viewModel.viewGood.value != null) {
-            binding.good = viewModel.viewGood.value!!.good
-        }
-
         adapter = UnitListAdapter(applicationContext)
         binding.lvUnits.adapter = adapter
 
         viewModel.viewGood.observe(this, {
+            binding.good = it.good
             adapter.units = it.units
             adapter.notifyDataSetChanged()
         })
@@ -48,6 +45,7 @@ class GoodActivity : AppCompatActivity() {
 
 class UnitListAdapter(private val context: Context) : BaseAdapterEx() {
     var units: List<Unit> = ArrayList()
+
     override fun getCount(): Int = units.size
 
     override fun getItem(position: Int): Any = units[position]
