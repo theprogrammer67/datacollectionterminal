@@ -16,6 +16,14 @@
         android:orientation="vertical"
         android:padding="10dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:text="Наименовение"
+            />
+
         <EditText
             android:id="@+id/goodName"
             android:layout_width="match_parent"
@@ -25,8 +33,20 @@
             android:importantForAutofill="no"
             android:inputType="none"
             android:text="@{good.name}"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"
+            tools:text="Наименование"/>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:text="Единицы измерения"
+            />
         <ListView
             android:id="@+id/lvUnits"
             android:layout_width="match_parent"

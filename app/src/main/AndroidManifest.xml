@@ -13,8 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DataCollectionTerminal">
-        <activity android:name=".ui.good.GoodActivity"></activity>
-        <activity android:name=".ui.goodlist.GoodListActivity" />
+        <activity
+            android:name=".ui.good.GoodActivity"
+            android:label="Товар" />
+        <activity
+            android:name=".ui.goodlist.GoodListActivity"
+            android:label="Номенклатура" />
         <activity
             android:name=".ui.documentlist.DocumentListActivity"
             android:label="Список документов" />
