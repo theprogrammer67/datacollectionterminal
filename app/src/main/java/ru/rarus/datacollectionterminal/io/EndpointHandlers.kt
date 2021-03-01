@@ -63,9 +63,9 @@ class Handlers(private val server: RestServer) {
     // documents endpoint
     @RequestHandler("/document")
     val documentHandler = HttpHandler { exchange ->
+        val documentID = exchange.requestURI.getFileName()
         when (exchange!!.requestMethod) {
             "GET" -> {
-                val documentID = exchange.requestURI.getFileName()
                 if (documentID == "") {
                     val documents = App.database.getDao().getDocumentsSync()
                     server.sendResponse<List<DocumentHeader>>(exchange, documents)
@@ -75,6 +75,13 @@ class Handlers(private val server: RestServer) {
                         server.sendResponse<List<ViewDocumentRow>>(exchange, document)
                     else
                         server.sendResponse<HandlerError>(exchange, makeNotFoundError())
+                }
+            }
+            "DELETE" -> {
+                if (documentID == "") {
+                    App.database.getDao().deleteDocumentsSync()    
+                } else {
+                    App.database.getDao().deleteDocumentSync(documentID)
                 }
             }
             else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError())

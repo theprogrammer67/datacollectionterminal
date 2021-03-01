@@ -42,8 +42,14 @@ abstract class DctDao {
     @Query("DELETE FROM document WHERE id = :id")
     abstract suspend fun deleteDocument(id: String)
 
+    @Query("DELETE FROM document WHERE id = :id")
+    abstract fun deleteDocumentSync(id: String)
+
     @Query("DELETE FROM document")
     abstract suspend fun deleteDocuments()
+
+    @Query("DELETE FROM document")
+    abstract fun deleteDocumentsSync()
 
     @Query("DELETE FROM document_row WHERE document = :id")
     abstract suspend fun deleteDocumentRows(id: String)
