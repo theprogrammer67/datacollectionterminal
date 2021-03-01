@@ -2,9 +2,11 @@ package ru.rarus.datacollectionterminal.io
 
 import android.content.pm.PackageInfo
 import android.os.Build
+import com.google.gson.Gson
 import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.DocumentHeader
+import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 
 
@@ -22,6 +24,9 @@ class Handlers(private val server: RestServer) {
         return HandlerError(404, "Ресурс не найден")
     }
 
+    private fun makeBadRequestError(): HandlerError {
+        return HandlerError(400, "Некорректный запрос")
+    }
 
     // root endpoint
     @RequestHandler("/")
@@ -79,10 +84,15 @@ class Handlers(private val server: RestServer) {
             }
             "DELETE" -> {
                 if (documentID == "") {
-                    App.database.getDao().deleteDocumentsSync()    
+                    server.sendResponse<HandlerError>(exchange, makeNotFoundError())
                 } else {
                     App.database.getDao().deleteDocumentSync(documentID)
                 }
+            }
+            "POST" -> {
+                val document =
+                    Gson().fromJson(exchange.requestBody.toString(), ViewDocument::class.java)
+                App.database.getDao().updateViewDocumentSync(document)
             }
             else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError())
         }

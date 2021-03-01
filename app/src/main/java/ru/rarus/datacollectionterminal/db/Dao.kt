@@ -23,11 +23,21 @@ abstract class DctDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insertDocumentRows(documentRows: List<DocumentRow>)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertDocumentRowsSync(documentRows: List<DocumentRow>)
+
     @Transaction
     open suspend fun updateViewDocument(document: ViewDocument) {
         deleteDocumentRows(document.document.id)
         updateDocument(document.document)
         insertDocumentRows(document.rows)
+    }
+
+    @Transaction
+    open fun updateViewDocumentSync(document: ViewDocument) {
+        deleteDocumentRowsSync(document.document.id)
+        updateDocument(document.document)
+        insertDocumentRowsSync(document.rows)
     }
 
     @Transaction
@@ -53,6 +63,9 @@ abstract class DctDao {
 
     @Query("DELETE FROM document_row WHERE document = :id")
     abstract suspend fun deleteDocumentRows(id: String)
+
+    @Query("DELETE FROM document_row WHERE document = :id")
+    abstract fun deleteDocumentRowsSync(id: String)
 
     @Query("SELECT * FROM unit WHERE barcode = :barcode")
     abstract fun getUnitByBarcode(barcode: String): LiveData<Unit>
