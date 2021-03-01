@@ -15,11 +15,11 @@ class Handlers(private val server: RestServer) {
     data class HandlerError(val code: Int, val message: String)
 
     private fun makeNotImplementedError(): HandlerError {
-        return HandlerError(406, "Метод не поддерживается");
+        return HandlerError(406, "Метод не поддерживается")
     }
 
     private fun makeNotFoundError(): HandlerError {
-        return HandlerError(404, "Ресурс не найден");
+        return HandlerError(404, "Ресурс не найден")
     }
 
 
@@ -71,7 +71,7 @@ class Handlers(private val server: RestServer) {
                     server.sendResponse<List<DocumentHeader>>(exchange, documents)
                 } else {
                     val document = App.database.getDao().getViewDocumentRowsSync(documentID)
-                    if (document != null)
+                    if (document.isNotEmpty())
                         server.sendResponse<List<ViewDocumentRow>>(exchange, document)
                     else
                         server.sendResponse<HandlerError>(exchange, makeNotFoundError())

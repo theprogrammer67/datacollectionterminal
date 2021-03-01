@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#808c9c</color>
     <color name="accent_button">#473DA0</color>
+    <color name="evenBgColor">#D8DEE7</color>
+    <color name="oddBgColor">#E6E8EC</color>
 </resources>
