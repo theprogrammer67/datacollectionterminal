@@ -2,6 +2,7 @@ package ru.rarus.datacollectionterminal.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import java.util.*
 
 @Dao
 abstract class DctDao {
@@ -110,6 +111,9 @@ abstract class DctDao {
     @Query("SELECT * FROM good ORDER BY name ASC")
     abstract fun getGoods(): LiveData<List<Good>>
 
+    @Query("SELECT * FROM good ORDER BY name ASC")
+    abstract fun getGoodsSync(): List<Good>
+
     @Query("SELECT * FROM good WHERE id = :id")
     abstract fun getGoodSync(id: String): Good
 
@@ -121,6 +125,25 @@ abstract class DctDao {
         val units = getGoodUnitsSync(id)
         val good = getGoodSync(id)
         return ViewGood(good, units)
+    }
+
+    @Transaction
+    open fun getViewGoodSync(id: String): ViewGood {
+        val units = getGoodUnitsSync(id)
+        val good = getGoodSync(id)
+        return ViewGood(good, units)
+    }
+
+    @Transaction
+    open fun getViewGoodsSync(): List<ViewGood> {
+        var viewGoods: MutableList<ViewGood> = ArrayList()
+        val goods = getGoodsSync()
+
+        for (good in goods) {
+            viewGoods.add(ViewGood(good, getGoodUnitsSync(good.id).toMutableList()))
+        }
+
+        return viewGoods
     }
 
 }

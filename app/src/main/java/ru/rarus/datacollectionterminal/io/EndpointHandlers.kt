@@ -8,6 +8,7 @@ import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.DocumentHeader
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
+import ru.rarus.datacollectionterminal.db.ViewGood
 
 
 class Handlers(private val server: RestServer) {
@@ -95,6 +96,27 @@ class Handlers(private val server: RestServer) {
                 App.database.getDao().updateViewDocumentSync(document)
             }
             else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError())
+        }
+    }
+
+    // good endpoint
+    @RequestHandler("/good")
+    val goodHandler = HttpHandler { exchange ->
+        val goodID = exchange.requestURI.getFileName()
+        when (exchange!!.requestMethod) {
+            "GET" -> {
+                if (goodID == "") {
+                    val goods = App.database.getDao().getViewGoodsSync()
+                    server.sendResponse<List<ViewGood>>(exchange, goods)
+                } else {
+                    val good = App.database.getDao().getViewGoodSync(goodID)
+                    if (good != null)
+                        server.sendResponse<ViewGood>(exchange, good)
+                    else
+                        server.sendResponse<HandlerError>(exchange, makeNotFoundError())
+                }
+
+            }
         }
     }
 }
