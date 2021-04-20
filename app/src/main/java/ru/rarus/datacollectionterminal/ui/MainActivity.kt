@@ -31,6 +31,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, GoodListActivity::class.java))
         }
 
+        binding.btnSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
         binding.swServerStart.isChecked = App.restserver.started
         binding.swServerStart.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) App.restserver.start(8118)
