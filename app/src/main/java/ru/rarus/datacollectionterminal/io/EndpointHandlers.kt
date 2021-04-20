@@ -3,6 +3,7 @@ package ru.rarus.datacollectionterminal.io
 import android.content.pm.PackageInfo
 import android.os.Build
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.DocumentHeader
@@ -91,9 +92,10 @@ class Handlers(private val server: RestServer) {
                 }
             }
             "POST" -> {
-                val document =
-                    Gson().fromJson(exchange.requestBody.toString(), ViewDocument::class.java)
-                App.database.getDao().updateViewDocumentSync(document)
+                val listType = object : TypeToken<List<ViewDocument>>() {}.type
+                val documentList: List<ViewDocument> =
+                    Gson().fromJson(exchange.requestBody.toString(), listType)
+                App.database.getDao().updateViewDocumentsSync(documentList)
             }
             else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError())
         }
@@ -124,9 +126,10 @@ class Handlers(private val server: RestServer) {
                 }
             }
             "POST" -> {
-                val good =
-                    Gson().fromJson(exchange.requestBody.toString(), ViewGood::class.java)
-                App.database.getDao().updateViewGoodSync(good)
+                val listType = object : TypeToken<List<ViewGood>>() {}.type
+                val goodList: List<ViewGood> =
+                    Gson().fromJson(exchange.requestBody.toString(), listType)
+                App.database.getDao().updateViewGoodsSync(goodList)
             }
             else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError())
         }

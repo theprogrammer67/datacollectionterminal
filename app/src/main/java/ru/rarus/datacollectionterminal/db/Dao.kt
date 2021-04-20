@@ -168,4 +168,17 @@ abstract class DctDao {
         insertUnitsSync(good.units)
     }
 
+    open fun updateViewGoodsSync(goodList: List<ViewGood>) {
+        goodList.forEach() {
+            updateViewGoodSync(it)
+        }
+    }
+
+    open fun updateViewDocumentsSync(documentList: List<ViewDocument>) {
+        documentList.forEach() {
+            updateViewDocumentSync(it)
+        }
+    }
+
+
 }
