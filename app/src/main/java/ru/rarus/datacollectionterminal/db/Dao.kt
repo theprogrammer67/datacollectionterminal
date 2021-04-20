@@ -100,6 +100,9 @@ abstract class DctDao {
     abstract suspend fun insertUnits(unit: List<Unit>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertUnitsSync(unit: List<Unit>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertGood(good: Good)
 
     @Transaction
@@ -144,6 +147,25 @@ abstract class DctDao {
         }
 
         return viewGoods
+    }
+
+    @Query("DELETE FROM good")
+    abstract fun deleteGoodsSync()
+
+    @Query("DELETE FROM good  WHERE id = :id")
+    abstract fun deleteGoodSync(id: String)
+
+    @Update
+    abstract fun updateGood(good: Good)
+
+    @Query("DELETE FROM unit WHERE good = :id")
+    abstract fun deleteGoodUnitsSync(id: String)
+
+    @Transaction
+    open fun updateViewGoodSync(good: ViewGood) {
+        deleteGoodUnitsSync(good.good.id)
+        updateGood(good.good)
+        insertUnitsSync(good.units)
     }
 
 }

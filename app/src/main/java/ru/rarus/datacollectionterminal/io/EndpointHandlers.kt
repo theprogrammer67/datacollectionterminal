@@ -85,7 +85,7 @@ class Handlers(private val server: RestServer) {
             }
             "DELETE" -> {
                 if (documentID == "") {
-                    server.sendResponse<HandlerError>(exchange, makeNotFoundError())
+                    App.database.getDao().deleteDocumentsSync()
                 } else {
                     App.database.getDao().deleteDocumentSync(documentID)
                 }
@@ -115,8 +115,20 @@ class Handlers(private val server: RestServer) {
                     else
                         server.sendResponse<HandlerError>(exchange, makeNotFoundError())
                 }
-
             }
+            "DELETE" -> {
+                if (goodID == "") {
+                    App.database.getDao().deleteGoodsSync()
+                } else {
+                    App.database.getDao().deleteGoodSync(goodID)
+                }
+            }
+            "POST" -> {
+                val good =
+                    Gson().fromJson(exchange.requestBody.toString(), ViewGood::class.java)
+                App.database.getDao().updateViewGoodSync(good)
+            }
+            else -> server.sendResponse<HandlerError>(exchange, makeNotImplementedError())
         }
     }
 }
