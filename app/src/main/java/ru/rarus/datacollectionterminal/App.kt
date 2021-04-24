@@ -1,9 +1,11 @@
 package ru.rarus.datacollectionterminal
 
 import android.app.Application
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import ru.rarus.datacollectionterminal.db.AppDatabase
 import ru.rarus.datacollectionterminal.io.RestServer
 
@@ -14,7 +16,11 @@ class App: Application() {
         _resources = resources
         _database = AppDatabase.getInstance(this)
         _restserver = RestServer()
-        _restserver.start(8118)
+
+        val prefs: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this)
+        val serverStarted = prefs.getBoolean("serverStarted", false)
+        if (serverStarted) _restserver.start(8118)
     }
 
     companion object {

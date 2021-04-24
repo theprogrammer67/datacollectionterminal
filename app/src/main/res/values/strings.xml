@@ -14,7 +14,7 @@
     <string name="caption_docdescription">Описание документа</string>
     <string name="caption_docid">Идентификатор документа</string>
     <string name="caption_goodname">Наименование товара</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Настройки</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

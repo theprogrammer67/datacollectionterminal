@@ -1,11 +1,12 @@
 package ru.rarus.datacollectionterminal.ui
 
+import android.content.SharedPreferences
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.text.format.Formatter
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import ru.rarus.datacollectionterminal.R
 
 
@@ -28,8 +29,10 @@ class SettingsActivity : AppCompatActivity() {
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val tvIpAddress = findViewById<TextView>(R.id.tvIpAddress)
-        tvIpAddress.text = getIpAddress()
+        val prefs: SharedPreferences.Editor =
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+        prefs.putString("ipAddress", getIpAddress())
+        prefs.apply()
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
