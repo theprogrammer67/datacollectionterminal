@@ -8,7 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#808c9c</color>
+    <color name="light_grey">#9FADBF</color>
+    <color name="dark_grey">#656C75</color>
     <color name="accent_button">#473DA0</color>
+    <color name="accent_lite">#ABA3F3</color>
     <color name="evenBgColor">#D8DEE7</color>
     <color name="oddBgColor">#E6E8EC</color>
 </resources>
