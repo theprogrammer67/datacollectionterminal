@@ -47,6 +47,10 @@ class DocumentListActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         })
 
+        binding.fabAdd.setOnClickListener {
+            startActivity(Intent(this, DocumentActivity::class.java))
+        }
+
         if (savedInstanceState == null) viewModel.getData(this)
     }
 }
