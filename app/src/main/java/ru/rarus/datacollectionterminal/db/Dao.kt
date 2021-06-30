@@ -10,7 +10,7 @@ abstract class DctDao {
     abstract fun getDocumentsSync(): List<DocumentHeader>
 
     @Query("SELECT * FROM document WHERE id = :id")
-    abstract fun getDocumentSync(id: String): DocumentHeader
+    abstract fun getDocumentSync(id: String): DocumentHeader?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insertDocument(documentHeader: DocumentHeader)
@@ -64,9 +64,9 @@ abstract class DctDao {
     abstract fun getViewDocumentRowsSync(id: String): List<ViewDocumentRow>
 
     @Transaction
-    open suspend fun getViewDocument(id: String): ViewDocument {
+    open suspend fun getViewDocument(id: String): ViewDocument? {
+        val header = getDocumentSync(id) ?: return null
         val rows = getViewDocumentRowsSync(id)
-        val header = getDocumentSync(id)
         return ViewDocument(header, rows)
     }
 
@@ -89,15 +89,15 @@ abstract class DctDao {
     abstract fun getGoodsSync(): List<Good>
 
     @Query("SELECT * FROM good WHERE id = :id")
-    abstract fun getGoodSync(id: String): Good
+    abstract fun getGoodSync(id: String): Good?
 
     @Query("SELECT * FROM unit WHERE good = :id")
     abstract fun getGoodUnitsSync(id: String): List<Unit>
 
     @Transaction
-    open fun getViewGoodSync(id: String): ViewGood {
+    open fun getViewGoodSync(id: String): ViewGood? {
+        val good = getGoodSync(id) ?: return null
         val units = getGoodUnitsSync(id)
-        val good = getGoodSync(id)
         return ViewGood(good, units)
     }
 
