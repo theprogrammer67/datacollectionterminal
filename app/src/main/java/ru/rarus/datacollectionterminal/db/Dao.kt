@@ -24,7 +24,7 @@ abstract class DctDao {
     @Transaction
     open fun updateViewDocumentSync(document: ViewDocument) {
         deleteDocumentRowsSync(document.document.id)
-        updateDocument(document.document)
+        updateDocumentSync(document.document)
         insertDocumentRowsSync(document.rows)
     }
 
@@ -35,7 +35,7 @@ abstract class DctDao {
     }
 
     @Update
-    abstract fun updateDocument(document: DocumentHeader)
+    abstract fun updateDocumentSync(document: DocumentHeader)
 
     @Query("DELETE FROM document WHERE id = :id")
     abstract fun deleteDocumentSync(id: String)
@@ -77,11 +77,11 @@ abstract class DctDao {
     abstract fun insertUnitsSync(unit: List<Unit>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertGood(good: Good)
+    abstract fun insertGoodSync(good: Good)
 
     @Transaction
     open suspend fun insertGoodAndUnit(goodAndUnit: GoodAndUnit) {
-        insertGood(goodAndUnit.good)
+        insertGoodSync(goodAndUnit.good)
         insertUnit(goodAndUnit.unit)
     }
 
@@ -120,7 +120,7 @@ abstract class DctDao {
     abstract fun deleteGoodSync(id: String)
 
     @Update
-    abstract fun updateGood(good: Good)
+    abstract fun updateGoodSync(good: Good)
 
     @Query("DELETE FROM unit WHERE good = :id")
     abstract fun deleteGoodUnitsSync(id: String)
@@ -128,7 +128,7 @@ abstract class DctDao {
     @Transaction
     open fun updateViewGoodSync(good: ViewGood) {
         deleteGoodUnitsSync(good.good.id)
-        updateGood(good.good)
+        updateGoodSync(good.good)
         insertUnitsSync(good.units)
     }
 
