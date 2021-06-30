@@ -24,9 +24,9 @@ class DocumentModel {
     }
 
     fun saveDocument(document: ViewDocument, onSave: (document: ViewDocument) -> Unit) {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             if (document.saved)
-                App.database.getDao().updateViewDocument(document)
+                App.database.getDao().updateViewDocumentSync(document)
             else
                 App.database.getDao().insertViewDocument(document)
 
