@@ -34,8 +34,9 @@ class Handlers(private val server: RestServer) {
         return HandlerError(400, "Некорректный запрос")
     }
 
-    private fun makeServerError(text: String): HandlerError {
-        return HandlerError(500, "Ошибка сервера: $text")
+    private fun makeServerError(text: String?): HandlerError {
+        val errorDescr = text ?: "Неизвестная ошибка"
+        return HandlerError(500, "Ошибка сервера: $errorDescr")
     }
 
     // root endpoint
@@ -98,10 +99,24 @@ class Handlers(private val server: RestServer) {
             }
             "POST" -> {
                 val listType = object : TypeToken<List<ViewDocument>>() {}.type
-                val documentList: List<ViewDocument> =
-                    Gson().fromJson(exchange.requestBody.toString(), listType)
-                App.database.getDao().updateViewDocumentsSync(documentList)
-                server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
+                val json = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
+                val documentList: List<ViewDocument>
+                try {
+                    documentList = Gson().fromJson(json, listType)
+                } catch (e: Exception) {
+                    server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
+                    return@HttpHandler
+                }
+
+                try {
+                    App.database.getDao().updateViewDocumentsSync(documentList)
+                    server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
+                } catch (e: Exception) {
+                    server.sendResponse<Handlers.HandlerError>(
+                        exchange, makeServerError(e.message)
+                    )
+                    return@HttpHandler
+                }
             }
             else -> server.sendResponse<Handlers.HandlerError>(exchange, makeNotImplementedError())
         }
@@ -133,7 +148,7 @@ class Handlers(private val server: RestServer) {
             }
             "POST" -> {
                 val listType = object : TypeToken<List<ViewGood>>() {}.type
-                val json: String = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
+                val json = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
                 val goodList: List<ViewGood>
                 try {
                     goodList = Gson().fromJson(json, listType)
@@ -147,8 +162,7 @@ class Handlers(private val server: RestServer) {
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 } catch (e: Exception) {
                     server.sendResponse<Handlers.HandlerError>(
-                        exchange,
-                        makeServerError(e.message ?: "Неизвестная ошибка")
+                        exchange, makeServerError(e.message)
                     )
                     return@HttpHandler
                 }
