@@ -18,6 +18,10 @@ class Handlers(private val server: RestServer) {
 
     data class HandlerError(val code: Int, val message: String)
 
+    private fun makeOkError(): HandlerError {
+        return HandlerError(200, "Метод выполнен успешно")
+    }
+
     private fun makeNotImplementedError(): HandlerError {
         return HandlerError(406, "Метод не поддерживается")
     }
@@ -28,6 +32,10 @@ class Handlers(private val server: RestServer) {
 
     private fun makeBadRequestError(): HandlerError {
         return HandlerError(400, "Некорректный запрос")
+    }
+
+    private fun makeServerError(text: String): HandlerError {
+        return HandlerError(500, "Ошибка сервера: $text")
     }
 
     // root endpoint
@@ -93,6 +101,7 @@ class Handlers(private val server: RestServer) {
                 val documentList: List<ViewDocument> =
                     Gson().fromJson(exchange.requestBody.toString(), listType)
                 App.database.getDao().updateViewDocumentsSync(documentList)
+                server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
             }
             else -> server.sendResponse<Handlers.HandlerError>(exchange, makeNotImplementedError())
         }
@@ -124,9 +133,25 @@ class Handlers(private val server: RestServer) {
             }
             "POST" -> {
                 val listType = object : TypeToken<List<ViewGood>>() {}.type
-                val goodList: List<ViewGood> =
-                    Gson().fromJson(exchange.requestBody.toString(), listType)
-                App.database.getDao().updateViewGoodsSync(goodList)
+                val json: String = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
+                val goodList: List<ViewGood>
+                try {
+                    goodList = Gson().fromJson(json, listType)
+                } catch (e: Exception) {
+                    server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
+                    return@HttpHandler
+                }
+
+                try {
+                    App.database.getDao().insertViewGoodsSync(goodList)
+                    server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
+                } catch (e: Exception) {
+                    server.sendResponse<Handlers.HandlerError>(
+                        exchange,
+                        makeServerError(e.message ?: "Неизвестная ошибка")
+                    )
+                    return@HttpHandler
+                }
             }
             else -> server.sendResponse<Handlers.HandlerError>(exchange, makeNotImplementedError())
         }

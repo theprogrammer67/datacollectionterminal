@@ -59,7 +59,7 @@ class RestServer {
     fun <T> sendResponse(httpExchange: HttpExchange, obj: T) {
         val jsonObj = gson.toJson(obj)
         val rawBody = jsonObj.toByteArray(Charsets.UTF_8)
-        httpExchange.responseHeaders.add("Content-Type", "text/JSON")
+        httpExchange.responseHeaders.add("Content-Type", "application/json")
         httpExchange.responseHeaders.add("charset", "utf-8")
         val code = if (obj is Handlers.HandlerError) (obj as Handlers.HandlerError).code else 200
         httpExchange.sendResponseHeaders(code, rawBody.size.toLong())

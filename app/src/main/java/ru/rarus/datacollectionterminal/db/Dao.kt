@@ -76,7 +76,7 @@ abstract class DctDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertUnitsSync(unit: List<Unit>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertGoodSync(good: Good)
 
     @Transaction
@@ -144,5 +144,17 @@ abstract class DctDao {
         }
     }
 
+    @Transaction
+    open fun insertViewGoodSync(good: ViewGood) {
+        deleteGoodUnitsSync(good.good.id)
+        insertGoodSync(good.good)
+        insertUnitsSync(good.units)
+    }
+
+    open fun insertViewGoodsSync(goodList: List<ViewGood>) {
+        goodList.forEach() {
+            insertViewGoodSync(it)
+        }
+    }
 
 }
