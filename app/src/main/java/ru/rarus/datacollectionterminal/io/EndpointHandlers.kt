@@ -109,7 +109,7 @@ class Handlers(private val server: RestServer) {
                 }
 
                 try {
-                    App.database.getDao().updateViewDocumentsSync(documentList)
+                    App.database.getDao().insertViewDocumentsSync(documentList)
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 } catch (e: Exception) {
                     server.sendResponse<Handlers.HandlerError>(

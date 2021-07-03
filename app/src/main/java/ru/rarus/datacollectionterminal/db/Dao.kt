@@ -28,14 +28,25 @@ abstract class DctDao {
         insertDocumentRowsSync(document.rows)
     }
 
+    // !!!
     @Transaction
     open suspend fun insertViewDocument(document: ViewDocument) {
         insertDocument(document.document)
         insertDocumentRows(document.rows)
     }
 
+    @Transaction
+    open fun insertViewDocumentSync(document: ViewDocument) {
+        deleteDocumentRowsSync(document.document.id)
+        insertDocumentSync(document.document)
+        insertDocumentRowsSync(document.rows)
+    }
+
     @Update
     abstract fun updateDocumentSync(document: DocumentHeader)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertDocumentSync(document: DocumentHeader)
 
     @Query("DELETE FROM document WHERE id = :id")
     abstract fun deleteDocumentSync(id: String)
@@ -156,5 +167,13 @@ abstract class DctDao {
             insertViewGoodSync(it)
         }
     }
+
+    open fun insertViewDocumentsSync(documentList: List<ViewDocument>) {
+        documentList.forEach() {
+            insertViewDocumentSync(it)
+        }
+    }
+
+
 
 }
