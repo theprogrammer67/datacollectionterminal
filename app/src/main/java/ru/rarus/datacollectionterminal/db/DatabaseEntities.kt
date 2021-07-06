@@ -45,6 +45,11 @@ class Good() {
     constructor(barcode: String) : this() {
         name = "Товар $barcode"
     }
+
+    constructor(id: String, name: String) : this() {
+        this.id = id
+        this.name = name
+    }
 }
 
 @Entity(
@@ -70,6 +75,14 @@ class Unit() {
         this.barcode = barcode
         this.good = good.id
         this.baseUnit = baseUnit
+    }
+
+    constructor(barcode: String, name: String, price: Double, good: String) : this() {
+        this.barcode = barcode
+        this.name = name
+        this.price = price
+        this.good = good
+        this.baseUnit = true
     }
 }
 
@@ -126,6 +139,7 @@ class ViewDocumentRow() : DocumentRow() {
     var good = ""
     var goodName = ""
     var unitName = ""
+    var unitPrice: Double = 0.0
 
     @Ignore
     @Transient
@@ -135,6 +149,7 @@ class ViewDocumentRow() : DocumentRow() {
         document = documentId
         goodName = goodAndUnit.good.name
         unitName = goodAndUnit.unit.name
+        unitPrice = goodAndUnit.unit.price
         unit = goodAndUnit.unit.barcode
         quantityActual = 1.0
     }

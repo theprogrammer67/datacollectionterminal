@@ -21,6 +21,24 @@ abstract class DctDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertDocumentRowsSync(documentRows: List<DocumentRow>)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertUnitSync(unit: Unit): Long
+
+    @Update
+    abstract fun updateUnitSync(unit: Unit)
+
+    @Transaction
+    open fun upsertGoodsUnitsSync(documentRows: List<ViewDocumentRow>) {
+        documentRows.forEach() {
+            insertGoodSync(Good(it.good, it.goodName))
+
+            val unit = Unit(it.unit, it.unitName, it.unitPrice, it.good)
+            if (insertUnitSync(unit) == -1L) {
+                updateUnitSync(unit)
+            }
+        }
+    }
+
     @Transaction
     open fun updateViewDocumentSync(document: ViewDocument) {
         deleteDocumentRowsSync(document.document.id)
@@ -38,6 +56,9 @@ abstract class DctDao {
     @Transaction
     open fun insertViewDocumentSync(document: ViewDocument) {
         deleteDocumentRowsSync(document.document.id)
+
+        upsertGoodsUnitsSync(document.rows)
+
         insertDocumentSync(document.document)
         insertDocumentRowsSync(document.rows)
     }
@@ -65,7 +86,7 @@ abstract class DctDao {
 
     @Query(
         """
-        SELECT document_row.*, unit.name as unitName, good.name as goodName, good.id as good
+        SELECT document_row.*, unit.name as unitName, unit.price as unitPrice, good.name as goodName, good.id as good
         FROM document_row
         LEFT JOIN unit on(document_row.unit = unit.barcode)
         LEFT JOIN good ON (unit.good = good.id)
