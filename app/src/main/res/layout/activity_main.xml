@@ -10,7 +10,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/rarus_logo"
+            android:src="@drawable/rarus_mobile_tsd"
             android:layout_margin="10dp"
             android:contentDescription="1С-Рарус" />
 
