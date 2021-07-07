@@ -24,8 +24,8 @@ abstract class DctDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertUnitSync(unit: Unit): Long
 
-    @Update
-    abstract fun updateUnitSync(unit: Unit)
+    @Query("UPDATE unit SET name = :name, price = :price, good = :good WHERE barcode = :barcode")
+    abstract fun updateUnitSync(barcode: String, name: String, price: Double, good: String)
 
     @Transaction
     open fun upsertGoodsUnitsSync(documentRows: List<ViewDocumentRow>) {
@@ -34,7 +34,7 @@ abstract class DctDao {
 
             val unit = Unit(it.unit, it.unitName, it.unitPrice, it.good)
             if (insertUnitSync(unit) == -1L) {
-                updateUnitSync(unit)
+                updateUnitSync(it.unit, it.unitName, it.unitPrice, it.good)
             }
         }
     }
@@ -194,7 +194,6 @@ abstract class DctDao {
             insertViewDocumentSync(it)
         }
     }
-
 
 
 }
