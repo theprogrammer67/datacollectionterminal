@@ -9,14 +9,15 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="10dp"
+            android:layout_height="180dp"
+            android:padding="10dp"
             android:contentDescription="1С-Рарус"
             android:src="@drawable/rarus_mobile_tsd"
             android:visibility="visible" />
 
         <ScrollView
             android:id="@+id/scroll"
+            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
