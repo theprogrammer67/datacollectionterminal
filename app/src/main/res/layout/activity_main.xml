@@ -9,65 +9,73 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/rarus_mobile_tsd"
+            android:layout_height="200dp"
             android:layout_margin="10dp"
-            android:contentDescription="1С-Рарус" />
+            android:contentDescription="1С-Рарус"
+            android:src="@drawable/rarus_mobile_tsd"
+            android:visibility="visible" />
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_width="270dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="vertical"
-                tools:context=".ui.MainActivity">
+                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnDocument"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:padding="20dp"
-                    android:text="Новый документ" />
 
-                <Button
-                    android:id="@+id/btnDocumentList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:padding="20dp"
-                    android:text="Список документов" />
+                <LinearLayout
+                    android:layout_width="270dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    tools:context=".ui.MainActivity">
 
-                <Button
-                    android:id="@+id/btnGoodList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:padding="20dp"
-                    android:text="Номенклатура" />
+                    <Button
+                        android:id="@+id/btnDocument"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="20dp"
+                        android:text="Новый документ" />
 
-                <Button
-                    android:id="@+id/btnSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:padding="20dp"
-                    android:text="Настройки" />
+                    <Button
+                        android:id="@+id/btnDocumentList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="20dp"
+                        android:text="Документы" />
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/swServerStart"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:text="Передача данных" />
+                    <Button
+                        android:id="@+id/btnGoodList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="20dp"
+                        android:text="Номенклатура" />
+
+                    <Button
+                        android:id="@+id/btnSettings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="20dp"
+                        android:text="Настройки" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/swServerStart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:text="Передача данных" />
+
+                </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </layout>
