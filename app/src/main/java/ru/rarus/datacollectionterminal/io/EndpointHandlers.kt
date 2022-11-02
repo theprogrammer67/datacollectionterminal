@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.BuildConfig
 import ru.rarus.datacollectionterminal.db.DocumentHeader
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
@@ -42,7 +43,7 @@ class Handlers(private val server: RestServer) {
     // root endpoint
     @RequestHandler("/")
     val rootHandler = HttpHandler { exchange ->
-        if ((exchange!!.requestURI.toString() == "/") && (exchange.requestMethod == "GET")) {
+        if ((exchange!!.requestURI.toString() == "/") && (exchange.requestMethod.equals("GET"))) {
             val hardInfo = StringBuffer()
             hardInfo.append("Модель: " + Build.MODEL + "</br>")
             hardInfo.append("Устройство: " + Build.DEVICE + "</br>")
@@ -73,8 +74,24 @@ class Handlers(private val server: RestServer) {
         } else server.sendResponse(exchange, makeNotImplementedError())
     }
 
+
+
+    // info endpoint
+    class AppInfo {
+        var version_code: Int = BuildConfig.VERSION_CODE
+        var version_name: String = BuildConfig.VERSION_NAME
+        var application_id: String = BuildConfig.APPLICATION_ID
+    }
+
+    @RequestHandler("/info")
+    val infoHandler = HttpHandler { exchange ->
+        if (exchange!!.requestMethod.equals("GET")) {
+            server.sendResponse<AppInfo>(exchange, AppInfo())
+        } else server.sendResponse(exchange, makeNotImplementedError())
+    }
+
     // documents endpoint
-    @Handlers.RequestHandler("/document")
+    @RequestHandler("/document")
     val documentHandler = HttpHandler { exchange ->
         val documentID = exchange.requestURI.getFileName()
         when (exchange!!.requestMethod) {
@@ -123,7 +140,7 @@ class Handlers(private val server: RestServer) {
     }
 
     // good endpoint
-    @Handlers.RequestHandler("/good")
+    @RequestHandler("/good")
     val goodHandler = HttpHandler { exchange ->
         val goodID = exchange.requestURI.getFileName()
         when (exchange!!.requestMethod) {
