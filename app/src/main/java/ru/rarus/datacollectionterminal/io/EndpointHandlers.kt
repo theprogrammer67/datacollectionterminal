@@ -75,7 +75,6 @@ class Handlers(private val server: RestServer) {
     }
 
 
-
     // info endpoint
     class AppInfo {
         var version_code: Int = BuildConfig.VERSION_CODE
@@ -94,97 +93,106 @@ class Handlers(private val server: RestServer) {
     @RequestHandler("/document")
     val documentHandler = HttpHandler { exchange ->
         val documentID = exchange.requestURI.getFileName()
-        when (exchange!!.requestMethod) {
-            "GET" -> {
-                if (documentID == "") {
-                    val documents = App.database.getDao().getDocumentsSync()
-                    server.sendResponse<List<DocumentHeader>>(exchange, documents)
-                } else {
-                    val document = App.database.getDao().getViewDocumentRowsSync(documentID)
-                    if (document.isNotEmpty())
+        try {
+            when (exchange!!.requestMethod) {
+                "GET" -> {
+                    if (documentID == "") {
+                        val documents = App.database.getDao().getDocumentsSync()
+                        server.sendResponse<List<DocumentHeader>>(exchange, documents)
+                    } else {
+                        val document =
+                            App.database.getDao().getViewDocumentRowsSync(documentID)
                         server.sendResponse<List<ViewDocumentRow>>(exchange, document)
-                    else
-                        server.sendResponse<Handlers.HandlerError>(exchange, makeNotFoundError())
+                    }
                 }
-            }
-            "DELETE" -> {
-                if (documentID == "") {
-                    App.database.getDao().deleteDocumentsSync()
-                } else {
-                    App.database.getDao().deleteDocumentSync(documentID)
+                "DELETE" -> {
+                    if (documentID == "") {
+                        App.database.getDao().deleteDocumentsSync()
+                    } else {
+                        App.database.getDao().deleteDocumentSync(documentID)
+                    }
+                    server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 }
-            }
-            "POST" -> {
-                val listType = object : TypeToken<List<ViewDocument>>() {}.type
-                val json = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
-                val documentList: List<ViewDocument>
-                try {
-                    documentList = Gson().fromJson(json, listType)
-                } catch (e: Exception) {
-                    server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
-                    return@HttpHandler
-                }
-
-                try {
+                "POST" -> {
+                    val listType = object : TypeToken<List<ViewDocument>>() {}.type
+                    val json = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
+                    val documentList: List<ViewDocument>
+                    try {
+                        documentList = Gson().fromJson(json, listType)
+                    } catch (e: Exception) {
+                        server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
+                        return@HttpHandler
+                    }
                     App.database.getDao().insertViewDocumentsSync(documentList)
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
-                } catch (e: Exception) {
-                    server.sendResponse<Handlers.HandlerError>(
-                        exchange, makeServerError(e.message)
-                    )
-                    return@HttpHandler
                 }
+                else -> server.sendResponse<Handlers.HandlerError>(
+                    exchange,
+                    makeNotImplementedError()
+                )
             }
-            else -> server.sendResponse<Handlers.HandlerError>(exchange, makeNotImplementedError())
+        } catch (e: Exception) {
+            server.sendResponse<Handlers.HandlerError>(
+                exchange, makeServerError(e.message)
+            )
+            return@HttpHandler
         }
+
     }
 
     // good endpoint
     @RequestHandler("/good")
     val goodHandler = HttpHandler { exchange ->
         val goodID = exchange.requestURI.getFileName()
-        when (exchange!!.requestMethod) {
-            "GET" -> {
-                if (goodID == "") {
-                    val goods = App.database.getDao().getViewGoodsSync()
-                    server.sendResponse<List<ViewGood>>(exchange, goods)
-                } else {
-                    val good = App.database.getDao().getViewGoodSync(goodID)
-                    if (good != null)
-                        server.sendResponse<ViewGood>(exchange, good)
-                    else
-                        server.sendResponse<Handlers.HandlerError>(exchange, makeNotFoundError())
+        try {
+            when (exchange!!.requestMethod) {
+                "GET" -> {
+                    if (goodID == "") {
+                        val goods = App.database.getDao().getViewGoodsSync()
+                        server.sendResponse<List<ViewGood>>(exchange, goods)
+                    } else {
+                        val good = App.database.getDao().getViewGoodSync(goodID)
+                        if (good != null)
+                            server.sendResponse<ViewGood>(exchange, good)
+                        else
+                            server.sendResponse<Handlers.HandlerError>(
+                                exchange,
+                                makeNotFoundError()
+                            )
+                    }
                 }
-            }
-            "DELETE" -> {
-                if (goodID == "") {
-                    App.database.getDao().deleteGoodsSync()
-                } else {
-                    App.database.getDao().deleteGoodSync(goodID)
+                "DELETE" -> {
+                    if (goodID == "") {
+                        App.database.getDao().deleteGoodsSync()
+                    } else {
+                        App.database.getDao().deleteGoodSync(goodID)
+                    }
+                    server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 }
-            }
-            "POST" -> {
-                val listType = object : TypeToken<List<ViewGood>>() {}.type
-                val json = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
-                val goodList: List<ViewGood>
-                try {
-                    goodList = Gson().fromJson(json, listType)
-                } catch (e: Exception) {
-                    server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
-                    return@HttpHandler
-                }
+                "POST" -> {
+                    val listType = object : TypeToken<List<ViewGood>>() {}.type
+                    val json = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
+                    val goodList: List<ViewGood>
+                    try {
+                        goodList = Gson().fromJson(json, listType)
+                    } catch (e: Exception) {
+                        server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
+                        return@HttpHandler
+                    }
 
-                try {
                     App.database.getDao().insertViewGoodsSync(goodList)
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
-                } catch (e: Exception) {
-                    server.sendResponse<Handlers.HandlerError>(
-                        exchange, makeServerError(e.message)
-                    )
-                    return@HttpHandler
                 }
+                else -> server.sendResponse<Handlers.HandlerError>(
+                    exchange,
+                    makeNotImplementedError()
+                )
             }
-            else -> server.sendResponse<Handlers.HandlerError>(exchange, makeNotImplementedError())
+        } catch (e: Exception) {
+            server.sendResponse<Handlers.HandlerError>(
+                exchange, makeServerError(e.message)
+            )
+            return@HttpHandler
         }
     }
 }

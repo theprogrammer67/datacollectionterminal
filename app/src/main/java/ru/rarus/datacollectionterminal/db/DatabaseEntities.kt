@@ -21,7 +21,13 @@ class DocumentHeader() {
         parentColumns = ["id"],
         childColumns = ["document"],
         onDelete = ForeignKey.CASCADE
-    )]
+    ),
+        ForeignKey(
+            entity = Unit::class,
+            parentColumns = ["barcode"],
+            childColumns = ["unit"],
+            onDelete = ForeignKey.RESTRICT
+        )]
 )
 open class DocumentRow() {
     @PrimaryKey
