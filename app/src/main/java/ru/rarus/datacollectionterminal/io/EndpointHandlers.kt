@@ -1,6 +1,7 @@
 package ru.rarus.datacollectionterminal.io
 
 import android.content.pm.PackageInfo
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -162,10 +163,16 @@ class Handlers(private val server: RestServer) {
                     }
                 }
                 "DELETE" -> {
-                    if (goodID == "") {
-                        App.database.getDao().deleteGoodsSync()
-                    } else {
-                        App.database.getDao().deleteGoodSync(goodID)
+                    try {
+                        if (goodID == "") {
+                            App.database.getDao().deleteGoodsSync()
+                        } else {
+                            App.database.getDao().deleteGoodSync(goodID)
+                        }
+                    } catch (e: SQLiteConstraintException) {
+                        server.sendResponse<Handlers.HandlerError>(
+                            exchange, makeServerError("Невозможно удалить товар на который есть ссылки в документах. Сначала необходимо удалить документы"))
+
                     }
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 }
