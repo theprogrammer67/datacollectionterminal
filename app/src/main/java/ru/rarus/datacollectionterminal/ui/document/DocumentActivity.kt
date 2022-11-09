@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.zxing.client.android.BeepManager
 import com.google.zxing.integration.android.IntentIntegrator
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
@@ -23,6 +24,7 @@ class DocumentActivity() : AppCompatActivity() {
     lateinit var viewModel: DocumentViewModel
     private lateinit var binding: ActivityDocumentBinding
     private val REQUEST_CODE = 1
+    private lateinit var beepManager: BeepManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,8 @@ class DocumentActivity() : AppCompatActivity() {
         if (intent.extras != null) {
             viewModel.getData(intent.extras?.getString(DOCUMENTID_TAG))
         }
+
+        beepManager = BeepManager(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -75,8 +79,10 @@ class DocumentActivity() : AppCompatActivity() {
         if (result != null) {
             if (result.contents == null)
                 App.showMessage("Сканирование отменено")
-            else
+            else {
+                beepManager.playBeepSoundAndVibrate()
                 viewModel.onScanBarcode(result.contents)
+            }
         } else
             super.onActivityResult(requestCode, resultCode, data)
     }
