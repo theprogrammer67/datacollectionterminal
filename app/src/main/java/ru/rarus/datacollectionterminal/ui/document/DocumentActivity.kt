@@ -14,9 +14,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.zxing.client.android.BeepManager
 import com.google.zxing.integration.android.IntentIntegrator
 import ru.rarus.datacollectionterminal.App
-import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
+import ru.rarus.datacollectionterminal.DOCUMENT_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
+import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.ui.ScannerCaptureActivity
 
 
@@ -46,7 +47,11 @@ class DocumentActivity() : AppCompatActivity() {
         binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
 
         if (intent.extras != null) {
-            viewModel.getData(intent.extras?.getString(DOCUMENTID_TAG))
+            val obj = intent.extras!!.get(DOCUMENT_TAG)
+            if ((obj != null) && (obj is ViewDocument)) {
+                val document: ViewDocument = obj
+                viewModel.document.value = document
+            }
         }
 
         beepManager = BeepManager(this)

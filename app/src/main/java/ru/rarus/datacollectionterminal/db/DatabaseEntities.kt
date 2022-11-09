@@ -1,11 +1,12 @@
 package ru.rarus.datacollectionterminal.db
 
 import androidx.room.*
+import java.io.Serializable
 import java.util.*
 
 
 @Entity(tableName = "document")
-class DocumentHeader() {
+class DocumentHeader(): Serializable {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
     var number: String = ""
@@ -31,7 +32,7 @@ class DocumentHeader() {
         )
     ]
 )
-open class DocumentRow() {
+open class DocumentRow(): Serializable {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
 
@@ -124,7 +125,7 @@ class ViewGood() {
     }
 }
 
-class ViewDocument() {
+class ViewDocument(): Serializable {
     var document: DocumentHeader = DocumentHeader()
     var rows: MutableList<ViewDocumentRow> = ArrayList()
     var saved: Boolean = false

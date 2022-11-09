@@ -97,9 +97,11 @@ abstract class DctDao {
 
     @Transaction
     open suspend fun getViewDocument(id: String): ViewDocument? {
-        val header = getDocumentSync(id) ?: return null
-        val rows = getViewDocumentRowsSync(id)
-        return ViewDocument(header, rows)
+        val header = getDocumentSync(id)
+        return if (header != null) {
+            val rows = getViewDocumentRowsSync(id)
+            ViewDocument(header, rows)
+        } else null
     }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

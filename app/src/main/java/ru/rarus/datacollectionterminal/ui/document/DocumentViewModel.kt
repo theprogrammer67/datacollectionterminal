@@ -1,7 +1,13 @@
 package ru.rarus.datacollectionterminal.ui.document
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.ViewDocument
@@ -9,9 +15,10 @@ import ru.rarus.datacollectionterminal.notifyObserver
 import ru.rarus.datacollectionterminal.observeOnce
 
 class DocumentViewModel : ViewModel() {
+    @SuppressLint("StaticFieldLeak")
     var activity: DocumentActivity? = null
     var document = MutableLiveData<ViewDocument>()
-    var model = DocumentModel()
+    var model = DocumentModel(this)
 
     init {
         document.value = ViewDocument()
@@ -26,12 +33,12 @@ class DocumentViewModel : ViewModel() {
     fun onScanBarcode(barcodeData: String) {
         if (activity == null) return
 
-        model.getGoodAndUnitByBarcode(barcodeData).observeOnce(activity!!, {
+        model.getGoodAndUnitByBarcode(barcodeData).observeOnce(activity!!) {
             if (it == null)
                 onBarcodeNotFound(barcodeData)
             else
                 addDocumentRow(it)
-        })
+        }
     }
 
     private fun addDocumentRow(goodAndUnit: GoodAndUnit) {
@@ -59,16 +66,5 @@ class DocumentViewModel : ViewModel() {
                 it.saved = true
                 App.showMessage("Документ сохранен")
             }
-    }
-
-    fun getData(documentId: String?) {
-        if (documentId == null) return
-
-        model.getData(documentId).observeOnce(activity!!, {
-            if (it != null) {
-                it.saved = true
-                document.value = it
-            }
-        })
     }
 }

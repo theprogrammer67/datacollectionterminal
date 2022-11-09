@@ -7,16 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import ru.rarus.datacollectionterminal.BaseAdapterEx
-import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
-import ru.rarus.datacollectionterminal.R
+import ru.rarus.datacollectionterminal.*
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentListBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentItemBinding
 import ru.rarus.datacollectionterminal.db.DocumentHeader
+import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.ui.document.DocumentActivity
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,6 +31,7 @@ class DocumentListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_document_list)
 
         viewModel = ViewModelProvider(this).get(DocumentListViewModel::class.java)
+        viewModel.activity = this
 
         adapter = DocumentListAdapter(applicationContext)
         binding.lvDocuments.adapter = adapter
@@ -37,21 +39,29 @@ class DocumentListActivity : AppCompatActivity() {
         binding.lvDocuments.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
                 val item = parent.getItemAtPosition(position) as DocumentHeader
-                val intent = Intent(this, DocumentActivity::class.java)
-                intent.putExtra(DOCUMENTID_TAG, item.id)
-                startActivity(intent)
+                viewModel.getDocument(item.id).observeOnce(this) {
+                    onGetDocument(it)
+                }
             }
 
-        viewModel.documents.observe(this, {
+        viewModel.documents.observe(this) {
             adapter.documents = it
             adapter.notifyDataSetChanged()
-        })
+        }
 
         binding.fabAdd.setOnClickListener {
             startActivity(Intent(this, DocumentActivity::class.java))
         }
 
-        if (savedInstanceState == null) viewModel.getData(this)
+        if (savedInstanceState == null) viewModel.getData()
+    }
+
+    private fun onGetDocument(document: ViewDocument?) {
+        if (document != null) {
+            val intent = Intent(this, DocumentActivity::class.java)
+            intent.putExtra(DOCUMENT_TAG, document as Serializable)
+            startActivity(intent)
+        } else App.showMessage("Документ не найден в БД")
     }
 }
 

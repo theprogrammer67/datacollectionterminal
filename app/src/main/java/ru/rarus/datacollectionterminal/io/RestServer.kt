@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer
+import kotlinx.coroutines.*
 import java.io.IOException
 import java.io.InputStream
 import java.net.InetSocketAddress
@@ -20,23 +21,34 @@ class RestServer {
     private val gson = Gson()
     private val handlers = Handlers(this)
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun start(port: Int) {
-        try {
-            mHttpServer = HttpServer.create(InetSocketAddress(port), 0)
-            mHttpServer!!.executor = Executors.newCachedThreadPool()
-            addHandlers()
-            mHttpServer!!.start()
-            _started = true
-        } catch (e: IOException) {
-            e.printStackTrace()
+        GlobalScope.launch {
+            try {
+                mHttpServer = HttpServer.create(InetSocketAddress(port), 0)
+                mHttpServer!!.executor = Executors.newCachedThreadPool()
+                addHandlers()
+                mHttpServer!!.start()
+                withContext(Dispatchers.Main) {
+                    _started = true
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
-
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun stop() {
         _started = false
         if (mHttpServer != null) {
-            mHttpServer!!.stop(0)
+            GlobalScope.launch {
+                try {
+                    mHttpServer!!.stop(0)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
         }
     }
 
