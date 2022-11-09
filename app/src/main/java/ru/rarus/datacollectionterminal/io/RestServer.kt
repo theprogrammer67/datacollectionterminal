@@ -1,5 +1,6 @@
 package ru.rarus.datacollectionterminal.io
 
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
@@ -16,8 +17,7 @@ import kotlin.reflect.full.memberProperties
 
 class RestServer {
     private var mHttpServer: HttpServer? = null
-    private var _started = false
-    val started: Boolean get() = (mHttpServer != null) && (_started)
+    val state = MutableLiveData<Boolean>()
     private val gson = Gson()
     private val handlers = Handlers(this)
 
@@ -29,9 +29,7 @@ class RestServer {
                 mHttpServer!!.executor = Executors.newCachedThreadPool()
                 addHandlers()
                 mHttpServer!!.start()
-                withContext(Dispatchers.Main) {
-                    _started = true
-                }
+                state.postValue(true)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -40,11 +38,11 @@ class RestServer {
 
     @OptIn(DelicateCoroutinesApi::class)
     fun stop() {
-        _started = false
         if (mHttpServer != null) {
             GlobalScope.launch {
                 try {
                     mHttpServer!!.stop(0)
+                    state.postValue(false)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
