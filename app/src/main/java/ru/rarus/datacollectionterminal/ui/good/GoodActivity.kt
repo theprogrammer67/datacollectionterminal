@@ -26,16 +26,15 @@ class GoodActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_good)
 
         viewModel = ViewModelProvider(this).get(GoodViewModel::class.java)
-        viewModel.activity = this
 
         adapter = UnitListAdapter(applicationContext)
         binding.lvUnits.adapter = adapter
 
-        viewModel.viewGood.observe(this, {
+        viewModel.viewGood.observe(this) {
             binding.good = it.good
             adapter.units = it.units
             adapter.notifyDataSetChanged()
-        })
+        }
 
         if (intent.extras != null) {
             viewModel.getData(intent.extras?.getString(GOODID_TAG))

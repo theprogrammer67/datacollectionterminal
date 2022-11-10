@@ -17,7 +17,6 @@ import ru.rarus.datacollectionterminal.observeOnce
 class DocumentViewModel : ViewModel() {
     @SuppressLint("StaticFieldLeak")
     var document = MutableLiveData<ViewDocument>()
-    var model = DocumentModel(this)
 
     init {
         document.value = ViewDocument()
@@ -25,7 +24,7 @@ class DocumentViewModel : ViewModel() {
 
     fun onScanBarcode(barcodeData: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val goodAndUnit = model.getGoodAndUnitByBarcode(barcodeData)
+            val goodAndUnit = App.database.getDao().getGoodAndUnitByBarcodeSync(barcodeData)
             withContext(Dispatchers.Main) {
                 if (goodAndUnit == null)
                     onBarcodeNotFound(barcodeData)
@@ -44,7 +43,12 @@ class DocumentViewModel : ViewModel() {
     private fun onBarcodeNotFound(barcodeData: String) {
         // Здесь в зависимости от настроек или добавляем или ругаемся
         App.showMessage("Штрихкод не найден")
-        model.insertGoodAndUnit(GoodAndUnit(barcodeData)) { addDocumentRow(it) }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val goodAndUnit = GoodAndUnit(barcodeData)
+            App.database.getDao().insertGoodAndUnit(goodAndUnit)
+            withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit) }
+        }
     }
 
     fun deleteSelectedRows() {
@@ -56,10 +60,20 @@ class DocumentViewModel : ViewModel() {
     }
 
     fun saveDocument() {
-        if (document.value != null)
-            model.saveDocument(document.value!!) {
-                it.saved = true
-                App.showMessage("Документ сохранен")
+        if (document.value != null) {
+            val data: ViewDocument = document.value!!
+
+            viewModelScope.launch(Dispatchers.IO) {
+                if (data.saved)
+                    App.database.getDao().updateViewDocumentSync(data)
+                else
+                    App.database.getDao().insertViewDocument(data)
+
+                withContext(Dispatchers.Main) {
+                    data.saved = true
+                    App.showMessage("Документ сохранен")
+                }
             }
+        }
     }
 }

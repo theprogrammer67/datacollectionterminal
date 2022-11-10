@@ -135,7 +135,7 @@ abstract class DctDao {
     open fun getViewGoodSync(id: String): ViewGood? {
         val good = getGoodSync(id) ?: return null
         val units = getGoodUnitsSync(id)
-        return ViewGood(good, units)
+        return ViewGood(good, units, true)
     }
 
     @Transaction

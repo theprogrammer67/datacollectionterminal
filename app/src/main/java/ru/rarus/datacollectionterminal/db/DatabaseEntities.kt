@@ -123,6 +123,10 @@ class ViewGood() {
         this.good = good
         this.units = units.toMutableList()
     }
+
+    constructor(good: Good, units: List<Unit>, saved: Boolean) : this(good, units) {
+        this.saved = saved
+    }
 }
 
 class ViewDocument(): Serializable {
