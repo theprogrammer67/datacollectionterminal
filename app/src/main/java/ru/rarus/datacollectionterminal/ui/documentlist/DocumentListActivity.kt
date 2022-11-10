@@ -50,8 +50,11 @@ class DocumentListActivity : AppCompatActivity() {
         binding.fabAdd.setOnClickListener {
             startActivity(Intent(this, DocumentActivity::class.java))
         }
+    }
 
-        if (savedInstanceState == null) viewModel.getData()
+    override fun onResume() {
+        super.onResume()
+        viewModel.getData()
     }
 
     private fun onGetDocument(document: ViewDocument?) {
