@@ -33,12 +33,10 @@ class GoodListActivity : AppCompatActivity() {
         adapter = GoodListAdapter(applicationContext)
         binding.lvGoods.adapter = adapter
 
-        viewModel.goods.observe(this, {
+        viewModel.goods.observe(this) {
             adapter.goods = it
             adapter.notifyDataSetChanged()
-        })
-
-        if (savedInstanceState == null) viewModel.getData(this)
+        }
 
         binding.lvGoods.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
@@ -48,7 +46,13 @@ class GoodListActivity : AppCompatActivity() {
                 startActivity(intent)
             }
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getData()
+    }
 }
+
 
 class GoodListAdapter(
     private val context: Context
