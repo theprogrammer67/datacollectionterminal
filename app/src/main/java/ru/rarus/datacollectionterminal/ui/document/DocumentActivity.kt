@@ -32,7 +32,6 @@ class DocumentActivity() : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_document)
 
         viewModel = ViewModelProvider(this).get(DocumentViewModel::class.java)
-        viewModel.activity = this
 
         binding.viewpager.adapter = ScreenSlidePagerAdapter(this)
         TabLayoutMediator(binding.tabs, binding.viewpager) { tab, position ->
@@ -43,7 +42,9 @@ class DocumentActivity() : AppCompatActivity() {
             binding.viewpager.setCurrentItem(tab.position, true)
         }.attach()
 
-        binding.btnScanBarcode.setOnClickListener { viewModel.scanBarcode() }
+        // По-умолчанию используем zxing сканер
+        // Но тут могут быть и другие варианты (bluetooth-сканер)
+        binding.btnScanBarcode.setOnClickListener { startScanActivity() }
         binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
 
         if (intent.extras != null) {

@@ -15,8 +15,8 @@ import ru.rarus.datacollectionterminal.db.ViewDocument
 class DocumentModel(documentViewModel: DocumentViewModel) {
     private val viewModel = documentViewModel
 
-    fun getGoodAndUnitByBarcode(barcodeData: String): LiveData<GoodAndUnit> {
-        return App.database.getDao().getGoodAndUnitByBarcode(barcodeData)
+    suspend fun getGoodAndUnitByBarcode(barcodeData: String): GoodAndUnit? {
+        return App.database.getDao().getGoodAndUnitByBarcodeSync(barcodeData)
     }
 
     fun insertGoodAndUnit(goodAndUnit: GoodAndUnit, onInsert: (GoodAndUnit) -> Unit) {

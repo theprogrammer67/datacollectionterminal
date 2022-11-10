@@ -16,7 +16,6 @@ import ru.rarus.datacollectionterminal.observeOnce
 
 class DocumentViewModel : ViewModel() {
     @SuppressLint("StaticFieldLeak")
-    var activity: DocumentActivity? = null
     var document = MutableLiveData<ViewDocument>()
     var model = DocumentModel(this)
 
@@ -24,20 +23,16 @@ class DocumentViewModel : ViewModel() {
         document.value = ViewDocument()
     }
 
-    fun scanBarcode() {
-        // По-умолчанию используем zxing сканер
-        // Но тут могут быть и другие варианты (bluetooth-сканер)
-        activity?.startScanActivity()
-    }
-
     fun onScanBarcode(barcodeData: String) {
-        if (activity == null) return
+        viewModelScope.launch(Dispatchers.IO) {
+            val goodAndUnit = model.getGoodAndUnitByBarcode(barcodeData)
+            withContext(Dispatchers.Main) {
+                if (goodAndUnit == null)
+                    onBarcodeNotFound(barcodeData)
+                else
+                    addDocumentRow(goodAndUnit)
+            }
 
-        model.getGoodAndUnitByBarcode(barcodeData).observeOnce(activity!!) {
-            if (it == null)
-                onBarcodeNotFound(barcodeData)
-            else
-                addDocumentRow(it)
         }
     }
 

@@ -84,6 +84,9 @@ abstract class DctDao {
     @Query("SELECT * FROM good JOIN unit ON(unit.good = good.id) WHERE unit.barcode = :barcode")
     abstract fun getGoodAndUnitByBarcode(barcode: String): LiveData<GoodAndUnit>
 
+    @Query("SELECT * FROM good JOIN unit ON(unit.good = good.id) WHERE unit.barcode = :barcode")
+    abstract suspend fun getGoodAndUnitByBarcodeSync(barcode: String): GoodAndUnit?
+
     @Query(
         """
         SELECT document_row.*, unit.name as unitName, unit.price as unitPrice, good.name as goodName, good.id as good
