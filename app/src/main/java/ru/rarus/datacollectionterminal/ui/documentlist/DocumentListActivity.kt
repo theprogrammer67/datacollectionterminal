@@ -30,7 +30,6 @@ class DocumentListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_document_list)
 
         viewModel = ViewModelProvider(this).get(DocumentListViewModel::class.java)
-        viewModel.activity = this
 
         adapter = DocumentListAdapter(applicationContext)
         binding.lvDocuments.adapter = adapter

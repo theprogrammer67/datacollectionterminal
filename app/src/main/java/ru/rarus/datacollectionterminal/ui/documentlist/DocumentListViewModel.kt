@@ -10,17 +10,12 @@ import ru.rarus.datacollectionterminal.db.ViewDocument
 
 class DocumentListViewModel() : ViewModel() {
     @SuppressLint("StaticFieldLeak")
-    var activity: DocumentListActivity? = null
     var documents = MutableLiveData<List<DocumentHeader>>()
 
     fun getData() {
-        if (activity == null) return
-
-        val data = MutableLiveData<List<DocumentHeader>>()
         viewModelScope.launch(Dispatchers.IO) {
-            data.postValue(App.database.getDao().getDocumentsSync())
+            documents.postValue(App.database.getDao().getDocumentsSync())
         }
-        activity?.let { data.observe(it, { documents.setValue(it) }) }
     }
 
     fun getDocument(documentId: String): LiveData<ViewDocument?> {
