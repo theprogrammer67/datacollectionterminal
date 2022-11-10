@@ -19,6 +19,7 @@ import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.ui.ScannerCaptureActivity
+import ru.rarus.datacollectionterminal.ui.SettingsActivity
 
 
 class DocumentActivity() : AppCompatActivity() {
@@ -63,11 +64,15 @@ class DocumentActivity() : AppCompatActivity() {
         return true
     }
 
+    fun onSettingsClick(menuItem: MenuItem) {
+        startActivity(Intent(this, SettingsActivity::class.java))
+    }
+
     fun onDeleteClick(menuItem: MenuItem) {
         viewModel.deleteSelectedRows()
     }
 
-    fun startScanActivity() {
+    private fun startScanActivity() {
         val integrator = IntentIntegrator(this)
         integrator.captureActivity = ScannerCaptureActivity::class.java
         integrator.setRequestCode(REQUEST_CODE)
