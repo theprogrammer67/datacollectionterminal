@@ -6,7 +6,7 @@ import java.util.*
 
 
 @Entity(tableName = "document")
-class DocumentHeader(): Serializable {
+class DocumentHeader() : Serializable {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
     var number: String = ""
@@ -32,7 +32,7 @@ class DocumentHeader(): Serializable {
         )
     ]
 )
-open class DocumentRow(): Serializable {
+open class DocumentRow() : Serializable {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
 
@@ -129,17 +129,20 @@ class ViewGood() {
     }
 }
 
-class ViewDocument(): Serializable {
+class ViewDocument() : Serializable {
     var document: DocumentHeader = DocumentHeader()
     var rows: MutableList<ViewDocumentRow> = ArrayList()
     var saved: Boolean = false
 
-    fun addRow(goodAndUnit: GoodAndUnit) {
-        val item = rows.find { it.unit == goodAndUnit.unit.barcode }
+    fun addRow(goodAndUnit: GoodAndUnit, addBarcode: String) {
+        var item: ViewDocumentRow? = null
+        if (addBarcode.isEmpty())
+            item = rows.find { it.unit == goodAndUnit.unit.barcode }
         if (item != null)
             item.quantityActual += 1
-        else
-            rows.add(ViewDocumentRow(goodAndUnit, document.id))
+        else {
+            rows.add(ViewDocumentRow(goodAndUnit, document.id, addBarcode))
+        }
     }
 
     constructor(document: DocumentHeader, rows: List<ViewDocumentRow>) : this() {
@@ -147,7 +150,10 @@ class ViewDocument(): Serializable {
         this.rows = rows.toMutableList()
     }
 
-    constructor(document: DocumentHeader, rows: List<ViewDocumentRow>, saved: Boolean) : this(document, rows) {
+    constructor(document: DocumentHeader, rows: List<ViewDocumentRow>, saved: Boolean) : this(
+        document,
+        rows
+    ) {
         this.saved = saved
     }
 }
@@ -169,5 +175,13 @@ class ViewDocumentRow() : DocumentRow() {
         unitPrice = goodAndUnit.unit.price
         unit = goodAndUnit.unit.barcode
         quantityActual = 1.0
+    }
+
+    constructor(
+        goodAndUnit: GoodAndUnit,
+        documentId: String,
+        addBarcode: String
+    ) : this(goodAndUnit, documentId) {
+        this.addBarcode = addBarcode
     }
 }

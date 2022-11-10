@@ -25,8 +25,10 @@ import ru.rarus.datacollectionterminal.ui.SettingsActivity
 class DocumentActivity() : AppCompatActivity() {
     lateinit var viewModel: DocumentViewModel
     private lateinit var binding: ActivityDocumentBinding
-    private val REQUEST_CODE = 1
+    private val REQUEST_BARCODE = 0x0000c0de // Only use bottom 16 bits
+    private val REQUEST_ADDBARCODE = 0x0000c0df // Only use bottom 16 bits
     private lateinit var beepManager: BeepManager
+    private var barcode: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,7 @@ class DocumentActivity() : AppCompatActivity() {
 
         // По-умолчанию используем zxing сканер
         // Но тут могут быть и другие варианты (bluetooth-сканер)
-        binding.btnScanBarcode.setOnClickListener { startScanActivity() }
+        binding.btnScanBarcode.setOnClickListener { startScanActivity(false) }
         binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
 
         if (intent.extras != null) {
@@ -72,16 +74,20 @@ class DocumentActivity() : AppCompatActivity() {
         viewModel.deleteSelectedRows()
     }
 
-    private fun startScanActivity() {
+    private fun startScanActivity(addBarcode: Boolean) {
         val integrator = IntentIntegrator(this)
         integrator.captureActivity = ScannerCaptureActivity::class.java
-        integrator.setRequestCode(REQUEST_CODE)
+        if (!addBarcode) {
+            barcode = ""
+            integrator.setRequestCode(REQUEST_BARCODE)
+        } else
+            integrator.setRequestCode(REQUEST_ADDBARCODE)
         integrator.setOrientationLocked(false)
         integrator.initiateScan()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != REQUEST_CODE) {
+        if (requestCode !in intArrayOf(REQUEST_BARCODE, REQUEST_ADDBARCODE)) {
             super.onActivityResult(requestCode, resultCode, data)
             return
         }
@@ -92,7 +98,14 @@ class DocumentActivity() : AppCompatActivity() {
                 App.showMessage("Сканирование отменено")
             else {
                 beepManager.playBeepSoundAndVibrate()
-                viewModel.onScanBarcode(result.contents)
+                if (requestCode == REQUEST_BARCODE) {
+                    barcode = result.contents
+                    if (App.prefs.getBoolean("extBarcodeRead", false)) {
+                        startScanActivity(true)
+                    } else viewModel.onScanBarcode(barcode, "")
+                } else {
+                    viewModel.onScanBarcode(barcode, result.contents)
+                }
             }
         } else
             super.onActivityResult(requestCode, resultCode, data)

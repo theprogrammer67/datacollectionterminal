@@ -5,14 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.notifyObserver
-import ru.rarus.datacollectionterminal.observeOnce
 
 class DocumentViewModel : ViewModel() {
     @SuppressLint("StaticFieldLeak")
@@ -22,33 +20,37 @@ class DocumentViewModel : ViewModel() {
         document.value = ViewDocument()
     }
 
-    fun onScanBarcode(barcodeData: String) {
+    fun onScanBarcode(barcode: String, addBarcode: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val goodAndUnit = App.database.getDao().getGoodAndUnitByBarcodeSync(barcodeData)
+            val goodAndUnit = App.database.getDao().getGoodAndUnitByBarcodeSync(barcode)
             withContext(Dispatchers.Main) {
                 if (goodAndUnit == null)
-                    onBarcodeNotFound(barcodeData)
+                    onBarcodeNotFound(barcode, addBarcode)
                 else
-                    addDocumentRow(goodAndUnit)
+                    onBarcodeFound(goodAndUnit, addBarcode)
             }
 
         }
     }
 
-    private fun addDocumentRow(goodAndUnit: GoodAndUnit) {
-        document.value?.addRow(goodAndUnit)
-        document.notifyObserver()
+    private fun onBarcodeFound(goodAndUnit: GoodAndUnit, addBarcode: String) {
+        addDocumentRow(goodAndUnit, addBarcode)
     }
 
-    private fun onBarcodeNotFound(barcodeData: String) {
+    private fun onBarcodeNotFound(barcodeData: String, addBarcode: String) {
         // Здесь в зависимости от настроек или добавляем или ругаемся
         App.showMessage("Штрихкод не найден")
 
         viewModelScope.launch(Dispatchers.IO) {
             val goodAndUnit = GoodAndUnit(barcodeData)
             App.database.getDao().insertGoodAndUnit(goodAndUnit)
-            withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit) }
+            withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit, addBarcode) }
         }
+    }
+
+    private fun addDocumentRow(goodAndUnit: GoodAndUnit, addBarcode: String) {
+        document.value?.addRow(goodAndUnit, addBarcode)
+        document.notifyObserver()
     }
 
     fun deleteSelectedRows() {
