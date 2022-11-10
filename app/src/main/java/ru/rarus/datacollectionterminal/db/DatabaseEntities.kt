@@ -146,6 +146,10 @@ class ViewDocument(): Serializable {
         this.document = document
         this.rows = rows.toMutableList()
     }
+
+    constructor(document: DocumentHeader, rows: List<ViewDocumentRow>, saved: Boolean) : this(document, rows) {
+        this.saved = saved
+    }
 }
 
 class ViewDocumentRow() : DocumentRow() {

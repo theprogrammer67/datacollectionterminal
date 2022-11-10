@@ -22,9 +22,6 @@ class DocumentListViewModel() : ViewModel() {
         val data = MutableLiveData<ViewDocument?>()
         viewModelScope.launch(Dispatchers.IO) {
             val document = App.database.getDao().getViewDocument(documentId)
-            if (document != null) {
-                document.saved = true
-            }
             data.postValue(document)
         }
         return data

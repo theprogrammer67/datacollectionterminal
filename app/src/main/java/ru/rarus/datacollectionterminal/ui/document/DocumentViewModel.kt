@@ -70,7 +70,6 @@ class DocumentViewModel : ViewModel() {
                     App.database.getDao().insertViewDocument(data)
 
                 withContext(Dispatchers.Main) {
-                    data.saved = true
                     App.showMessage("Документ сохранен")
                 }
             }

@@ -44,6 +44,7 @@ abstract class DctDao {
         deleteDocumentRowsSync(document.document.id)
         updateDocumentSync(document.document)
         insertDocumentRowsSync(document.rows)
+        document.saved = true
     }
 
     // !!!
@@ -51,6 +52,7 @@ abstract class DctDao {
     open suspend fun insertViewDocument(document: ViewDocument) {
         insertDocument(document.document)
         insertDocumentRows(document.rows)
+        document.saved = true
     }
 
     @Transaction
@@ -100,11 +102,9 @@ abstract class DctDao {
 
     @Transaction
     open suspend fun getViewDocument(id: String): ViewDocument? {
-        val header = getDocumentSync(id)
-        return if (header != null) {
-            val rows = getViewDocumentRowsSync(id)
-            ViewDocument(header, rows)
-        } else null
+        val header = getDocumentSync(id) ?: return null
+        val rows = getViewDocumentRowsSync(id)
+        return ViewDocument(header, rows, true)
     }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
