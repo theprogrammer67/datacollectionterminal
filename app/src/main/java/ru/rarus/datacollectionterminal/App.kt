@@ -9,18 +9,17 @@ import androidx.preference.PreferenceManager
 import ru.rarus.datacollectionterminal.db.AppDatabase
 import ru.rarus.datacollectionterminal.io.RestServer
 
-class App: Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
         _context = this
         _resources = resources
         _database = AppDatabase.getInstance(this)
         _restserver = RestServer()
+        _prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
-        val prefs: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(this)
-        val serverStarted = prefs.getBoolean("serverStarted", false)
-        if (serverStarted) _restserver.start(8118)
+        if (_prefs.getBoolean("startServer", false))
+            _restserver.start(SERVER_PORT)
     }
 
     companion object {
@@ -30,9 +29,12 @@ class App: Application() {
         private lateinit var _database: AppDatabase
         val database get() = _database
         private lateinit var _restserver: RestServer
+        private lateinit var _prefs: SharedPreferences
+
 
         val restserver get() = _restserver
         val resources get() = _resources
+        val prefs get() = _prefs
 
         fun stop() {
             _restserver.stop()

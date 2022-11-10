@@ -15,8 +15,8 @@
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
-            app:key="serverStarted"
-            app:title="По-умолчанию сервер запущен" />
+            app:key="startServer"
+            app:title="Запускать сервер при старте" />
 
         <SwitchPreferenceCompat
             app:key="extBarcodeRead"

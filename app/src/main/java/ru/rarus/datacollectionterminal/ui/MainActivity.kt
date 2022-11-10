@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
-        binding.swServerStart.isChecked = false
+        binding.swServerStart.isChecked = App.prefs.getBoolean("startServer", false)
         App.restserver.state.observe(this) { binding.swServerStart.isChecked = it }
         binding.swServerStart.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) App.restserver.start(SERVER_PORT)

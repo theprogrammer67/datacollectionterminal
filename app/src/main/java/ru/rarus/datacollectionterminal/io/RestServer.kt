@@ -6,6 +6,8 @@ import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer
 import kotlinx.coroutines.*
+import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.SERVER_PORT
 import java.io.IOException
 import java.io.InputStream
 import java.net.InetSocketAddress
@@ -20,33 +22,45 @@ class RestServer {
     val state = MutableLiveData<Boolean>()
     private val gson = Gson()
     private val handlers = Handlers(this)
+    private var serverPort = SERVER_PORT
+    val serverStarted get() = mHttpServer != null
+
+
+    private fun startServer(port: Int) {
+        if ((mHttpServer == null) || (serverPort != port)) {
+            stopServer()
+            serverPort = port
+            mHttpServer = HttpServer.create(InetSocketAddress(serverPort), 0)
+            mHttpServer!!.executor = Executors.newCachedThreadPool()
+            addHandlers()
+            mHttpServer!!.start()
+        }
+    }
+
+    private fun stopServer() {
+        mHttpServer?.stop(0)
+        mHttpServer = null
+    }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun start(port: Int) {
         GlobalScope.launch {
             try {
-                mHttpServer = HttpServer.create(InetSocketAddress(port), 0)
-                mHttpServer!!.executor = Executors.newCachedThreadPool()
-                addHandlers()
-                mHttpServer!!.start()
+                startServer(port)
                 state.postValue(true)
-            } catch (e: IOException) {
-                e.printStackTrace()
+            } catch (e: Exception) {
+                stopServer()
+                state.postValue(false)
+                withContext(Dispatchers.Main) { App.showMessage(e.message) }
             }
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun stop() {
-        if (mHttpServer != null) {
-            GlobalScope.launch {
-                try {
-                    mHttpServer!!.stop(0)
-                    state.postValue(false)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
+        GlobalScope.launch {
+            state.postValue(false)
+            stopServer()
         }
     }
 
