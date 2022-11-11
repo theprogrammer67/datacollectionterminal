@@ -18,7 +18,8 @@ import ru.rarus.datacollectionterminal.DOCUMENT_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 import ru.rarus.datacollectionterminal.db.ViewDocument
-import ru.rarus.datacollectionterminal.ui.ScannerCaptureActivity
+import ru.rarus.datacollectionterminal.ui.BarcodeCaptureActivity
+import ru.rarus.datacollectionterminal.ui.ExtBarcodeCaptureActivity
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
 
 
@@ -76,12 +77,14 @@ class DocumentActivity() : AppCompatActivity() {
 
     private fun startScanActivity(addBarcode: Boolean) {
         val integrator = IntentIntegrator(this)
-        integrator.captureActivity = ScannerCaptureActivity::class.java
         if (!addBarcode) {
+            integrator.captureActivity = BarcodeCaptureActivity::class.java
             barcode = ""
             integrator.setRequestCode(REQUEST_BARCODE)
-        } else
+        } else {
+            integrator.captureActivity = ExtBarcodeCaptureActivity::class.java
             integrator.setRequestCode(REQUEST_ADDBARCODE)
+        }
         integrator.setOrientationLocked(false)
         integrator.initiateScan()
     }

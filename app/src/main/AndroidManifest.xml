@@ -27,7 +27,13 @@
             android:name=".ui.documentlist.DocumentListActivity"
             android:label="Список документов" />
         <activity
-            android:name=".ui.ScannerCaptureActivity"
+            android:name=".ui.BarcodeCaptureActivity"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".ui.ExtBarcodeCaptureActivity"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
