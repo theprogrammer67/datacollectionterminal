@@ -16,7 +16,7 @@
         android:theme="@style/Theme.DataCollectionTerminal">
         <activity
             android:name=".ui.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".ui.good.GoodActivity"
             android:label="Товар" />
