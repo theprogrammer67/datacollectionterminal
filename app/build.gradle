@@ -35,7 +35,9 @@ android {
         dataBinding = true
         // for view binding:
         // viewBinding = true
-    }}
+    }
+    namespace 'ru.rarus.datacollectionterminal'
+}
 
 dependencies {
     def lifecycle_version = "2.5.1"
