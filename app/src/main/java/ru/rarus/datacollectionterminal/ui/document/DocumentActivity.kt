@@ -1,9 +1,12 @@
 package ru.rarus.datacollectionterminal.ui.document
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -30,6 +33,21 @@ class DocumentActivity() : AppCompatActivity() {
     private val REQUEST_ADDBARCODE = 0x0000c0df // Only use bottom 16 bits
     private lateinit var beepManager: BeepManager
     private var barcode: String = ""
+
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // There are no request codes
+                val data: Intent? = result.data
+                val barcode: String = data?.getStringExtra("barcode") ?: ""
+                val extBarcode: String = data?.getStringExtra("extBarcode") ?: ""
+                Toast.makeText(
+                    this,
+                    "Scanned: $barcode, $extBarcode",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
