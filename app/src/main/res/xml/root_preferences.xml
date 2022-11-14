@@ -16,11 +16,13 @@
 
         <SwitchPreferenceCompat
             app:key="startServer"
-            app:title="Запускать сервер при старте" />
+            app:summary="Запускать сервер обмена данными при старте приложения"
+            app:title="Передача данных" />
 
         <SwitchPreferenceCompat
             app:key="extBarcodeRead"
-            app:title="Считывать дополнительный штрихкод" />
+            app:summary="Сканировать дополнительный штрихкод после основного"
+            app:title="Дополнительны штрихкод" />
 
     </PreferenceCategory>
 

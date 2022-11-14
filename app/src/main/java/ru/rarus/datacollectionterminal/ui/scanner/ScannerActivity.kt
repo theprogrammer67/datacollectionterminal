@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
+import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -18,6 +19,7 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityScannerBinding
+import ru.rarus.datacollectionterminal.enableButton
 
 const val cameraPermissionReqCode = 250
 
@@ -84,14 +86,14 @@ class ScannerActivity : AppCompatActivity() {
 
     fun pause(view: View?) {
         barcodeView.pause()
-        binding.btnPause.isEnabled = false
-        binding.btnResume.isEnabled = true
+        enableButton(binding.btnPause, false)
+        enableButton(binding.btnResume, true)
     }
 
     fun resume(view: View?) {
         barcodeView.resume()
-        binding.btnPause.isEnabled = true
-        binding.btnResume.isEnabled = false
+        enableButton(binding.btnPause, true)
+        enableButton(binding.btnResume, false)
     }
 
     fun cancel(view: View?) {

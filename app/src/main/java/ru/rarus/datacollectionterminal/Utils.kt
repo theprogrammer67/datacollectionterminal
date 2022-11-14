@@ -1,5 +1,6 @@
 package ru.rarus.datacollectionterminal
 
+import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,4 +17,10 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 
 fun <T> MutableLiveData<T>.notifyObserver() {
     this.value = this.value
+}
+
+fun enableButton(button: Button, enable: Boolean) {
+    var v = if (enable) 0 else 1
+    button.alpha = if (enable) 1.0f else 0.5f
+    button.isClickable = enable;
 }
