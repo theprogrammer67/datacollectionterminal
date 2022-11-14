@@ -23,7 +23,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
+            android:paddingBottom="10dp"
             android:orientation="horizontal">
             <Button
                 android:id="@+id/btnPause"
@@ -47,7 +48,7 @@
         <Button
             android:id="@+id/btnCancel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:onClick="cancel"
             android:text="Отмена" />
     </LinearLayout>

@@ -24,15 +24,12 @@ import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.ui.BarcodeCaptureActivity
 import ru.rarus.datacollectionterminal.ui.ExtBarcodeCaptureActivity
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
+import ru.rarus.datacollectionterminal.ui.scanner.ScannerActivity
 
 
 class DocumentActivity() : AppCompatActivity() {
     lateinit var viewModel: DocumentViewModel
     private lateinit var binding: ActivityDocumentBinding
-    private val REQUEST_BARCODE = 0x0000c0de // Only use bottom 16 bits
-    private val REQUEST_ADDBARCODE = 0x0000c0df // Only use bottom 16 bits
-    private lateinit var beepManager: BeepManager
-    private var barcode: String = ""
 
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -41,11 +38,9 @@ class DocumentActivity() : AppCompatActivity() {
                 val data: Intent? = result.data
                 val barcode: String = data?.getStringExtra("barcode") ?: ""
                 val extBarcode: String = data?.getStringExtra("extBarcode") ?: ""
-                Toast.makeText(
-                    this,
-                    "Scanned: $barcode, $extBarcode",
-                    Toast.LENGTH_LONG
-                ).show()
+                viewModel.onScanBarcode(barcode, extBarcode)
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                App.showMessage("Сканирование отменено")
             }
         }
 
@@ -76,8 +71,6 @@ class DocumentActivity() : AppCompatActivity() {
                 viewModel.document.value = document
             }
         }
-
-        beepManager = BeepManager(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -94,42 +87,8 @@ class DocumentActivity() : AppCompatActivity() {
     }
 
     private fun startScanActivity(addBarcode: Boolean) {
-        val integrator = IntentIntegrator(this)
-        if (!addBarcode) {
-            integrator.captureActivity = BarcodeCaptureActivity::class.java
-            barcode = ""
-            integrator.setRequestCode(REQUEST_BARCODE)
-        } else {
-            integrator.captureActivity = ExtBarcodeCaptureActivity::class.java
-            integrator.setRequestCode(REQUEST_ADDBARCODE)
-        }
-        integrator.setOrientationLocked(false)
-        integrator.initiateScan()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode !in intArrayOf(REQUEST_BARCODE, REQUEST_ADDBARCODE)) {
-            super.onActivityResult(requestCode, resultCode, data)
-            return
-        }
-
-        val result = IntentIntegrator.parseActivityResult(resultCode, data)
-        if (result != null) {
-            if (result.contents == null)
-                App.showMessage("Сканирование отменено")
-            else {
-                beepManager.playBeepSoundAndVibrate()
-                if (requestCode == REQUEST_BARCODE) {
-                    barcode = result.contents
-                    if (App.prefs.getBoolean("extBarcodeRead", false)) {
-                        startScanActivity(true)
-                    } else viewModel.onScanBarcode(barcode, "")
-                } else {
-                    viewModel.onScanBarcode(barcode, result.contents)
-                }
-            }
-        } else
-            super.onActivityResult(requestCode, resultCode, data)
+        val intent = Intent(this, ScannerActivity::class.java)
+        resultLauncher.launch(intent)
     }
 
     private inner class ScreenSlidePagerAdapter(fragmentActivity: FragmentActivity) :

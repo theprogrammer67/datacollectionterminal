@@ -15,6 +15,7 @@ import com.google.zxing.client.android.BeepManager
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityScannerBinding
 
@@ -28,6 +29,7 @@ class ScannerActivity : AppCompatActivity() {
     private var askedPermission = false
     private var barcode = ""
     private var extBarcode = ""
+    val extBarcodeRead = App.prefs.getBoolean("extBarcodeRead", false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +38,6 @@ class ScannerActivity : AppCompatActivity() {
             this, R.layout.activity_scanner
         )
         barcodeView = binding.barcodeScanner
-//        val formats: Collection<BarcodeFormat> =
-//            listOf(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
-//        barcodeView.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
         barcodeView.initializeFromIntent(intent)
         barcodeView.decodeContinuous(callback)
 
@@ -54,12 +53,19 @@ class ScannerActivity : AppCompatActivity() {
             lastText = result.text
             barcodeView.setStatusText(result.text)
             beepManager.playBeepSoundAndVibrate()
-            pause(null)
 
-            if (barcode.isEmpty()) barcode = result.text
-            else {
-                extBarcode = result.text
+            if (!extBarcodeRead) {
+                barcode = result.text
+                extBarcode = ""
                 returnData()
+            } else {
+                if (barcode.isEmpty()) {
+                    barcode = result.text
+                    pause(null)
+                } else {
+                    extBarcode = result.text
+                    returnData()
+                }
             }
         }
 
@@ -86,10 +92,6 @@ class ScannerActivity : AppCompatActivity() {
         barcodeView.resume()
         binding.btnPause.isEnabled = true
         binding.btnResume.isEnabled = false
-    }
-
-    fun triggerScan(view: View?) {
-        barcodeView.decodeSingle(callback)
     }
 
     fun cancel(view: View?) {
