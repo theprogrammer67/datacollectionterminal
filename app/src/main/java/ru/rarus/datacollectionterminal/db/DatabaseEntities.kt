@@ -51,10 +51,6 @@ class Good() {
     var id: String = UUID.randomUUID().toString()
     var name: String = "Неизвестный товар"
 
-    @Ignore
-    @Transient
-    var isSelected = false
-
     constructor(barcode: String) : this() {
         name = "Товар $barcode"
     }
@@ -167,10 +163,6 @@ class ViewDocumentRow() : DocumentRow() {
     var goodName = ""
     var unitName = ""
     var unitPrice: Double = 0.0
-
-    @Ignore
-    @Transient
-    var isSelected = false
 
     constructor(goodAndUnit: GoodAndUnit, documentId: String) : this() {
         document = documentId

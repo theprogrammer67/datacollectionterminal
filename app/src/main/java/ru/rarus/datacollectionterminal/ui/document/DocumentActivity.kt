@@ -48,7 +48,7 @@ class DocumentActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_document)
 
-        viewModel = ViewModelProvider(this).get(DocumentViewModel::class.java)
+        viewModel = ViewModelProvider(this)[DocumentViewModel::class.java]
 
         binding.viewpager.adapter = ScreenSlidePagerAdapter(this)
         TabLayoutMediator(binding.tabs, binding.viewpager) { tab, position ->
@@ -63,12 +63,18 @@ class DocumentActivity() : AppCompatActivity() {
         // Но тут могут быть и другие варианты (bluetooth-сканер)
         binding.btnScanBarcode.setOnClickListener { startScanActivity(false) }
         binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
+        binding.btnDeleteSelected.setOnClickListener { viewModel.deleteSelectedRows() }
+        binding.btnClear.setOnClickListener { viewModel.clewrRows() }
 
-        if (intent.extras != null) {
-            val obj = intent.extras!!.get(DOCUMENT_TAG)
-            if ((obj != null) && (obj is ViewDocument)) {
-                val document: ViewDocument = obj
-                viewModel.document.value = document
+        if (savedInstanceState == null) {
+            viewModel.selectedItems.clear()
+
+            if (intent.extras != null) {
+                val obj = intent.extras!!.get(DOCUMENT_TAG)
+                if ((obj != null) && (obj is ViewDocument)) {
+                    val document: ViewDocument = obj
+                    viewModel.document.value = document
+                }
             }
         }
     }

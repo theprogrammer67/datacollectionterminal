@@ -7,6 +7,10 @@
         <variable
             name="viewDocumentRow"
             type="ru.rarus.datacollectionterminal.db.ViewDocumentRow" />
+
+        <variable
+            name="checked"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -59,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/black"
-                android:checked="@{viewDocumentRow.isSelected}" />
+                android:checked="@{checked}" />
         </LinearLayout>
 
         <LinearLayout

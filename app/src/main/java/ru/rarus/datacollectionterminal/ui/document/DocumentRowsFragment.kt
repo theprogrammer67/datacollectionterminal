@@ -15,6 +15,7 @@ import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentRowsBinding
 import ru.rarus.datacollectionterminal.db.DocumentRow
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
+import ru.rarus.datacollectionterminal.ui.documentlist.DocumentListActivity
 
 
 class DocumentRowsFragment : Fragment() {
@@ -29,7 +30,7 @@ class DocumentRowsFragment : Fragment() {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_document_rows, container, false)
 
-        adapter = DocumentRowsAdapter(this.context)
+        adapter = DocumentRowsAdapter(this)
         binding.lvRows.adapter = adapter
 
         return binding.root
@@ -37,7 +38,8 @@ class DocumentRowsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(DocumentViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity())[DocumentViewModel::class.java]
+        adapter.selectedItems = viewModel.selectedItems
 
         viewModel.document.observe(viewLifecycleOwner) {
             adapter.documentRows = it.rows
@@ -46,9 +48,12 @@ class DocumentRowsFragment : Fragment() {
     }
 }
 
-class DocumentRowsAdapter(private val context: Context?) : BaseAdapterEx() {
+class DocumentRowsAdapter(
+    private val fragment: DocumentRowsFragment,
+    ) : BaseAdapterEx() {
     var documentRows: List<DocumentRow> = ArrayList()
     var selectedRow: Int = -1
+    var selectedItems: ArrayList<String>? = null
 
     override fun getCount(): Int = documentRows.size
 
@@ -61,11 +66,16 @@ class DocumentRowsAdapter(private val context: Context?) : BaseAdapterEx() {
         val viewDocumentRow = getItem(position) as ViewDocumentRow
 
         if (convertView == null) {
-            binding = DocumentRowBinding.inflate(LayoutInflater.from(context), parent, false)
+            binding = DocumentRowBinding.inflate(LayoutInflater.from(fragment.context), parent, false)
             binding.root.tag = binding
 
             binding.chbSelected.setOnClickListener {
-                viewDocumentRow.isSelected = (it as CheckBox).isChecked
+                val checked = (it as CheckBox).isChecked
+                if (checked) {
+                    selectedItems?.add(documentRows[position].id);
+                } else {
+                    selectedItems?.remove(documentRows[position].id);
+                }
             }
             binding.rowMaster.setOnClickListener {
                 selectedRow = if (selectedRow == position)
@@ -87,6 +97,7 @@ class DocumentRowsAdapter(private val context: Context?) : BaseAdapterEx() {
         } else
             binding = convertView.tag as DocumentRowBinding
 
+        binding.checked = selectedItems?.contains(documentRows[position].id)
         binding.viewDocumentRow = viewDocumentRow
         if (position == selectedRow)
             binding.rowDetail.visibility = View.VISIBLE

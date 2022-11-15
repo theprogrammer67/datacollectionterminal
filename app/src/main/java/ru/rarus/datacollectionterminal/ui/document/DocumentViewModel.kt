@@ -11,10 +11,12 @@ import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.notifyObserver
+import java.util.ArrayList
 
 class DocumentViewModel : ViewModel() {
     @SuppressLint("StaticFieldLeak")
     var document = MutableLiveData<ViewDocument>()
+    val selectedItems: ArrayList<String> = ArrayList()
 
     init {
         document.value = ViewDocument()
@@ -55,8 +57,16 @@ class DocumentViewModel : ViewModel() {
 
     fun deleteSelectedRows() {
         if (document.value != null) {
-            document.value!!.rows.filter { it.isSelected }
+            document.value!!.rows.filter { selectedItems.contains(it.id) }
                 .forEach { document.value!!.rows.remove(it) }
+            selectedItems.clear()
+            document.notifyObserver()
+        }
+    }
+
+    fun clewrRows() {
+        if (document.value != null) {
+            document.value!!.rows.clear()
             document.notifyObserver()
         }
     }

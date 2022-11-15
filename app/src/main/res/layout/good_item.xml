@@ -8,7 +8,6 @@
             name="good"
             type="ru.rarus.datacollectionterminal.db.Good" />
 
-
         <variable
             name="checked"
             type="Boolean" />
