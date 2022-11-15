@@ -14,6 +14,10 @@ class DocumentHeader() : Serializable {
     var source: Int = 0
     var state: Int = 0
     var description: String = "Новый документ"
+
+    @Ignore
+    @Transient
+    var isSelected = false
 }
 
 @Entity(

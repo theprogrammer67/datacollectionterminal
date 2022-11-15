@@ -20,7 +20,6 @@ fun <T> MutableLiveData<T>.notifyObserver() {
 }
 
 fun enableButton(button: Button, enable: Boolean) {
-    var v = if (enable) 0 else 1
     button.alpha = if (enable) 1.0f else 0.5f
     button.isClickable = enable;
 }

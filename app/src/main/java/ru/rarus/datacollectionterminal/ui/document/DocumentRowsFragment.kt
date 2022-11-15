@@ -39,10 +39,10 @@ class DocumentRowsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(DocumentViewModel::class.java)
 
-        viewModel.document.observe(this, {
+        viewModel.document.observe(viewLifecycleOwner) {
             adapter.documentRows = it.rows
             adapter.notifyDataSetChanged()
-        })
+        }
     }
 }
 
