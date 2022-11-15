@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="viewDocumentRow"
             type="ru.rarus.datacollectionterminal.db.ViewDocumentRow" />
@@ -60,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/black"
-                android:checked="@{viewDocumentRow.selected}" />
+                android:checked="@{viewDocumentRow.isSelected}" />
         </LinearLayout>
 
         <LinearLayout

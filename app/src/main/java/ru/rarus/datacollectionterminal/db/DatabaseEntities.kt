@@ -14,10 +14,6 @@ class DocumentHeader() : Serializable {
     var source: Int = 0
     var state: Int = 0
     var description: String = "Новый документ"
-
-    @Ignore
-    @Transient
-    var isSelected = false
 }
 
 @Entity(
@@ -54,6 +50,10 @@ class Good() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
     var name: String = "Неизвестный товар"
+
+    @Ignore
+    @Transient
+    var isSelected = false
 
     constructor(barcode: String) : this() {
         name = "Товар $barcode"

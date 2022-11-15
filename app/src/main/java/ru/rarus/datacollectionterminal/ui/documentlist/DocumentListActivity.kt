@@ -1,13 +1,10 @@
 package ru.rarus.datacollectionterminal.ui.documentlist
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import ru.rarus.datacollectionterminal.*
@@ -15,7 +12,6 @@ import ru.rarus.datacollectionterminal.databinding.ActivityDocumentListBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentItemBinding
 import ru.rarus.datacollectionterminal.db.DocumentHeader
 import ru.rarus.datacollectionterminal.db.ViewDocument
-import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import ru.rarus.datacollectionterminal.ui.document.DocumentActivity
 import java.io.Serializable
@@ -33,7 +29,7 @@ class DocumentListActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[DocumentListViewModel::class.java]
 
-        adapter = DocumentListAdapter(this)
+        adapter = DocumentListAdapter(this, viewModel.selectedDocs)
         binding.lvDocuments.adapter = adapter
 
         viewModel.documents.observe(this) {
@@ -61,7 +57,7 @@ class DocumentListActivity : AppCompatActivity() {
     }
 
     fun onDeleteClick(menuItem: MenuItem) {
-        viewModel.deleteSelectedItems()
+        viewModel.deleteSelected()
     }
 
     private fun onGetDocument(document: ViewDocument?) {
@@ -80,7 +76,8 @@ class DocumentListActivity : AppCompatActivity() {
 }
 
 class DocumentListAdapter(
-    private val activity: DocumentListActivity
+    private val activity: DocumentListActivity,
+    private val selectedDocs: ArrayList<String>
 ) : BaseAdapterEx() {
     var documents: List<DocumentHeader> = ArrayList()
 
@@ -98,7 +95,12 @@ class DocumentListAdapter(
             setItemBgColor(position, binding.root)
 
             binding.chbSelected.setOnClickListener {
-                documents[position].isSelected = (it as CheckBox).isChecked
+                val checked = (it as CheckBox).isChecked
+                if (checked) {
+                    selectedDocs.add(documents[position].id);
+                } else{
+                    selectedDocs.remove(documents[position].id);
+                }
             }
             binding.itmMaster.setOnClickListener {
                 activity.onClickDocument(documents[position])
@@ -109,6 +111,7 @@ class DocumentListAdapter(
         val currentItem = getItem(position) as DocumentHeader
         binding.dctDocument = currentItem
         binding.docDate = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date(currentItem.date))
+        binding.checked = selectedDocs.contains(documents[position].id)
 
         return binding.root
     }
