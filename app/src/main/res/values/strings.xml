@@ -30,4 +30,5 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="error_delete_good">Невозможно удалить товар на который есть ссылки в документах. Сначала необходимо удалить документы</string>
 </resources>

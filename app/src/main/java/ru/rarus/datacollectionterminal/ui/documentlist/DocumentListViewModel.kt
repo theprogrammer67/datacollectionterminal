@@ -11,12 +11,12 @@ import java.util.ArrayList
 
 class DocumentListViewModel() : ViewModel() {
     @SuppressLint("StaticFieldLeak")
-    var documents = MutableLiveData<List<DocumentHeader>>()
-    val selectedDocs: ArrayList<String> = ArrayList()
+    var list = MutableLiveData<List<DocumentHeader>>()
+    val selectedItems: ArrayList<String> = ArrayList()
 
     fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
-            documents.postValue(App.database.getDao().getDocumentsSync())
+            list.postValue(App.database.getDao().getDocumentsSync())
         }
     }
 
@@ -30,13 +30,13 @@ class DocumentListViewModel() : ViewModel() {
     }
 
     fun deleteSelected() {
-        if (selectedDocs.isNotEmpty()) {
+        if (selectedItems.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                selectedDocs.forEach {
+                selectedItems.forEach {
                     App.database.getDao().deleteDocumentSync(it)
                 }
-                documents.postValue(App.database.getDao().getDocumentsSync())
-                selectedDocs.clear()
+                list.postValue(App.database.getDao().getDocumentsSync())
+                selectedItems.clear()
             }
         }
     }

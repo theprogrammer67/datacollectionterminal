@@ -30,12 +30,12 @@ class DocumentListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[DocumentListViewModel::class.java]
 
         if (savedInstanceState == null) {
-            viewModel.selectedDocs.clear()
+            viewModel.selectedItems.clear()
         }
-        adapter = DocumentListAdapter(this, viewModel.selectedDocs)
+        adapter = DocumentListAdapter(this, viewModel.selectedItems)
         binding.lvDocuments.adapter = adapter
 
-        viewModel.documents.observe(this) {
+        viewModel.list.observe(this) {
             adapter.documents = it
             adapter.notifyDataSetChanged()
         }
@@ -80,7 +80,7 @@ class DocumentListActivity : AppCompatActivity() {
 
 class DocumentListAdapter(
     private val activity: DocumentListActivity,
-    private val selectedDocs: ArrayList<String>
+    private val selectedItems: ArrayList<String>
 ) : BaseAdapterEx() {
     var documents: List<DocumentHeader> = ArrayList()
 
@@ -100,9 +100,9 @@ class DocumentListAdapter(
             binding.chbSelected.setOnClickListener {
                 val checked = (it as CheckBox).isChecked
                 if (checked) {
-                    selectedDocs.add(documents[position].id);
+                    selectedItems.add(documents[position].id);
                 } else {
-                    selectedDocs.remove(documents[position].id);
+                    selectedItems.remove(documents[position].id);
                 }
             }
             binding.itmMaster.setOnClickListener {
@@ -114,7 +114,7 @@ class DocumentListAdapter(
         val currentItem = getItem(position) as DocumentHeader
         binding.dctDocument = currentItem
         binding.docDate = SimpleDateFormat("dd.MM.yyyy HH:mm").format(Date(currentItem.date))
-        binding.checked = selectedDocs.contains(documents[position].id)
+        binding.checked = selectedItems.contains(documents[position].id)
 
         return binding.root
     }

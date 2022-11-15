@@ -3,10 +3,9 @@ package ru.rarus.datacollectionterminal.ui.goodlist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
+import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +15,8 @@ import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityGoodsListBinding
 import ru.rarus.datacollectionterminal.databinding.GoodItemBinding
 import ru.rarus.datacollectionterminal.db.Good
+import ru.rarus.datacollectionterminal.ui.SettingsActivity
+import ru.rarus.datacollectionterminal.ui.documentlist.DocumentListActivity
 import ru.rarus.datacollectionterminal.ui.good.GoodActivity
 import java.util.*
 
@@ -29,11 +30,14 @@ class GoodListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_goods_list)
 
         viewModel = ViewModelProvider(this).get(GoodListViewModel::class.java)
+        if (savedInstanceState == null) {
+            viewModel.selectedItems.clear()
+        }
 
-        adapter = GoodListAdapter(applicationContext)
+        adapter = GoodListAdapter(this, viewModel.selectedItems)
         binding.lvGoods.adapter = adapter
 
-        viewModel.goods.observe(this) {
+        viewModel.list.observe(this) {
             adapter.goods = it
             adapter.notifyDataSetChanged()
         }
@@ -51,11 +55,26 @@ class GoodListActivity : AppCompatActivity() {
         super.onResume()
         viewModel.getData()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    fun onSettingsClick(menuItem: MenuItem) {
+        startActivity(Intent(this, SettingsActivity::class.java))
+    }
+
+
+    fun onDeleteClick(menuItem: MenuItem) {
+        viewModel.deleteSelected()
+    }
 }
 
 
 class GoodListAdapter(
-    private val context: Context
+    private val activity: GoodListActivity,
+    private val selectedItems: ArrayList<String>
 ) : BaseAdapterEx() {
     var goods: List<Good> = ArrayList()
 
@@ -67,14 +86,24 @@ class GoodListAdapter(
         val binding: GoodItemBinding
 
         if (convertView == null) {
-            binding = GoodItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            binding = GoodItemBinding.inflate(LayoutInflater.from(activity), parent, false)
             binding.root.tag = binding
 
             setItemBgColor(position, binding.root)
+
+            binding.chbSelected.setOnClickListener {
+                val checked = (it as CheckBox).isChecked
+                if (checked) {
+                    selectedItems.add(goods[position].id);
+                } else {
+                    selectedItems.remove(goods[position].id);
+                }
+            }
         } else
             binding = convertView.tag as GoodItemBinding
 
         binding.good = getItem(position) as Good
+        binding.checked = selectedItems.contains(goods[position].id)
 
         return binding.root
     }

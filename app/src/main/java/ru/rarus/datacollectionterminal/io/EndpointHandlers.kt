@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken
 import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.BuildConfig
+import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.db.DocumentHeader
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
@@ -171,7 +172,7 @@ class Handlers(private val server: RestServer) {
                         }
                     } catch (e: SQLiteConstraintException) {
                         server.sendResponse<Handlers.HandlerError>(
-                            exchange, makeServerError("Невозможно удалить товар на который есть ссылки в документах. Сначала необходимо удалить документы"))
+                            exchange, makeServerError(App.context.getString(R.string.error_delete_good)))
 
                     }
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
