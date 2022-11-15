@@ -29,6 +29,9 @@ class DocumentListActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[DocumentListViewModel::class.java]
 
+        if (savedInstanceState == null) {
+            viewModel.selectedDocs.clear()
+        }
         adapter = DocumentListAdapter(this, viewModel.selectedDocs)
         binding.lvDocuments.adapter = adapter
 
@@ -98,7 +101,7 @@ class DocumentListAdapter(
                 val checked = (it as CheckBox).isChecked
                 if (checked) {
                     selectedDocs.add(documents[position].id);
-                } else{
+                } else {
                     selectedDocs.remove(documents[position].id);
                 }
             }
