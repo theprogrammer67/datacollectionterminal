@@ -3,9 +3,7 @@ package ru.rarus.datacollectionterminal.ui.documentlist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +16,7 @@ import ru.rarus.datacollectionterminal.databinding.DocumentItemBinding
 import ru.rarus.datacollectionterminal.db.DocumentHeader
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
+import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import ru.rarus.datacollectionterminal.ui.document.DocumentActivity
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -52,6 +51,19 @@ class DocumentListActivity : AppCompatActivity() {
         viewModel.getData()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    fun onSettingsClick(menuItem: MenuItem) {
+        startActivity(Intent(this, SettingsActivity::class.java))
+    }
+
+    fun onDeleteClick(menuItem: MenuItem) {
+        viewModel.deleteSelectedItems()
+    }
+
     private fun onGetDocument(document: ViewDocument?) {
         if (document != null) {
             val intent = Intent(this, DocumentActivity::class.java)
@@ -78,7 +90,6 @@ class DocumentListAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding: DocumentItemBinding
-        val document = getItem(position) as DocumentHeader
 
         if (convertView == null) {
             binding = DocumentItemBinding.inflate(LayoutInflater.from(activity), parent, false)
@@ -87,10 +98,10 @@ class DocumentListAdapter(
             setItemBgColor(position, binding.root)
 
             binding.chbSelected.setOnClickListener {
-                document.isSelected = (it as CheckBox).isChecked
+                documents[position].isSelected = (it as CheckBox).isChecked
             }
             binding.itmMaster.setOnClickListener {
-                activity.onClickDocument(document)
+                activity.onClickDocument(documents[position])
             }
         } else
             binding = convertView.tag as DocumentItemBinding

@@ -27,7 +27,7 @@
         android:theme="@style/Theme.DataCollectionTerminal">
         <activity
             android:name=".ui.scanner.ScannerActivity"
-            android:label="Сканируйте штрихкод"
+            android:label="Сканер"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
