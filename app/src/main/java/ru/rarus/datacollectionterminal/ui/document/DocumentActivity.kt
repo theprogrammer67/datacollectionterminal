@@ -114,7 +114,19 @@ class DocumentActivity() : AppCompatActivity() {
     }
 
     fun onDeleteClick(menuItem: MenuItem) {
-        viewModel.deleteSelectedRows()
+        if (viewModel.selectedItems.size > 0) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Удалить выбранные строки?")
+                .setCancelable(false)
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.deleteSelectedRows()
+                }
+                .setNegativeButton("Нет") { dialog, id ->
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
     }
 
     private fun startScanActivity(addBarcode: Boolean) {
