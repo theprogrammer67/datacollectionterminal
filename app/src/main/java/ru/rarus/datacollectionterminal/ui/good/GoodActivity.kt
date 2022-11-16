@@ -3,6 +3,7 @@ package ru.rarus.datacollectionterminal.ui.good
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,7 @@ class GoodActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_good)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel = ViewModelProvider(this).get(GoodViewModel::class.java)
 
@@ -40,6 +42,17 @@ class GoodActivity : AppCompatActivity() {
             viewModel.getData(intent.extras?.getString(GOODID_TAG))
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 }
 
 class UnitListAdapter(private val context: Context) : BaseAdapterEx() {

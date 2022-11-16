@@ -60,8 +60,8 @@ class DocumentActivity() : AppCompatActivity() {
         // Но тут могут быть и другие варианты (bluetooth-сканер)
         binding.btnScanBarcode.setOnClickListener { startScanActivity(false) }
         binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
-        binding.btnDeleteSelected.setOnClickListener { viewModel.deleteSelectedRows() }
-        binding.btnClear.setOnClickListener { viewModel.clearRows() }
+        binding.btnDeleteSelected.setOnClickListener { onDeleteClick(null) }
+        binding.btnClear.setOnClickListener { onClearClick() }
 
         if (savedInstanceState == null) {
             viewModel.selectedItems.clear()
@@ -112,7 +112,7 @@ class DocumentActivity() : AppCompatActivity() {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
-    fun onDeleteClick(menuItem: MenuItem) {
+    fun onDeleteClick(menuItem: MenuItem?) {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Удалить выбранные строки?")
@@ -126,6 +126,23 @@ class DocumentActivity() : AppCompatActivity() {
             alert.show()
         }
     }
+
+
+    private fun onClearClick() {
+        if (viewModel.selectedItems.size > 0) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Удалить все строки?")
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.clearRows()
+                }
+                .setNegativeButton("Нет") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
+    }
+
 
     private fun startScanActivity(addBarcode: Boolean) {
         val intent = Intent(this, ScannerActivity::class.java)

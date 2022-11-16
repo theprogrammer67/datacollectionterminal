@@ -40,14 +40,6 @@ class GoodListActivity : AppCompatActivity() {
             adapter.goods = it
             adapter.notifyDataSetChanged()
         }
-
-        binding.lvGoods.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, _, position, _ ->
-                val item = parent.getItemAtPosition(position) as Good
-                val intent = Intent(this, GoodActivity::class.java)
-                intent.putExtra(GOODID_TAG, item.id)
-                startActivity(intent)
-            }
     }
 
     override fun onResume() {
@@ -64,6 +56,11 @@ class GoodListActivity : AppCompatActivity() {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
+    fun onClickGood(item: Good) {
+        val intent = Intent(this, GoodActivity::class.java)
+        intent.putExtra(GOODID_TAG, item.id)
+        startActivity(intent)
+    }
 
     fun onDeleteClick(menuItem: MenuItem) {
         if (viewModel.selectedItems.size > 0) {
@@ -108,6 +105,9 @@ class GoodListAdapter(
                 } else {
                     selectedItems.remove(goods[position].id);
                 }
+            }
+            binding.itmMaster.setOnClickListener {
+                activity.onClickGood(goods[position])
             }
         } else
             binding = convertView.tag as GoodItemBinding
