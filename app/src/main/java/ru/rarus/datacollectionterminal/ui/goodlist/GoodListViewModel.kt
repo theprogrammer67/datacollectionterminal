@@ -10,7 +10,6 @@ import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.db.Good
-import ru.rarus.datacollectionterminal.io.Handlers
 import java.util.ArrayList
 
 class GoodListViewModel() : ViewModel() {
@@ -23,7 +22,7 @@ class GoodListViewModel() : ViewModel() {
         }
     }
 
-    fun deleteSelected() {
+    fun deleteSelectedItems() {
         if (selectedItems.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
                 selectedItems.forEach {

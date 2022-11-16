@@ -1,6 +1,6 @@
 package ru.rarus.datacollectionterminal.ui.goodlist
 
-import android.content.Context
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -16,7 +16,6 @@ import ru.rarus.datacollectionterminal.databinding.ActivityGoodsListBinding
 import ru.rarus.datacollectionterminal.databinding.GoodItemBinding
 import ru.rarus.datacollectionterminal.db.Good
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
-import ru.rarus.datacollectionterminal.ui.documentlist.DocumentListActivity
 import ru.rarus.datacollectionterminal.ui.good.GoodActivity
 import java.util.*
 
@@ -67,7 +66,18 @@ class GoodListActivity : AppCompatActivity() {
 
 
     fun onDeleteClick(menuItem: MenuItem) {
-        viewModel.deleteSelected()
+        if (viewModel.selectedItems.size > 0) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Удалить выбранные товары?")
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.deleteSelectedItems()
+                }
+                .setNegativeButton("Нет") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
     }
 }
 

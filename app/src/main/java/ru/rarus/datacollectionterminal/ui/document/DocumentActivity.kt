@@ -119,7 +119,7 @@ class DocumentActivity() : AppCompatActivity() {
                 .setPositiveButton("Да") { _, _ ->
                     viewModel.deleteSelectedRows()
                 }
-                .setNegativeButton("Нет") { dialog, id ->
+                .setNegativeButton("Нет") { dialog, _ ->
                     dialog.dismiss()
                 }
             val alert = builder.create()

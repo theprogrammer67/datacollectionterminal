@@ -1,5 +1,6 @@
 package ru.rarus.datacollectionterminal.ui.documentlist
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -60,7 +61,18 @@ class DocumentListActivity : AppCompatActivity() {
     }
 
     fun onDeleteClick(menuItem: MenuItem) {
-        viewModel.deleteSelected()
+        if (viewModel.selectedItems.size > 0) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Удалить выбранные документы?")
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.deleteSelectedItems()
+                }
+                .setNegativeButton("Нет") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
     }
 
     private fun onGetDocument(document: ViewDocument?) {

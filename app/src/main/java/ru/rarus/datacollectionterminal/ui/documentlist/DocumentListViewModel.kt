@@ -29,7 +29,7 @@ class DocumentListViewModel() : ViewModel() {
         return data
     }
 
-    fun deleteSelected() {
+    fun deleteSelectedItems() {
         if (selectedItems.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
                 selectedItems.forEach {
