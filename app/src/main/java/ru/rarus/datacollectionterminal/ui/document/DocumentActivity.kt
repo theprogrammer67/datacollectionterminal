@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -15,15 +14,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.zxing.client.android.BeepManager
-import com.google.zxing.integration.android.IntentIntegrator
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.DOCUMENT_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
 import ru.rarus.datacollectionterminal.db.ViewDocument
-import ru.rarus.datacollectionterminal.ui.BarcodeCaptureActivity
-import ru.rarus.datacollectionterminal.ui.ExtBarcodeCaptureActivity
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import ru.rarus.datacollectionterminal.ui.scanner.ScannerActivity
 
@@ -66,7 +61,7 @@ class DocumentActivity() : AppCompatActivity() {
         binding.btnScanBarcode.setOnClickListener { startScanActivity(false) }
         binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
         binding.btnDeleteSelected.setOnClickListener { viewModel.deleteSelectedRows() }
-        binding.btnClear.setOnClickListener { viewModel.clewrRows() }
+        binding.btnClear.setOnClickListener { viewModel.clearRows() }
 
         if (savedInstanceState == null) {
             viewModel.selectedItems.clear()

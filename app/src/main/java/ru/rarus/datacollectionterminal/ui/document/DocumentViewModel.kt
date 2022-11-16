@@ -43,8 +43,8 @@ class DocumentViewModel : ViewModel() {
         // Здесь в зависимости от настроек или добавляем или ругаемся
         App.showMessage("Штрихкод не найден")
 
+        val goodAndUnit = GoodAndUnit(barcodeData)
         viewModelScope.launch(Dispatchers.IO) {
-            val goodAndUnit = GoodAndUnit(barcodeData)
             App.database.getDao().insertGoodAndUnit(goodAndUnit)
             withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit, addBarcode) }
         }
@@ -52,6 +52,7 @@ class DocumentViewModel : ViewModel() {
 
     private fun addDocumentRow(goodAndUnit: GoodAndUnit, addBarcode: String) {
         document.value?.addRow(goodAndUnit, addBarcode)
+        document.value!!.saved = false
         document.notifyObserver()
     }
 
@@ -60,13 +61,24 @@ class DocumentViewModel : ViewModel() {
             document.value!!.rows.filter { selectedItems.contains(it.id) }
                 .forEach { document.value!!.rows.remove(it) }
             selectedItems.clear()
+            document.value!!.saved = false
             document.notifyObserver()
         }
     }
 
-    fun clewrRows() {
+    fun clearRows() {
         if (document.value != null) {
             document.value!!.rows.clear()
+            document.value!!.saved = false
+            document.notifyObserver()
+        }
+    }
+
+    fun incRowQuantity (position: Int, value: Int) {
+        if (document.value != null) {
+            val quantityActual = document.value!!.rows[position].quantityActual
+            document.value!!.saved = false
+            document.value!!.rows[position].quantityActual = quantityActual + value
             document.notifyObserver()
         }
     }
@@ -76,11 +88,7 @@ class DocumentViewModel : ViewModel() {
             val data: ViewDocument = document.value!!
 
             viewModelScope.launch(Dispatchers.IO) {
-                if (data.saved)
-                    App.database.getDao().updateViewDocumentSync(data)
-                else
-                    App.database.getDao().insertViewDocument(data)
-
+                App.database.getDao().upsertViewDocumentSync(data)
                 withContext(Dispatchers.Main) {
                     App.showMessage("Документ сохранен")
                 }

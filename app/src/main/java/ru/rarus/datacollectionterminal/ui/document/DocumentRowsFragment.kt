@@ -1,6 +1,5 @@
 package ru.rarus.datacollectionterminal.ui.document
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,6 @@ import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentRowsBinding
 import ru.rarus.datacollectionterminal.db.DocumentRow
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
-import ru.rarus.datacollectionterminal.ui.documentlist.DocumentListActivity
 
 
 class DocumentRowsFragment : Fragment() {
@@ -39,7 +37,7 @@ class DocumentRowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[DocumentViewModel::class.java]
-        adapter.selectedItems = viewModel.selectedItems
+        adapter.viewModel = viewModel
 
         viewModel.document.observe(viewLifecycleOwner) {
             adapter.documentRows = it.rows
@@ -53,7 +51,8 @@ class DocumentRowsAdapter(
     ) : BaseAdapterEx() {
     var documentRows: List<DocumentRow> = ArrayList()
     var selectedRow: Int = -1
-    var selectedItems: ArrayList<String>? = null
+
+    var viewModel: DocumentViewModel? = null
 
     override fun getCount(): Int = documentRows.size
 
@@ -72,9 +71,9 @@ class DocumentRowsAdapter(
             binding.chbSelected.setOnClickListener {
                 val checked = (it as CheckBox).isChecked
                 if (checked) {
-                    selectedItems?.add(documentRows[position].id);
+                    viewModel?.selectedItems?.add(documentRows[position].id);
                 } else {
-                    selectedItems?.remove(documentRows[position].id);
+                    viewModel?.selectedItems?.remove(documentRows[position].id);
                 }
             }
             binding.rowMaster.setOnClickListener {
@@ -85,19 +84,17 @@ class DocumentRowsAdapter(
                 notifyDataSetChanged()
             }
             binding.lyEditQuantity.btnDec.setOnClickListener {
-                viewDocumentRow.quantityActual--
-                notifyDataSetChanged()
+                viewModel?.incRowQuantity(position, -1)
             }
             binding.lyEditQuantity.btnInc.setOnClickListener {
-                viewDocumentRow.quantityActual++
-                notifyDataSetChanged()
+                viewModel?.incRowQuantity(position, 1)
             }
 
             setItemBgColor(position, binding.root)
         } else
             binding = convertView.tag as DocumentRowBinding
 
-        binding.checked = selectedItems?.contains(documentRows[position].id)
+        binding.checked = viewModel?.selectedItems?.contains(documentRows[position].id)
         binding.viewDocumentRow = viewDocumentRow
         if (position == selectedRow)
             binding.rowDetail.visibility = View.VISIBLE

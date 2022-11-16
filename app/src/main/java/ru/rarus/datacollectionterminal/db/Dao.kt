@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import java.util.*
 
+
 @Dao
 abstract class DctDao {
     @Query("SELECT * FROM document ORDER BY date ASC")
@@ -15,11 +16,18 @@ abstract class DctDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insertDocument(documentHeader: DocumentHeader)
 
+    @Transaction
+    open fun upsertDocumentSync(documentHeader: DocumentHeader) {
+        val id: Long = insertDocumentSync(documentHeader)
+        if (id == -1L)
+            updateDocumentSync(documentHeader)
+    }
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insertDocumentRows(documentRows: List<DocumentRow>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertDocumentRowsSync(documentRows: List<DocumentRow>)
+    abstract fun insertDocumentRowsSync(documentRows: List<DocumentRow>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertUnitSync(unit: Unit): Long
@@ -40,36 +48,18 @@ abstract class DctDao {
     }
 
     @Transaction
-    open fun updateViewDocumentSync(document: ViewDocument) {
+    open fun upsertViewDocumentSync(document: ViewDocument) {
         deleteDocumentRowsSync(document.document.id)
-        updateDocumentSync(document.document)
+        upsertDocumentSync(document.document)
         insertDocumentRowsSync(document.rows)
         document.saved = true
-    }
-
-    // !!!
-    @Transaction
-    open suspend fun insertViewDocument(document: ViewDocument) {
-        insertDocument(document.document)
-        insertDocumentRows(document.rows)
-        document.saved = true
-    }
-
-    @Transaction
-    open fun insertViewDocumentSync(document: ViewDocument) {
-        deleteDocumentRowsSync(document.document.id)
-
-        upsertGoodsUnitsSync(document.rows)
-
-        insertDocumentSync(document.document)
-        insertDocumentRowsSync(document.rows)
     }
 
     @Update
     abstract fun updateDocumentSync(document: DocumentHeader)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertDocumentSync(document: DocumentHeader)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertDocumentSync(document: DocumentHeader): Long
 
     @Query("DELETE FROM document WHERE id = :id")
     abstract fun deleteDocumentSync(id: String)
@@ -140,7 +130,7 @@ abstract class DctDao {
 
     @Transaction
     open fun getViewGoodsSync(): List<ViewGood> {
-        var viewGoods: MutableList<ViewGood> = ArrayList()
+        val viewGoods: MutableList<ViewGood> = ArrayList()
         val goods = getGoodsSync()
 
         for (good in goods) {
@@ -169,18 +159,6 @@ abstract class DctDao {
         insertUnitsSync(good.units)
     }
 
-    open fun updateViewGoodsSync(goodList: List<ViewGood>) {
-        goodList.forEach() {
-            updateViewGoodSync(it)
-        }
-    }
-
-    open fun updateViewDocumentsSync(documentList: List<ViewDocument>) {
-        documentList.forEach() {
-            updateViewDocumentSync(it)
-        }
-    }
-
     @Transaction
     open fun insertViewGoodSync(good: ViewGood) {
 //        deleteGoodUnitsSync(good.good.id)
@@ -194,9 +172,9 @@ abstract class DctDao {
         }
     }
 
-    open fun insertViewDocumentsSync(documentList: List<ViewDocument>) {
+    open fun upsertViewDocumentsSync(documentList: List<ViewDocument>) {
         documentList.forEach() {
-            insertViewDocumentSync(it)
+            upsertViewDocumentSync(it)
         }
     }
 

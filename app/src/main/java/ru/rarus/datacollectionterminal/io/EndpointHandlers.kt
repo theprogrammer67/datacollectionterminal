@@ -125,7 +125,7 @@ class Handlers(private val server: RestServer) {
                         server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
                         return@HttpHandler
                     }
-                    App.database.getDao().insertViewDocumentsSync(documentList)
+                    App.database.getDao().upsertViewDocumentsSync(documentList)
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 }
                 else -> server.sendResponse<Handlers.HandlerError>(
