@@ -95,7 +95,6 @@ class DocumentActivity() : AppCompatActivity() {
         if (!viewModel.document.value?.saved!!) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Записать документ?")
-                .setCancelable(false)
                 .setPositiveButton("Да") { _, _ ->
                     viewModel.saveDocument()
                     super.onBackPressed()
@@ -117,7 +116,6 @@ class DocumentActivity() : AppCompatActivity() {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Удалить выбранные строки?")
-                .setCancelable(true)
                 .setPositiveButton("Да") { _, _ ->
                     viewModel.deleteSelectedRows()
                 }
