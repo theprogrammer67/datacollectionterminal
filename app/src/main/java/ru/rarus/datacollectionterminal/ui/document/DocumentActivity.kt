@@ -117,7 +117,7 @@ class DocumentActivity() : AppCompatActivity() {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Удалить выбранные строки?")
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton("Да") { _, _ ->
                     viewModel.deleteSelectedRows()
                 }
