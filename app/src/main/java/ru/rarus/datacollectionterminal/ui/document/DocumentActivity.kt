@@ -127,7 +127,6 @@ class DocumentActivity() : AppCompatActivity() {
         }
     }
 
-
     private fun onClearClick() {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)
@@ -142,7 +141,6 @@ class DocumentActivity() : AppCompatActivity() {
             alert.show()
         }
     }
-
 
     private fun startScanActivity(addBarcode: Boolean) {
         val intent = Intent(this, ScannerActivity::class.java)

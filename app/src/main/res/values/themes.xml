@@ -1,4 +1,4 @@
-<resources xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="RoundedButton" parent="android:Widget.Button">
         <item name="android:textColor">@color/white</item>

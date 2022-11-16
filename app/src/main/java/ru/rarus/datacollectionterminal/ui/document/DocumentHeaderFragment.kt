@@ -27,7 +27,7 @@ class DocumentHeaderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(DocumentViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity())[DocumentViewModel::class.java]
 
         if (viewModel.document.value != null) {
             binding.dctDocument = viewModel.document.value!!.document

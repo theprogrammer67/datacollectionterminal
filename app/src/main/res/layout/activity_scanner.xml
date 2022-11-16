@@ -50,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:onClick="cancel"
+            android:backgroundTint="@color/accent_button"
             android:text="Отмена" />
     </LinearLayout>
 
