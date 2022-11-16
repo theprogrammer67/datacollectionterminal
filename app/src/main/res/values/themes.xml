@@ -7,6 +7,13 @@
         <item name="backgroundTint">@null</item>
     </style>
 
+    <style name="RoundedAccentButton" parent="android:Widget.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/rounded_accent_button</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="backgroundTint">@null</item>
+    </style>
+
     <style name="AppTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorHeight">6dp</item>
         <item name="tabIndicatorColor">@color/accent_button</item>
