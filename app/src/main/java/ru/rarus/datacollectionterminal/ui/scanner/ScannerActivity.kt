@@ -37,6 +37,8 @@ class ScannerActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(
             this, R.layout.activity_scanner
         )
+        binding.header = "Штрихкод товара"
+        binding.llBarcode.visibility = View.GONE
         barcodeView = binding.barcodeScanner
         barcodeView.initializeFromIntent(intent)
         barcodeView.decodeContinuous(callback)
@@ -51,7 +53,6 @@ class ScannerActivity : AppCompatActivity() {
                 return
             }
             lastText = result.text
-            barcodeView.setStatusText(result.text)
             beepManager.playBeepSoundAndVibrate()
 
             if (!extBarcodeRead) {
@@ -61,6 +62,10 @@ class ScannerActivity : AppCompatActivity() {
             } else {
                 if (barcode.isEmpty()) {
                     barcode = result.text
+                    binding.barcode = result.text
+                    binding.header = "Дополнительный штрихкод"
+                    barcodeView.setStatusText("Нажмите кнопку 'Сканировать' и поместите дополнительный штрихкод в прямоугольник видоискателя")
+                    binding.llBarcode.visibility = View.VISIBLE
                     pause(null)
                 } else {
                     extBarcode = result.text
