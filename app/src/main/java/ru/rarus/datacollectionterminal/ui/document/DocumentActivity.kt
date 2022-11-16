@@ -1,6 +1,7 @@
 package ru.rarus.datacollectionterminal.ui.document
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -95,6 +96,23 @@ class DocumentActivity() : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (!viewModel.document.value?.saved!!) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Записать документ?")
+                .setCancelable(false)
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.saveDocument()
+                    super.onBackPressed()
+                }
+                .setNegativeButton("Нет") { dialog, id ->
+                    dialog.dismiss()
+                    super.onBackPressed()
+                }
+            val alert = builder.create()
+            alert.show()
+        } else super.onBackPressed()
+    }
 
     fun onSettingsClick(menuItem: MenuItem) {
         startActivity(Intent(this, SettingsActivity::class.java))
