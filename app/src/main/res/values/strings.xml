@@ -3,6 +3,7 @@
     <string name="caption_scanbarcode">Сканировать штрихкод</string>
     <string name="action_settings">Настройки</string>
     <string name="action_delete_selected">Удалить выбранные</string>
+    <string name="action_select_all">Выбрать все</string>
     <string name="caption_save">Сохранить</string>
     <string name="caption_scanner">Сканер</string>
     <!-- TODO: Remove or change this placeholder text -->

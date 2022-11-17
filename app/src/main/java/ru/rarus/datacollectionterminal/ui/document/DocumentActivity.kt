@@ -91,6 +91,12 @@ class DocumentActivity() : AppCompatActivity() {
         }
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.action_select_all)?.isEnabled = binding.viewpager.currentItem == 0
+        return super.onPrepareOptionsMenu(menu)
+
+    }
+
     override fun onBackPressed() {
         if (!viewModel.document.value?.saved!!) {
             val builder = AlertDialog.Builder(this)
@@ -111,6 +117,21 @@ class DocumentActivity() : AppCompatActivity() {
     fun onSettingsClick(menuItem: MenuItem) {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
+
+    fun onSelectAllClick(menuItem: MenuItem) {
+        if (binding.viewpager.currentItem == 0) {
+            val fragment = supportFragmentManager.findFragmentByTag("f0")
+            if (fragment != null) {
+                val rowsFragment = fragment as DocumentRowsFragment
+                viewModel.selectedItems.clear()
+                rowsFragment.adapter.documentRows.forEach {
+                    viewModel.selectedItems.add(it.id)
+                }
+                rowsFragment.adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
 
     fun onDeleteClick(menuItem: MenuItem?) {
         if (viewModel.selectedItems.size > 0) {

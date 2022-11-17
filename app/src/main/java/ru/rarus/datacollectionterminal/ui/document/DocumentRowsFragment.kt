@@ -18,7 +18,7 @@ import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 
 class DocumentRowsFragment : Fragment() {
     private lateinit var binding: FragmentDocumentRowsBinding
-    private lateinit var adapter: DocumentRowsAdapter
+    lateinit var adapter: DocumentRowsAdapter
     private lateinit var viewModel: DocumentViewModel
 
     override fun onCreateView(

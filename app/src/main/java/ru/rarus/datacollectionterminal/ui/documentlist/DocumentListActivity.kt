@@ -60,6 +60,14 @@ class DocumentListActivity : AppCompatActivity() {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
+    fun onSelectAllClick(menuItem: MenuItem) {
+        viewModel.selectedItems.clear()
+        adapter.documents.forEach {
+            viewModel.selectedItems.add(it.id)
+        }
+        adapter.notifyDataSetChanged()
+    }
+
     fun onDeleteClick(menuItem: MenuItem) {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)

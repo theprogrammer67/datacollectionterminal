@@ -56,6 +56,14 @@ class GoodListActivity : AppCompatActivity() {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
+    fun onSelectAllClick(menuItem: MenuItem) {
+        viewModel.selectedItems.clear()
+        adapter.goods.forEach {
+            viewModel.selectedItems.add(it.id)
+        }
+        adapter.notifyDataSetChanged()
+    }
+
     fun onClickGood(item: Good) {
         val intent = Intent(this, GoodActivity::class.java)
         intent.putExtra(GOODID_TAG, item.id)
