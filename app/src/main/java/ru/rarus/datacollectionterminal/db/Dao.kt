@@ -1,12 +1,14 @@
 package ru.rarus.datacollectionterminal.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import java.util.*
 
 
 @Dao
-abstract class DctDao {
+abstract class DctDao : BaseDao {
+
+    // Document
+
     @Query("SELECT * FROM document ORDER BY date ASC")
     abstract fun getDocumentsSync(): List<DocumentHeader>
 
@@ -20,14 +22,62 @@ abstract class DctDao {
             updateDocumentSync(documentHeader)
     }
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertDocumentRowsSync(documentRows: List<DocumentRow>): List<Long>
+    @Query("DELETE FROM document WHERE id = :id")
+    abstract fun deleteDocumentSync(id: String)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertUnitSync(unit: Unit): Long
+    @Query("DELETE FROM document")
+    abstract fun deleteDocumentsSync()
+
+    // DocumentRow
+
+    @Query("DELETE FROM document_row WHERE document = :id")
+    abstract fun deleteDocumentRowsSync(id: String)
+
+
+    // Unit
+
+    @Query("DELETE FROM unit WHERE barcode = :barcode")
+    abstract fun deleteUnitSync(barcode: String)
 
     @Query("UPDATE unit SET name = :name, price = :price, good = :good WHERE barcode = :barcode")
     abstract fun updateUnitSync(barcode: String, name: String, price: Double, good: String)
+
+    @Query("SELECT * FROM unit WHERE barcode = :barcode")
+    abstract suspend fun getUnitByBarcodeSync(barcode: String): Unit?
+
+    @Query("DELETE FROM unit WHERE good = :id")
+    abstract fun deleteGoodUnitsSync(id: String)
+
+    @Query("SELECT * FROM unit WHERE good = :id")
+    abstract fun getGoodUnitsSync(id: String): List<Unit>
+
+    // Good
+
+    @Query("DELETE FROM good")
+    abstract fun deleteGoodsSync()
+
+    @Query("DELETE FROM good  WHERE id = :id")
+    abstract fun deleteGoodSync(id: String)
+
+    @Query("SELECT * FROM good ORDER BY name ASC")
+    abstract fun getGoodsSync(): List<Good>
+
+    @Query("SELECT * FROM good WHERE id = :id")
+    abstract fun getGoodSync(id: String): Good?
+
+    // other...
+
+    @Query(
+        """
+        SELECT document_row.*, unit.name as unitName, unit.price as unitPrice, good.name as goodName, good.id as good
+        FROM document_row
+        LEFT JOIN unit on(document_row.unit = unit.barcode)
+        LEFT JOIN good ON (unit.good = good.id)
+        WHERE document_row.document = :id
+        """
+    )
+    abstract fun getViewDocumentRowsSync(id: String): List<ViewDocumentRow>
+
 
     @Transaction
     open fun upsertGoodsUnitsSync(documentRows: List<ViewDocumentRow>) {
@@ -49,41 +99,12 @@ abstract class DctDao {
         document.saved = true
     }
 
-    @Update
-    abstract fun updateDocumentSync(document: DocumentHeader)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertDocumentSync(document: DocumentHeader): Long
-
-    @Query("DELETE FROM document WHERE id = :id")
-    abstract fun deleteDocumentSync(id: String)
-
-    @Query("DELETE FROM document")
-    abstract fun deleteDocumentsSync()
-
-    @Query("DELETE FROM document_row WHERE document = :id")
-    abstract fun deleteDocumentRowsSync(id: String)
-
-    @Query("SELECT * FROM unit WHERE barcode = :barcode")
-    abstract suspend fun getUnitByBarcodeSync(barcode: String): Unit?
-
     @Transaction
     open suspend fun getGoodAndUnitByBarcodeSync(barcode: String): GoodAndUnit? {
         val unit = getUnitByBarcodeSync(barcode) ?: return null
         val good = getGoodSync(unit.good) ?: return null
         return GoodAndUnit(good, unit)
     }
-
-    @Query(
-        """
-        SELECT document_row.*, unit.name as unitName, unit.price as unitPrice, good.name as goodName, good.id as good
-        FROM document_row
-        LEFT JOIN unit on(document_row.unit = unit.barcode)
-        LEFT JOIN good ON (unit.good = good.id)
-        WHERE document_row.document = :id
-        """
-    )
-    abstract fun getViewDocumentRowsSync(id: String): List<ViewDocumentRow>
 
     @Transaction
     open suspend fun getViewDocument(id: String): ViewDocument? {
@@ -92,29 +113,11 @@ abstract class DctDao {
         return ViewDocument(header, rows, true)
     }
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun insertUnit(unit: Unit)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertUnitsSync(unit: List<Unit>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertGoodSync(good: Good)
-
     @Transaction
     open suspend fun insertGoodAndUnit(goodAndUnit: GoodAndUnit) {
         insertGoodSync(goodAndUnit.good)
         insertUnit(goodAndUnit.unit)
     }
-
-    @Query("SELECT * FROM good ORDER BY name ASC")
-    abstract fun getGoodsSync(): List<Good>
-
-    @Query("SELECT * FROM good WHERE id = :id")
-    abstract fun getGoodSync(id: String): Good?
-
-    @Query("SELECT * FROM unit WHERE good = :id")
-    abstract fun getGoodUnitsSync(id: String): List<Unit>
 
     @Transaction
     open fun getViewGoodSync(id: String): ViewGood? {
@@ -134,21 +137,6 @@ abstract class DctDao {
 
         return viewGoods
     }
-
-    @Query("DELETE FROM good")
-    abstract fun deleteGoodsSync()
-
-    @Query("DELETE FROM good  WHERE id = :id")
-    abstract fun deleteGoodSync(id: String)
-
-    @Update
-    abstract fun updateGoodSync(good: Good)
-
-    @Query("DELETE FROM unit WHERE good = :id")
-    abstract fun deleteGoodUnitsSync(id: String)
-
-    @Query("DELETE FROM unit WHERE barcode = :barcode")
-    abstract fun deleteUnitSync(barcode: String)
 
     @Transaction
     open fun insertViewGoodSync(good: ViewGood) {
