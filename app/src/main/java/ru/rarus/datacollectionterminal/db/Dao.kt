@@ -21,9 +21,6 @@ abstract class DctDao {
     }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun insertDocumentRows(documentRows: List<DocumentRow>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertDocumentRowsSync(documentRows: List<DocumentRow>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -152,13 +149,6 @@ abstract class DctDao {
 
     @Query("DELETE FROM unit WHERE barcode = :barcode")
     abstract fun deleteUnitSync(barcode: String)
-
-    @Transaction
-    open fun updateViewGoodSync(good: ViewGood) {
-        deleteGoodUnitsSync(good.good.id)
-        updateGoodSync(good.good)
-        insertUnitsSync(good.units)
-    }
 
     @Transaction
     open fun insertViewGoodSync(good: ViewGood) {
