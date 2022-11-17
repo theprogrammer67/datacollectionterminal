@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.DOCUMENT_TAG
@@ -55,6 +56,17 @@ class DocumentActivity() : AppCompatActivity() {
             }
             binding.viewpager.setCurrentItem(tab.position, true)
         }.attach()
+
+        binding.viewpager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val pageRows = position == 0
+                binding.btnScanBarcode.isEnabled = pageRows
+                binding.btnClear.isEnabled = pageRows
+                binding.btnDeleteSelected.isEnabled = pageRows
+                binding.btnContinuousScanning.isEnabled = pageRows
+            }
+        })
 
         // По-умолчанию используем zxing сканер
         // Но тут могут быть и другие варианты (bluetooth-сканер)
