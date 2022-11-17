@@ -1,11 +1,11 @@
 package ru.rarus.datacollectionterminal.ui.good
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +15,7 @@ import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityGoodBinding
 import ru.rarus.datacollectionterminal.databinding.UnitItemBinding
 import ru.rarus.datacollectionterminal.db.Unit
+import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import java.util.*
 
 class GoodActivity : AppCompatActivity() {
@@ -28,8 +29,11 @@ class GoodActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel = ViewModelProvider(this).get(GoodViewModel::class.java)
+        if (savedInstanceState == null) {
+            viewModel.selectedItems.clear()
+        }
 
-        adapter = UnitListAdapter(applicationContext)
+        adapter = UnitListAdapter(this, viewModel.selectedItems)
         binding.lvUnits.adapter = adapter
 
         viewModel.viewGood.observe(this) {
@@ -53,9 +57,44 @@ class GoodActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    fun onSelectAllClick(menuItem: MenuItem) {
+        viewModel.selectedItems.clear()
+        adapter.units.forEach {
+            viewModel.selectedItems.add(it.barcode)
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    fun onSettingsClick(menuItem: MenuItem) {
+        startActivity(Intent(this, SettingsActivity::class.java))
+    }
+
+    fun onDeleteClick(menuItem: MenuItem) {
+        if (viewModel.selectedItems.size > 0) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Удалить выбранные единицы?")
+                .setPositiveButton("Да") { _, _ ->
+                    viewModel.deleteSelectedItems()
+                }
+                .setNegativeButton("Нет") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
+    }
+
 }
 
-class UnitListAdapter(private val context: Context) : BaseAdapterEx() {
+class UnitListAdapter(
+    private val activity: GoodActivity,
+    private val selectedItems: ArrayList<String>
+) : BaseAdapterEx() {
     var units: List<Unit> = ArrayList()
 
     override fun getCount(): Int = units.size
@@ -66,14 +105,26 @@ class UnitListAdapter(private val context: Context) : BaseAdapterEx() {
         val binding: UnitItemBinding
 
         if (convertView == null) {
-            binding = UnitItemBinding.inflate(LayoutInflater.from(context), parent, false)
+            binding = UnitItemBinding.inflate(LayoutInflater.from(activity), parent, false)
             binding.root.tag = binding
 
             setItemBgColor(position, binding.root)
+            binding.chbSelected.setOnClickListener {
+                val checked = (it as CheckBox).isChecked
+                if (checked) {
+                    selectedItems.add(units[position].barcode);
+                } else {
+                    selectedItems.remove(units[position].barcode);
+                }
+            }
         } else
             binding = convertView.tag as UnitItemBinding
 
-        binding.unit = getItem(position) as Unit
+        binding.unit = units[position]
+        if (units[position].baseUnit)
+            binding.llBaseUnit.visibility = View.VISIBLE
+        else
+            binding.llBaseUnit.visibility = View.INVISIBLE
 
         return binding.root
     }

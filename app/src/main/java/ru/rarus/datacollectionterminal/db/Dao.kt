@@ -152,6 +152,9 @@ abstract class DctDao {
     @Query("DELETE FROM unit WHERE good = :id")
     abstract fun deleteGoodUnitsSync(id: String)
 
+    @Query("DELETE FROM unit WHERE barcode = :barcode")
+    abstract fun deleteUnitSync(barcode: String)
+
     @Transaction
     open fun updateViewGoodSync(good: ViewGood) {
         deleteGoodUnitsSync(good.good.id)

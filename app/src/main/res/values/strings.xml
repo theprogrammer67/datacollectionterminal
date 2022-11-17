@@ -32,4 +32,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="error_delete_good">Невозможно удалить товар на который есть ссылки в документах. Сначала необходимо удалить документы</string>
+    <string name="error_delete_unit">Невозможно удалить единицу измерения на который есть ссылки в документах. Сначала необходимо удалить документы</string>
 </resources>
