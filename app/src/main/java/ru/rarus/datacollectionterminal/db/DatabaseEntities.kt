@@ -112,6 +112,11 @@ class GoodAndUnit() {
         this.good = Good(barcode)
         this.unit = Unit(barcode, good, true)
     }
+
+    constructor(good: Good, unit: Unit) : this() {
+        this.good = good
+        this.unit = unit
+    }
 }
 
 class ViewGood() {

@@ -13,9 +13,6 @@ abstract class DctDao {
     @Query("SELECT * FROM document WHERE id = :id")
     abstract fun getDocumentSync(id: String): DocumentHeader?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun insertDocument(documentHeader: DocumentHeader)
-
     @Transaction
     open fun upsertDocumentSync(documentHeader: DocumentHeader) {
         val id: Long = insertDocumentSync(documentHeader)
@@ -71,13 +68,14 @@ abstract class DctDao {
     abstract fun deleteDocumentRowsSync(id: String)
 
     @Query("SELECT * FROM unit WHERE barcode = :barcode")
-    abstract fun getUnitByBarcode(barcode: String): LiveData<Unit>
+    abstract suspend fun getUnitByBarcodeSync(barcode: String): Unit?
 
-    @Query("SELECT * FROM good JOIN unit ON(unit.good = good.id) WHERE unit.barcode = :barcode")
-    abstract fun getGoodAndUnitByBarcode(barcode: String): LiveData<GoodAndUnit>
-
-    @Query("SELECT * FROM good JOIN unit ON(unit.good = good.id) WHERE unit.barcode = :barcode")
-    abstract suspend fun getGoodAndUnitByBarcodeSync(barcode: String): GoodAndUnit?
+    @Transaction
+    open suspend fun getGoodAndUnitByBarcodeSync(barcode: String): GoodAndUnit? {
+        val unit = getUnitByBarcodeSync(barcode) ?: return null
+        val good = getGoodSync(unit.good) ?: return null
+        return GoodAndUnit(good, unit)
+    }
 
     @Query(
         """
