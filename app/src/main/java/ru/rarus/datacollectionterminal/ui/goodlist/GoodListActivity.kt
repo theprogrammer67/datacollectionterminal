@@ -103,23 +103,28 @@ class GoodListAdapter(
             binding = GoodItemBinding.inflate(LayoutInflater.from(activity), parent, false)
             binding.root.tag = binding
             setItemBgColor(position, binding.root)
+
+            binding.chbSelected.setOnClickListener {
+                val checked = (it as CheckBox).isChecked
+                val good = it.tag as Good
+                if (checked) {
+                    selectedItems.add(good.id);
+                } else {
+                    selectedItems.remove(good.id);
+                }
+            }
+            binding.itmMaster.setOnClickListener {
+                val good = it.tag as Good
+                activity.onClickGood(good)
+            }
         } else
             binding = convertView.tag as GoodItemBinding
 
-        binding.chbSelected.setOnClickListener {
-            val checked = (it as CheckBox).isChecked
-            if (checked) {
-                selectedItems.add(goods[position].id);
-            } else {
-                selectedItems.remove(goods[position].id);
-            }
-        }
-        binding.itmMaster.setOnClickListener {
-            activity.onClickGood(goods[position])
-        }
-
-        binding.good = getItem(position) as Good
-        binding.checked = selectedItems.contains(goods[position].id)
+        val good = getItem(position) as Good
+        binding.good = good
+        binding.checked = selectedItems.contains(good.id)
+        binding.chbSelected.tag = good
+        binding.itmMaster.tag = good
 
         return binding.root
     }
