@@ -14,19 +14,26 @@
     </data>
 
     <LinearLayout
-        android:id="@+id/itmMaster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="10dp">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/itmMaster"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@{good.name}"
-            android:textColor="@color/black"
-            tools:text="Неизвестный товар" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{good.name}"
+                android:textColor="@color/black"
+                tools:text="Неизвестный товар" />
+        </LinearLayout>
 
         <CheckBox
             android:id="@+id/chbSelected"

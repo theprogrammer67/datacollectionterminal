@@ -114,22 +114,21 @@ class DocumentListAdapter(
         if (convertView == null) {
             binding = DocumentItemBinding.inflate(LayoutInflater.from(activity), parent, false)
             binding.root.tag = binding
-
             setItemBgColor(position, binding.root)
-
-            binding.chbSelected.setOnClickListener {
-                val checked = (it as CheckBox).isChecked
-                if (checked) {
-                    selectedItems.add(documents[position].id);
-                } else {
-                    selectedItems.remove(documents[position].id);
-                }
-            }
-            binding.itmMaster.setOnClickListener {
-                activity.onClickDocument(documents[position])
-            }
         } else
             binding = convertView.tag as DocumentItemBinding
+
+        binding.chbSelected.setOnClickListener {
+            val checked = (it as CheckBox).isChecked
+            if (checked) {
+                selectedItems.add(documents[position].id);
+            } else {
+                selectedItems.remove(documents[position].id);
+            }
+        }
+        binding.itmMaster.setOnClickListener {
+            activity.onClickDocument(documents[position])
+        }
 
         val currentItem = getItem(position) as DocumentHeader
         binding.dctDocument = currentItem

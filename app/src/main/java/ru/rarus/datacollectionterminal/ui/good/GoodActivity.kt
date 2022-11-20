@@ -107,18 +107,18 @@ class UnitListAdapter(
         if (convertView == null) {
             binding = UnitItemBinding.inflate(LayoutInflater.from(activity), parent, false)
             binding.root.tag = binding
-
             setItemBgColor(position, binding.root)
-            binding.chbSelected.setOnClickListener {
-                val checked = (it as CheckBox).isChecked
-                if (checked) {
-                    selectedItems.add(units[position].barcode);
-                } else {
-                    selectedItems.remove(units[position].barcode);
-                }
-            }
         } else
             binding = convertView.tag as UnitItemBinding
+
+        binding.chbSelected.setOnClickListener {
+            val checked = (it as CheckBox).isChecked
+            if (checked) {
+                selectedItems.add(units[position].barcode);
+            } else {
+                selectedItems.remove(units[position].barcode);
+            }
+        }
 
         binding.unit = units[position]
         if (units[position].baseUnit)

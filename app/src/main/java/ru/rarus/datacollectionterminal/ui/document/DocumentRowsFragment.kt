@@ -67,32 +67,31 @@ class DocumentRowsAdapter(
         if (convertView == null) {
             binding = DocumentRowBinding.inflate(LayoutInflater.from(fragment.context), parent, false)
             binding.root.tag = binding
-
-            binding.chbSelected.setOnClickListener {
-                val checked = (it as CheckBox).isChecked
-                if (checked) {
-                    viewModel?.selectedItems?.add(documentRows[position].id);
-                } else {
-                    viewModel?.selectedItems?.remove(documentRows[position].id);
-                }
-            }
-            binding.rowMaster.setOnClickListener {
-                selectedRow = if (selectedRow == position)
-                    -1
-                else
-                    position
-                notifyDataSetChanged()
-            }
-            binding.lyEditQuantity.btnDec.setOnClickListener {
-                viewModel?.incRowQuantity(position, -1)
-            }
-            binding.lyEditQuantity.btnInc.setOnClickListener {
-                viewModel?.incRowQuantity(position, 1)
-            }
-
             setItemBgColor(position, binding.root)
         } else
             binding = convertView.tag as DocumentRowBinding
+
+        binding.chbSelected.setOnClickListener {
+            val checked = (it as CheckBox).isChecked
+            if (checked) {
+                viewModel?.selectedItems?.add(documentRows[position].id);
+            } else {
+                viewModel?.selectedItems?.remove(documentRows[position].id);
+            }
+        }
+        binding.rowMaster.setOnClickListener {
+            selectedRow = if (selectedRow == position)
+                -1
+            else
+                position
+            notifyDataSetChanged()
+        }
+        binding.lyEditQuantity.btnDec.setOnClickListener {
+            viewModel?.incRowQuantity(position, -1)
+        }
+        binding.lyEditQuantity.btnInc.setOnClickListener {
+            viewModel?.incRowQuantity(position, 1)
+        }
 
         binding.checked = viewModel?.selectedItems?.contains(documentRows[position].id)
         binding.viewDocumentRow = viewDocumentRow

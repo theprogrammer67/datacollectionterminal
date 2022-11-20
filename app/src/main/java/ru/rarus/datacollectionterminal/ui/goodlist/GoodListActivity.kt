@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -103,22 +102,21 @@ class GoodListAdapter(
         if (convertView == null) {
             binding = GoodItemBinding.inflate(LayoutInflater.from(activity), parent, false)
             binding.root.tag = binding
-
             setItemBgColor(position, binding.root)
-
-            binding.chbSelected.setOnClickListener {
-                val checked = (it as CheckBox).isChecked
-                if (checked) {
-                    selectedItems.add(goods[position].id);
-                } else {
-                    selectedItems.remove(goods[position].id);
-                }
-            }
-            binding.itmMaster.setOnClickListener {
-                activity.onClickGood(goods[position])
-            }
         } else
             binding = convertView.tag as GoodItemBinding
+
+        binding.chbSelected.setOnClickListener {
+            val checked = (it as CheckBox).isChecked
+            if (checked) {
+                selectedItems.add(goods[position].id);
+            } else {
+                selectedItems.remove(goods[position].id);
+            }
+        }
+        binding.itmMaster.setOnClickListener {
+            activity.onClickGood(goods[position])
+        }
 
         binding.good = getItem(position) as Good
         binding.checked = selectedItems.contains(goods[position].id)
