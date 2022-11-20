@@ -106,25 +106,25 @@ class GoodListAdapter(
 
             binding.chbSelected.setOnClickListener {
                 val checked = (it as CheckBox).isChecked
-                val good = it.tag as Good
+                val item = it.tag as Good
                 if (checked) {
-                    selectedItems.add(good.id);
+                    selectedItems.add(item.id);
                 } else {
-                    selectedItems.remove(good.id);
+                    selectedItems.remove(item.id);
                 }
             }
             binding.itmMaster.setOnClickListener {
-                val good = it.tag as Good
-                activity.onClickGood(good)
+                val item = it.tag as Good
+                activity.onClickGood(item)
             }
         } else
             binding = convertView.tag as GoodItemBinding
 
-        val good = getItem(position) as Good
-        binding.good = good
-        binding.checked = selectedItems.contains(good.id)
-        binding.chbSelected.tag = good
-        binding.itmMaster.tag = good
+        val item = getItem(position) as Good
+        binding.good = item
+        binding.checked = selectedItems.contains(item.id)
+        binding.chbSelected.tag = item
+        binding.itmMaster.tag = item
 
         return binding.root
     }

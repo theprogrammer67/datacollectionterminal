@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.db.DocumentRow
 import ru.rarus.datacollectionterminal.db.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.ViewDocument
 import ru.rarus.datacollectionterminal.notifyObserver
@@ -74,11 +75,11 @@ class DocumentViewModel : ViewModel() {
         }
     }
 
-    fun incRowQuantity (position: Int, value: Int) {
+    fun incRowQuantity (row: DocumentRow, value: Int) {
         if (document.value != null) {
-            val quantityActual = document.value!!.rows[position].quantityActual
+            val quantityActual = row.quantityActual
             document.value!!.saved = false
-            document.value!!.rows[position].quantityActual = quantityActual + value
+            row.quantityActual = quantityActual + value
             document.notifyObserver()
         }
     }

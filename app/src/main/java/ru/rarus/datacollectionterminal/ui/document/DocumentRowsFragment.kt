@@ -12,7 +12,9 @@ import ru.rarus.datacollectionterminal.BaseAdapterEx
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentRowsBinding
+import ru.rarus.datacollectionterminal.db.DocumentHeader
 import ru.rarus.datacollectionterminal.db.DocumentRow
+import ru.rarus.datacollectionterminal.db.Good
 import ru.rarus.datacollectionterminal.db.ViewDocumentRow
 
 
@@ -48,9 +50,9 @@ class DocumentRowsFragment : Fragment() {
 
 class DocumentRowsAdapter(
     private val fragment: DocumentRowsFragment,
-    ) : BaseAdapterEx() {
+) : BaseAdapterEx() {
     var documentRows: List<DocumentRow> = ArrayList()
-    var selectedRow: Int = -1
+    var selectedRow: DocumentRow? = null
 
     var viewModel: DocumentViewModel? = null
 
@@ -65,37 +67,49 @@ class DocumentRowsAdapter(
         val viewDocumentRow = getItem(position) as ViewDocumentRow
 
         if (convertView == null) {
-            binding = DocumentRowBinding.inflate(LayoutInflater.from(fragment.context), parent, false)
+            binding =
+                DocumentRowBinding.inflate(LayoutInflater.from(fragment.context), parent, false)
             binding.root.tag = binding
             setItemBgColor(position, binding.root)
+
+            binding.chbSelected.setOnClickListener {
+                val checked = (it as CheckBox).isChecked
+                val item = it.tag as DocumentRow
+                if (checked) {
+                    viewModel?.selectedItems?.add(item.id);
+                } else {
+                    viewModel?.selectedItems?.remove(item.id);
+                }
+            }
+            binding.itmMaster.setOnClickListener {
+                val item = it.tag as DocumentRow
+                selectedRow = if (selectedRow == item)
+                    null
+                else
+                    item
+                notifyDataSetChanged()
+            }
+            binding.lyEditQuantity.btnDec.setOnClickListener {
+                val item = it.tag as DocumentRow
+                viewModel?.incRowQuantity(item, -1)
+            }
+            binding.lyEditQuantity.btnInc.setOnClickListener {
+                val item = it.tag as DocumentRow
+                viewModel?.incRowQuantity(item, 1)
+            }
         } else
             binding = convertView.tag as DocumentRowBinding
 
-        binding.chbSelected.setOnClickListener {
-            val checked = (it as CheckBox).isChecked
-            if (checked) {
-                viewModel?.selectedItems?.add(documentRows[position].id);
-            } else {
-                viewModel?.selectedItems?.remove(documentRows[position].id);
-            }
-        }
-        binding.rowMaster.setOnClickListener {
-            selectedRow = if (selectedRow == position)
-                -1
-            else
-                position
-            notifyDataSetChanged()
-        }
-        binding.lyEditQuantity.btnDec.setOnClickListener {
-            viewModel?.incRowQuantity(position, -1)
-        }
-        binding.lyEditQuantity.btnInc.setOnClickListener {
-            viewModel?.incRowQuantity(position, 1)
-        }
 
-        binding.checked = viewModel?.selectedItems?.contains(documentRows[position].id)
+        val item = getItem(position) as DocumentRow
+        binding.checked = viewModel?.selectedItems?.contains(item.id)
+        binding.chbSelected.tag = item
+        binding.itmMaster.tag = item
+        binding.lyEditQuantity.btnInc.tag = item
+        binding.lyEditQuantity.btnDec.tag = item
+
         binding.viewDocumentRow = viewDocumentRow
-        if (position == selectedRow)
+        if (item == selectedRow)
             binding.rowDetail.visibility = View.VISIBLE
         else
             binding.rowDetail.visibility = View.GONE

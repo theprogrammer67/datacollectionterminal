@@ -14,6 +14,7 @@ import ru.rarus.datacollectionterminal.GOODID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityGoodBinding
 import ru.rarus.datacollectionterminal.databinding.UnitItemBinding
+import ru.rarus.datacollectionterminal.db.DocumentRow
 import ru.rarus.datacollectionterminal.db.Unit
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import java.util.*
@@ -108,20 +109,23 @@ class UnitListAdapter(
             binding = UnitItemBinding.inflate(LayoutInflater.from(activity), parent, false)
             binding.root.tag = binding
             setItemBgColor(position, binding.root)
+
+            binding.chbSelected.setOnClickListener {
+                val checked = (it as CheckBox).isChecked
+                val item = it.tag as Unit
+                if (checked) {
+                    selectedItems.add(item.barcode);
+                } else {
+                    selectedItems.remove(item.barcode);
+                }
+            }
         } else
             binding = convertView.tag as UnitItemBinding
 
-        binding.chbSelected.setOnClickListener {
-            val checked = (it as CheckBox).isChecked
-            if (checked) {
-                selectedItems.add(units[position].barcode);
-            } else {
-                selectedItems.remove(units[position].barcode);
-            }
-        }
-
-        binding.unit = units[position]
-        if (units[position].baseUnit)
+        val item = getItem(position) as Unit
+        binding.chbSelected.tag = item
+        binding.unit = item
+        if (item.baseUnit)
             binding.llBaseUnit.visibility = View.VISIBLE
         else
             binding.llBaseUnit.visibility = View.INVISIBLE
