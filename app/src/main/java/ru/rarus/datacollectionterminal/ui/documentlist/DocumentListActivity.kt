@@ -83,18 +83,10 @@ class DocumentListActivity : AppCompatActivity() {
         }
     }
 
-    private fun onGetDocument(document: ViewDocument?) {
-        if (document != null) {
-            val intent = Intent(this, DocumentActivity::class.java)
-            intent.putExtra(DOCUMENT_TAG, document as Serializable)
-            startActivity(intent)
-        } else App.showMessage("Документ не найден в БД")
-    }
-
     fun onClickDocument(document: DocumentHeader) {
-        viewModel.getDocument(document.id).observeOnce(this) {
-            onGetDocument(it)
-        }
+        val intent = Intent(this, DocumentActivity::class.java)
+        intent.putExtra(DOCUMENTID_TAG, document.id)
+        startActivity(intent)
     }
 }
 

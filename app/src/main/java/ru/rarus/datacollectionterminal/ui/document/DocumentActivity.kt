@@ -12,10 +12,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
 import ru.rarus.datacollectionterminal.DOCUMENT_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
@@ -79,13 +84,30 @@ class DocumentActivity() : AppCompatActivity() {
             viewModel.selectedItems.clear()
 
             if (intent.extras != null) {
-                val obj = intent.extras!!.get(DOCUMENT_TAG)
-                if ((obj != null) && (obj is ViewDocument)) {
-                    val document: ViewDocument = obj
-                    viewModel.document.value = document
+                val id = intent.extras!!.get(DOCUMENTID_TAG)
+                if (id != null) {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        viewModel.getData(id as String).collect {
+                            if (it == null)
+                                withContext(Dispatchers.Main) { onDataNotFound(id) }
+                            else
+                                viewModel.document.postValue(it)
+                        }
+                    }
+                } else {
+                    val obj = intent.extras!!.get(DOCUMENT_TAG)
+                    if ((obj != null) && (obj is ViewDocument)) {
+                        val document: ViewDocument = obj
+                        viewModel.document.value = document
+                    }
                 }
             }
         }
+    }
+
+    private fun onDataNotFound(id: String) {
+        App.showMessage("Документ не найден: $id")
+        this.finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

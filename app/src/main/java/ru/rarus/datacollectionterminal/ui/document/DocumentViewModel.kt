@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
@@ -18,10 +21,18 @@ class DocumentViewModel : ViewModel() {
     @SuppressLint("StaticFieldLeak")
     var document = MutableLiveData<ViewDocument>()
     val selectedItems: ArrayList<String> = ArrayList()
+    private val model = DocumentModel()
 
     init {
         document.value = ViewDocument()
     }
+
+    fun getData(id: String) : Flow<ViewDocument?> {
+        return flow {
+            emit(model.getDocument(id))
+        }
+    }
+
 
     fun onScanBarcode(barcode: String, addBarcode: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -32,7 +43,6 @@ class DocumentViewModel : ViewModel() {
                 else
                     onBarcodeFound(goodAndUnit, addBarcode)
             }
-
         }
     }
 
