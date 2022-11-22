@@ -21,7 +21,6 @@ class DocumentViewModel : ViewModel() {
     @SuppressLint("StaticFieldLeak")
     var document = MutableLiveData<ViewDocument>()
     val selectedItems: ArrayList<String> = ArrayList()
-    private val model = DocumentModel()
 
     init {
         document.value = ViewDocument()
@@ -29,7 +28,7 @@ class DocumentViewModel : ViewModel() {
 
     fun getData(id: String) : Flow<ViewDocument?> {
         return flow {
-            emit(model.getDocument(id))
+            emit(DocumentModel.getDocument(id))
         }
     }
 
@@ -97,7 +96,7 @@ class DocumentViewModel : ViewModel() {
     fun saveDocument() {
         if (document.value != null) {
             viewModelScope.launch(Dispatchers.IO) {
-                model.saveDocument(document.value!!)
+                DocumentModel.saveDocument(document.value!!)
                 withContext(Dispatchers.Main) {
                     App.showMessage("Документ сохранен")
                 }
