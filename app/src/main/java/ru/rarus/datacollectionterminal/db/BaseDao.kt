@@ -3,6 +3,10 @@ package ru.rarus.datacollectionterminal.db
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
+import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
+import ru.rarus.datacollectionterminal.db.entities.DocumentRow
+import ru.rarus.datacollectionterminal.db.entities.Good
+import ru.rarus.datacollectionterminal.db.entities.Unit
 
 interface BaseDao {
 

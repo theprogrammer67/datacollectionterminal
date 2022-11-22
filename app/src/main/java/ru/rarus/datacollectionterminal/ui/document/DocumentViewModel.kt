@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
-import ru.rarus.datacollectionterminal.db.DocumentRow
-import ru.rarus.datacollectionterminal.db.GoodAndUnit
-import ru.rarus.datacollectionterminal.db.ViewDocument
+import ru.rarus.datacollectionterminal.db.entities.DocumentRow
+import ru.rarus.datacollectionterminal.db.entities.GoodAndUnit
+import ru.rarus.datacollectionterminal.db.entities.ViewDocument
 import ru.rarus.datacollectionterminal.db.models.DocumentModel
 import ru.rarus.datacollectionterminal.notifyObserver
 import java.util.ArrayList

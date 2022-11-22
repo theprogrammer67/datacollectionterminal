@@ -6,7 +6,7 @@
 
         <variable
             name="unit"
-            type="ru.rarus.datacollectionterminal.db.Unit" />
+            type="ru.rarus.datacollectionterminal.db.entities.Unit" />
 
     </data>
 

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewDocumentRow"
-            type="ru.rarus.datacollectionterminal.db.ViewDocumentRow" />
+            type="ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow" />
 
         <variable
             name="checked"

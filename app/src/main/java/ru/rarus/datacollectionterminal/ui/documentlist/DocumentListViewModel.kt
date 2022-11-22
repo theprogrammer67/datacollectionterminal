@@ -5,8 +5,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.rarus.datacollectionterminal.App
-import ru.rarus.datacollectionterminal.db.DocumentHeader
-import ru.rarus.datacollectionterminal.db.ViewDocument
+import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
 import java.util.ArrayList
 
 class DocumentListViewModel() : ViewModel() {
@@ -18,15 +17,6 @@ class DocumentListViewModel() : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             list.postValue(App.database.getDao().getDocumentsSync())
         }
-    }
-
-    fun getDocument(documentId: String): LiveData<ViewDocument?> {
-        val data = MutableLiveData<ViewDocument?>()
-        viewModelScope.launch(Dispatchers.IO) {
-            val document = App.database.getDao().getViewDocument(documentId)
-            data.postValue(document)
-        }
-        return data
     }
 
     fun deleteSelectedItems() {

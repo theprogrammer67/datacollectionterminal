@@ -1,4 +1,4 @@
-package ru.rarus.datacollectionterminal.db
+package ru.rarus.datacollectionterminal.db.entities
 
 import androidx.room.*
 import java.io.Serializable

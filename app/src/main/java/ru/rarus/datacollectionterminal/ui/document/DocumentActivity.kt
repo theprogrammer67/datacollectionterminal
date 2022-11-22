@@ -24,7 +24,7 @@ import ru.rarus.datacollectionterminal.DOCUMENTID_TAG
 import ru.rarus.datacollectionterminal.DOCUMENT_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentBinding
-import ru.rarus.datacollectionterminal.db.ViewDocument
+import ru.rarus.datacollectionterminal.db.entities.ViewDocument
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import ru.rarus.datacollectionterminal.ui.scanner.ScannerActivity
 
@@ -75,7 +75,7 @@ class DocumentActivity() : AppCompatActivity() {
 
         // По-умолчанию используем zxing сканер
         // Но тут могут быть и другие варианты (bluetooth-сканер)
-        binding.btnScanBarcode.setOnClickListener { startScanActivity(false) }
+        binding.btnScanBarcode.setOnClickListener { startScanActivity() }
         binding.btnSaveDocument.setOnClickListener { viewModel.saveDocument() }
         binding.btnDeleteSelected.setOnClickListener { onDeleteClick(null) }
         binding.btnClear.setOnClickListener { onClearClick() }
@@ -139,7 +139,7 @@ class DocumentActivity() : AppCompatActivity() {
                     viewModel.saveDocument()
                     super.onBackPressed()
                 }
-                .setNegativeButton("Нет") { dialog, id ->
+                .setNegativeButton("Нет") { dialog, _ ->
                     dialog.dismiss()
                     super.onBackPressed()
                 }
@@ -148,11 +148,11 @@ class DocumentActivity() : AppCompatActivity() {
         } else super.onBackPressed()
     }
 
-    fun onSettingsClick(menuItem: MenuItem) {
+    fun onSettingsClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
-    fun onSelectAllClick(menuItem: MenuItem) {
+    fun onSelectAllClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         if (binding.viewpager.currentItem == 0) {
             val fragment = supportFragmentManager.findFragmentByTag("f0")
             if (fragment != null) {
@@ -167,7 +167,7 @@ class DocumentActivity() : AppCompatActivity() {
     }
 
 
-    fun onDeleteClick(menuItem: MenuItem?) {
+    fun onDeleteClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem?) {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Удалить выбранные строки?")
@@ -197,7 +197,7 @@ class DocumentActivity() : AppCompatActivity() {
         }
     }
 
-    private fun startScanActivity(addBarcode: Boolean) {
+    private fun startScanActivity() {
         val intent = Intent(this, ScannerActivity::class.java)
         resultLauncher.launch(intent)
     }

@@ -11,11 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import ru.rarus.datacollectionterminal.*
 import ru.rarus.datacollectionterminal.databinding.ActivityDocumentListBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentItemBinding
-import ru.rarus.datacollectionterminal.db.DocumentHeader
-import ru.rarus.datacollectionterminal.db.ViewDocument
+import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import ru.rarus.datacollectionterminal.ui.document.DocumentActivity
-import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -56,11 +54,11 @@ class DocumentListActivity : AppCompatActivity() {
         return true
     }
 
-    fun onSettingsClick(menuItem: MenuItem) {
+    fun onSettingsClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
-    fun onSelectAllClick(menuItem: MenuItem) {
+    fun onSelectAllClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         viewModel.selectedItems.clear()
         adapter.documents.forEach {
             viewModel.selectedItems.add(it.id)
@@ -68,7 +66,7 @@ class DocumentListActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    fun onDeleteClick(menuItem: MenuItem) {
+    fun onDeleteClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Удалить выбранные документы?")

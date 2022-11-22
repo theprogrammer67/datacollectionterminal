@@ -1,6 +1,8 @@
 package ru.rarus.datacollectionterminal.db
 
 import androidx.room.*
+import ru.rarus.datacollectionterminal.db.entities.*
+import ru.rarus.datacollectionterminal.db.entities.Unit
 import java.util.*
 
 

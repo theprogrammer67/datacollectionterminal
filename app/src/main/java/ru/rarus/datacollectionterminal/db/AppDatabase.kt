@@ -4,6 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
+import ru.rarus.datacollectionterminal.db.entities.DocumentRow
+import ru.rarus.datacollectionterminal.db.entities.Good
+import ru.rarus.datacollectionterminal.db.entities.Unit
 
 @Database(
     entities = [DocumentHeader::class, DocumentRow::class, Good::class, Unit::class],

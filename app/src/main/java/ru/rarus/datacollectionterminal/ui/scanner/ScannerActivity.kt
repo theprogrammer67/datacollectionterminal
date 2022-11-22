@@ -87,19 +87,19 @@ class ScannerActivity : AppCompatActivity() {
         barcodeView.pause()
     }
 
-    fun pause(view: View?) {
+    fun pause(@Suppress("UNUSED_PARAMETER")view: View?) {
         barcodeView.pause()
         binding.btnPause.isEnabled = false
         binding.btnResume.isEnabled = true
     }
 
-    fun resume(view: View?) {
+    fun resume(@Suppress("UNUSED_PARAMETER")view: View?) {
         barcodeView.resume()
         binding.btnPause.isEnabled = true
         binding.btnResume.isEnabled = false
     }
 
-    fun cancel(view: View?) {
+    fun cancel(@Suppress("UNUSED_PARAMETER")view: View?) {
         val data = Intent()
         setResult(RESULT_CANCELED, data)
         finish()

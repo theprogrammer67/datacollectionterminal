@@ -9,10 +9,10 @@ import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.BuildConfig
 import ru.rarus.datacollectionterminal.R
-import ru.rarus.datacollectionterminal.db.DocumentHeader
-import ru.rarus.datacollectionterminal.db.ViewDocument
-import ru.rarus.datacollectionterminal.db.ViewDocumentRow
-import ru.rarus.datacollectionterminal.db.ViewGood
+import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
+import ru.rarus.datacollectionterminal.db.entities.ViewDocument
+import ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow
+import ru.rarus.datacollectionterminal.db.entities.ViewGood
 
 
 class Handlers(private val server: RestServer) {

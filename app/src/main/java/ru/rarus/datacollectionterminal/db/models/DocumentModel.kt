@@ -1,15 +1,17 @@
 package ru.rarus.datacollectionterminal.db.models
 
 import ru.rarus.datacollectionterminal.App
-import ru.rarus.datacollectionterminal.db.ViewDocument
+import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
+import ru.rarus.datacollectionterminal.db.entities.ViewDocument
 
 
 class DocumentModel {
 
     fun getDocument(id: String): ViewDocument? {
-        val header = App.database.getDao().getDocumentSync(id)
+        val dao = App.database.getDao()
+        val header = dao.getDocumentSync(id)
         return if (header != null) {
-            val rows = App.database.getDao().getViewDocumentRowsSync(id)
+            val rows = dao.getViewDocumentRowsSync(id)
             ViewDocument(header, rows, true)
         } else null
     }
@@ -23,4 +25,19 @@ class DocumentModel {
             document.saved = true
         }
     }
+    fun saveDocuments(documents: List<ViewDocument>) {
+        documents.forEach() {
+            saveDocument(it)
+        }
+    }
+
+    fun deleteDocument(id: String) {
+        App.database.getDao().deleteDocumentSync(id)
+    }
+
+    fun getAllHeaders(): List<DocumentHeader> {
+        return  App.database.getDao().getDocumentsSync()
+    }
+
+
 }

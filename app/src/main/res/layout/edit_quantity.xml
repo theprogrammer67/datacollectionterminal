@@ -7,7 +7,7 @@
 
         <variable
             name="viewDocumentRow"
-            type="ru.rarus.datacollectionterminal.db.ViewDocumentRow" />
+            type="ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow" />
     </data>
 
     <LinearLayout

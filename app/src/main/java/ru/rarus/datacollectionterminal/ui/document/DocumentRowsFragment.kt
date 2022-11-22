@@ -12,10 +12,8 @@ import ru.rarus.datacollectionterminal.BaseAdapterEx
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentRowsBinding
-import ru.rarus.datacollectionterminal.db.DocumentHeader
-import ru.rarus.datacollectionterminal.db.DocumentRow
-import ru.rarus.datacollectionterminal.db.Good
-import ru.rarus.datacollectionterminal.db.ViewDocumentRow
+import ru.rarus.datacollectionterminal.db.entities.DocumentRow
+import ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow
 
 
 class DocumentRowsFragment : Fragment() {

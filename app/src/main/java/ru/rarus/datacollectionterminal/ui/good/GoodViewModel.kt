@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.R
-import ru.rarus.datacollectionterminal.db.ViewGood
+import ru.rarus.datacollectionterminal.db.entities.ViewGood
 import java.util.ArrayList
 
 class GoodViewModel : ViewModel() {

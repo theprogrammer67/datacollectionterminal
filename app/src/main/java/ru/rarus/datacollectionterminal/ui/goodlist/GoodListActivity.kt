@@ -13,7 +13,7 @@ import ru.rarus.datacollectionterminal.GOODID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityGoodsListBinding
 import ru.rarus.datacollectionterminal.databinding.GoodItemBinding
-import ru.rarus.datacollectionterminal.db.Good
+import ru.rarus.datacollectionterminal.db.entities.Good
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import ru.rarus.datacollectionterminal.ui.good.GoodActivity
 import java.util.*
@@ -51,11 +51,11 @@ class GoodListActivity : AppCompatActivity() {
         return true
     }
 
-    fun onSettingsClick(menuItem: MenuItem) {
+    fun onSettingsClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
-    fun onSelectAllClick(menuItem: MenuItem) {
+    fun onSelectAllClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         viewModel.selectedItems.clear()
         adapter.goods.forEach {
             viewModel.selectedItems.add(it.id)
@@ -69,7 +69,7 @@ class GoodListActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun onDeleteClick(menuItem: MenuItem) {
+    fun onDeleteClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Удалить выбранные товары?")

@@ -1,7 +1,6 @@
 package ru.rarus.datacollectionterminal.ui.good
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -14,8 +13,7 @@ import ru.rarus.datacollectionterminal.GOODID_TAG
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.databinding.ActivityGoodBinding
 import ru.rarus.datacollectionterminal.databinding.UnitItemBinding
-import ru.rarus.datacollectionterminal.db.DocumentRow
-import ru.rarus.datacollectionterminal.db.Unit
+import ru.rarus.datacollectionterminal.db.entities.Unit
 import ru.rarus.datacollectionterminal.ui.SettingsActivity
 import java.util.*
 
@@ -63,7 +61,7 @@ class GoodActivity : AppCompatActivity() {
         return true
     }
 
-    fun onSelectAllClick(menuItem: MenuItem) {
+    fun onSelectAllClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         viewModel.selectedItems.clear()
         adapter.units.forEach {
             viewModel.selectedItems.add(it.barcode)
@@ -71,11 +69,11 @@ class GoodActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    fun onSettingsClick(menuItem: MenuItem) {
+    fun onSettingsClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
-    fun onDeleteClick(menuItem: MenuItem) {
+    fun onDeleteClick(@Suppress("UNUSED_PARAMETER")menuItem: MenuItem) {
         if (viewModel.selectedItems.size > 0) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Удалить выбранные единицы?")
