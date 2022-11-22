@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
+import ru.rarus.datacollectionterminal.db.models.DocumentModel
 import java.util.ArrayList
 
 class DocumentListViewModel() : ViewModel() {
@@ -15,7 +16,7 @@ class DocumentListViewModel() : ViewModel() {
 
     fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
-            list.postValue(App.database.getDao().getDocumentsSync())
+            list.postValue(DocumentModel.getAllHeaders())
         }
     }
 
@@ -23,10 +24,10 @@ class DocumentListViewModel() : ViewModel() {
         if (selectedItems.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
                 selectedItems.forEach {
-                    App.database.getDao().deleteDocumentSync(it)
+                    DocumentModel.deleteDocument(it)
                 }
-                list.postValue(App.database.getDao().getDocumentsSync())
                 selectedItems.clear()
+                list.postValue(DocumentModel.getAllHeaders())
             }
         }
     }
