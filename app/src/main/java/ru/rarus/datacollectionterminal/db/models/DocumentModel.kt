@@ -3,6 +3,7 @@ package ru.rarus.datacollectionterminal.db.models
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
 import ru.rarus.datacollectionterminal.db.entities.ViewDocument
+import ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow
 
 
 class DocumentModel {
@@ -15,6 +16,11 @@ class DocumentModel {
                 val rows = dao.getViewDocumentRowsSync(id)
                 ViewDocument(header, rows, true)
             } else null
+        }
+
+        @JvmStatic
+        fun getDocumentRows(id: String): List<ViewDocumentRow> {
+            return App.database.getDao().getViewDocumentRowsSync(id)
         }
 
         @JvmStatic
@@ -38,6 +44,11 @@ class DocumentModel {
         @JvmStatic
         fun deleteDocument(id: String) {
             App.database.getDao().deleteDocumentSync(id)
+        }
+
+        @JvmStatic
+        fun deleteAllDocuments() {
+            App.database.getDao().deleteDocumentsSync()
         }
 
         @JvmStatic

@@ -13,6 +13,7 @@ import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
 import ru.rarus.datacollectionterminal.db.entities.ViewDocument
 import ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow
 import ru.rarus.datacollectionterminal.db.entities.ViewGood
+import ru.rarus.datacollectionterminal.db.models.DocumentModel
 
 
 class Handlers(private val server: RestServer) {
@@ -99,19 +100,19 @@ class Handlers(private val server: RestServer) {
             when (exchange!!.requestMethod) {
                 "GET" -> {
                     if (documentID == "") {
-                        val documents = App.database.getDao().getDocumentsSync()
+                        val documents = DocumentModel.getAllHeaders()
                         server.sendResponse<List<DocumentHeader>>(exchange, documents)
                     } else {
                         val document =
-                            App.database.getDao().getViewDocumentRowsSync(documentID)
+                            DocumentModel.getDocumentRows(documentID)
                         server.sendResponse<List<ViewDocumentRow>>(exchange, document)
                     }
                 }
                 "DELETE" -> {
                     if (documentID == "") {
-                        App.database.getDao().deleteDocumentsSync()
+                        DocumentModel.deleteAllDocuments()
                     } else {
-                        App.database.getDao().deleteDocumentSync(documentID)
+                        DocumentModel.deleteDocument(documentID)
                     }
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 }
@@ -125,7 +126,7 @@ class Handlers(private val server: RestServer) {
                         server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
                         return@HttpHandler
                     }
-                    App.database.getDao().upsertViewDocumentsSync(documentList)
+                    DocumentModel.saveDocuments(documentList)
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 }
                 else -> server.sendResponse<Handlers.HandlerError>(
