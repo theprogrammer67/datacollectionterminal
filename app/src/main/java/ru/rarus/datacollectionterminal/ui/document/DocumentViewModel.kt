@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,6 +13,7 @@ import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.DocumentRow
 import ru.rarus.datacollectionterminal.db.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.ViewDocument
+import ru.rarus.datacollectionterminal.db.models.DocumentModel
 import ru.rarus.datacollectionterminal.notifyObserver
 import java.util.ArrayList
 
@@ -96,10 +96,8 @@ class DocumentViewModel : ViewModel() {
 
     fun saveDocument() {
         if (document.value != null) {
-            val data: ViewDocument = document.value!!
-
             viewModelScope.launch(Dispatchers.IO) {
-                App.database.getDao().upsertViewDocumentSync(data)
+                model.saveDocument(document.value!!)
                 withContext(Dispatchers.Main) {
                     App.showMessage("Документ сохранен")
                 }
