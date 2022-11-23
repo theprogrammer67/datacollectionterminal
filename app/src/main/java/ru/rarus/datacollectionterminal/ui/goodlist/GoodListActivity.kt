@@ -27,7 +27,7 @@ class GoodListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_goods_list)
 
-        viewModel = ViewModelProvider(this).get(GoodListViewModel::class.java)
+        viewModel = ViewModelProvider(this)[GoodListViewModel::class.java]
         if (savedInstanceState == null) {
             viewModel.selectedItems.clear()
         }

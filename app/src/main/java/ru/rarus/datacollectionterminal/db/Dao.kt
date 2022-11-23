@@ -159,5 +159,15 @@ abstract class DctDao : BaseDao {
         }
     }
 
+    open fun upsertGoodSync(good: Good) {
+        if (insertGoodSync(good) == -1L) {
+            updateGoodSync(good)
+        }
+    }
+
+    @Transaction
+    open fun upsertViewGoodSync(item: ViewGood) {
+        upsertGoodSync(item.good)
+    }
 
 }

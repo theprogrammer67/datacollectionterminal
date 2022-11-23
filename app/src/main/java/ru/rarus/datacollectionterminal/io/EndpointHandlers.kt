@@ -14,6 +14,7 @@ import ru.rarus.datacollectionterminal.db.entities.ViewDocument
 import ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow
 import ru.rarus.datacollectionterminal.db.entities.ViewGood
 import ru.rarus.datacollectionterminal.db.models.DocumentModel
+import ru.rarus.datacollectionterminal.db.models.GoodModel
 
 
 class Handlers(private val server: RestServer) {
@@ -151,10 +152,10 @@ class Handlers(private val server: RestServer) {
             when (exchange!!.requestMethod) {
                 "GET" -> {
                     if (goodID == "") {
-                        val goods = App.database.getDao().getViewGoodsSync()
+                        val goods = GoodModel.getAllViewGoods()
                         server.sendResponse<List<ViewGood>>(exchange, goods)
                     } else {
-                        val good = App.database.getDao().getViewGoodSync(goodID)
+                        val good = GoodModel.getViewGood(goodID)
                         if (good != null)
                             server.sendResponse<ViewGood>(exchange, good)
                         else
@@ -167,9 +168,9 @@ class Handlers(private val server: RestServer) {
                 "DELETE" -> {
                     try {
                         if (goodID == "") {
-                            App.database.getDao().deleteGoodsSync()
+                            GoodModel.deleteAllGoods()
                         } else {
-                            App.database.getDao().deleteGoodSync(goodID)
+                            GoodModel.deleteGood(goodID)
                         }
                     } catch (e: SQLiteConstraintException) {
                         server.sendResponse<Handlers.HandlerError>(

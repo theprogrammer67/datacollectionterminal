@@ -9,8 +9,7 @@ import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
 import ru.rarus.datacollectionterminal.db.models.DocumentModel
 import java.util.ArrayList
 
-class DocumentListViewModel() : ViewModel() {
-    @SuppressLint("StaticFieldLeak")
+class DocumentListViewModel : ViewModel() {
     var list = MutableLiveData<List<DocumentHeader>>()
     val selectedItems: ArrayList<String> = ArrayList()
 

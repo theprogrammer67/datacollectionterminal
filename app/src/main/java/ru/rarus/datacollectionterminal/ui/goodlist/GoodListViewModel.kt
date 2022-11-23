@@ -10,15 +10,16 @@ import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.db.entities.Good
+import ru.rarus.datacollectionterminal.db.models.GoodModel
 import java.util.ArrayList
 
-class GoodListViewModel() : ViewModel() {
+class GoodListViewModel : ViewModel() {
     var list = MutableLiveData<List<Good>>()
     val selectedItems: ArrayList<String> = ArrayList()
 
     fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
-            list.postValue(App.database.getDao().getGoodsSync())
+            list.postValue(GoodModel.getAllGoods())
         }
     }
 
@@ -27,15 +28,15 @@ class GoodListViewModel() : ViewModel() {
             viewModelScope.launch(Dispatchers.IO) {
                 selectedItems.forEach {
                     try {
-                        App.database.getDao().deleteGoodSync(it)
+                        GoodModel.deleteGood(it)
                     } catch (e: SQLiteConstraintException) {
                         withContext(Dispatchers.Main) {
                             App.showMessage(App.context.getString(R.string.error_delete_good))
                         }
                     }
                 }
-                list.postValue(App.database.getDao().getGoodsSync())
                 selectedItems.clear()
+                list.postValue(GoodModel.getAllGoods())
             }
         }
     }

@@ -13,7 +13,7 @@ interface BaseDao {
     // Document
 
     @Update
-    fun updateDocumentSync(document: DocumentHeader)
+    fun updateDocumentSync(document: DocumentHeader): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDocumentSync(document: DocumentHeader): Long
@@ -29,16 +29,19 @@ interface BaseDao {
     fun insertUnitSync(unit: Unit): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertUnit(unit: Unit)
+    suspend fun insertUnit(unit: Unit): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertUnitsSync(unit: List<Unit>)
+    fun insertUnitsSync(units: List<Unit>): List<Long>
+
+    @Update
+    fun updateUnitSync(unit: Unit): Int
 
     // Good
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertGoodSync(good: Good)
+    fun insertGoodSync(good: Good): Long
 
     @Update
-    fun updateGoodSync(good: Good)
+    fun updateGoodSync(good: Good): Int
 }
