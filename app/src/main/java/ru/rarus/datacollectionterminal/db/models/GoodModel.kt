@@ -45,7 +45,11 @@ class GoodModel {
 
         @JvmStatic
         fun saveViewGood(item: ViewGood) {
-
+            val dao = App.database.getGoodDao()
+            App.database.runInTransaction {
+                dao.saveGood(item.good)
+                dao.saveUnits(item.units)
+            }
         }
 
     }

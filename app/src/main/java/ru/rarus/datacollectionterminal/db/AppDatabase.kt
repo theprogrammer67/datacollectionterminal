@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import ru.rarus.datacollectionterminal.db.dao.DocumentDao
+import ru.rarus.datacollectionterminal.db.dao.GoodDao
 import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
 import ru.rarus.datacollectionterminal.db.entities.DocumentRow
 import ru.rarus.datacollectionterminal.db.entities.Good
@@ -16,6 +18,8 @@ import ru.rarus.datacollectionterminal.db.entities.Unit
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getDao(): DctDao
+    abstract fun getDocumentDao(): DocumentDao
+    abstract fun getGoodDao(): GoodDao
 
     companion object {
         private var instance: AppDatabase? = null
