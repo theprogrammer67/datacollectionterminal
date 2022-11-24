@@ -169,5 +169,4 @@ abstract class DctDao : BaseDao {
     open fun upsertViewGoodSync(item: ViewGood) {
         upsertGoodSync(item.good)
     }
-
 }
