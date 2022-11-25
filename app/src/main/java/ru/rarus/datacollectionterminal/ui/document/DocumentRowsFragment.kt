@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.rarus.datacollectionterminal.BaseAdapterEx
 import ru.rarus.datacollectionterminal.R
+import ru.rarus.datacollectionterminal.databinding.DialogQuantityBinding
 import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentRowsBinding
 import ru.rarus.datacollectionterminal.db.entities.DocumentRow
@@ -56,26 +57,16 @@ class DocumentRowsFragment : Fragment() {
 
     fun onQuantityClick(row: DocumentRow) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+
+        val binding: DialogQuantityBinding = DialogQuantityBinding.inflate(LayoutInflater.from(context))
+        binding.quantity = row.quantityActual
+
+        builder.setView(binding.root)
         builder.setTitle("Количество")
-
-        val input = EditText(activity)
-        input.hint = "Введите количество"
-        input.inputType = InputType.TYPE_CLASS_NUMBER
-        input.gravity = Gravity.END
-        (input as TextView).text = row.quantityActual.toString()
-        builder.setView(input)
-
-
-//        builder.setView(layoutInflater.inflate(R.layout.YourLayout, null))
-
-//        val binding: MyDialogBinding = MyDialogBinding.inflate(LayoutInflater.from(context))
-//        builder.setView(binding.getRoot())
-
-        builder.setPositiveButton("ОК", DialogInterface.OnClickListener { dialog, which ->
-            // Here you get get input text from the Edittext
-            row.quantityActual = input.text.toString().toDouble()
+        builder.setPositiveButton("ОК") { _, _ ->
+            row.quantityActual = binding.etQuantity.text.toString().toDouble()
             viewModel.document.notifyObserver()
-        })
+        }
         builder.setNegativeButton(
             "Отмена"
         ) { dialog, _ -> dialog.cancel() }
