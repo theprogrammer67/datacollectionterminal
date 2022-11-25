@@ -56,7 +56,7 @@ class DocumentViewModel : ViewModel() {
 
         val goodAndUnit = GoodAndUnit(barcodeData)
         viewModelScope.launch(Dispatchers.IO) {
-            App.database.getDao().insertGoodAndUnit(goodAndUnit)
+            GoodModel.insertGoodAndUnit(goodAndUnit)
             withContext(Dispatchers.Main) { addDocumentRow(goodAndUnit, addBarcode) }
         }
     }

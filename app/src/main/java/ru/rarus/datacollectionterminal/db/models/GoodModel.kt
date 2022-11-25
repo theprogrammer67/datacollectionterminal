@@ -1,5 +1,6 @@
 package ru.rarus.datacollectionterminal.db.models
 
+import androidx.room.Transaction
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.db.entities.Good
 import ru.rarus.datacollectionterminal.db.entities.GoodAndUnit
@@ -20,6 +21,11 @@ class GoodModel {
         @JvmStatic
         fun deleteAllGoods() {
             App.database.getGoodDao().deleteAllGoods()
+        }
+
+        @JvmStatic
+        fun deleteUnit(barcode: List<String>) {
+            App.database.getGoodDao().deleteUnit(barcode)
         }
 
         @JvmStatic
@@ -75,6 +81,15 @@ class GoodModel {
             val unit = dao.getUnit(barcode) ?: return null
             val good = dao.getGood(unit.good) ?: return null
             return GoodAndUnit(good, unit)
+        }
+
+        @JvmStatic
+        fun insertGoodAndUnit(goodAndUnit: GoodAndUnit) {
+            val dao = App.database.getGoodDao()
+            App.database.runInTransaction {
+                dao.insertGood(goodAndUnit.good)
+                dao.insertUnit(goodAndUnit.unit)
+            }
         }
     }
 }

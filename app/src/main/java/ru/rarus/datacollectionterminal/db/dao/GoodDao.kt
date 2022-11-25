@@ -63,6 +63,9 @@ abstract class GoodDao {
     @Update
     abstract fun updateUnit(unit: Unit): Int
 
+    @Query("DELETE FROM unit WHERE barcode IN (:barcode)")
+    abstract fun deleteUnit(barcode: List<String>)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertUnits(units: List<Unit>): List<Long>
 

@@ -9,7 +9,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.R
+import ru.rarus.datacollectionterminal.db.dao.GoodDao
 import ru.rarus.datacollectionterminal.db.entities.ViewGood
+import ru.rarus.datacollectionterminal.db.models.GoodModel
 import java.util.ArrayList
 
 class GoodViewModel : ViewModel() {
@@ -26,7 +28,7 @@ class GoodViewModel : ViewModel() {
 
         this.goodId = goodId
         viewModelScope.launch(Dispatchers.IO) {
-            viewGood.postValue(App.database.getDao().getViewGoodSync(goodId))
+            viewGood.postValue(GoodModel.getViewGood(goodId))
         }
     }
 
@@ -35,16 +37,14 @@ class GoodViewModel : ViewModel() {
 
         if (selectedItems.isNotEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                selectedItems.forEach {
-                    try {
-                        App.database.getDao().deleteUnitSync(it)
-                    } catch (e: SQLiteConstraintException) {
-                        withContext(Dispatchers.Main) {
-                            App.showMessage(App.context.getString(R.string.error_delete_good))
-                        }
+                try {
+                    GoodModel.deleteUnit(selectedItems)
+                } catch (e: SQLiteConstraintException) {
+                    withContext(Dispatchers.Main) {
+                        App.showMessage(App.context.getString(R.string.error_delete_good))
                     }
                 }
-                viewGood.postValue(App.database.getDao().getViewGoodSync(goodId!!))
+                viewGood.postValue(GoodModel.getViewGood(goodId!!))
                 selectedItems.clear()
             }
         }

@@ -17,7 +17,6 @@ import ru.rarus.datacollectionterminal.db.entities.Unit
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun getDao(): DctDao
     abstract fun getDocumentDao(): DocumentDao
     abstract fun getGoodDao(): GoodDao
 
