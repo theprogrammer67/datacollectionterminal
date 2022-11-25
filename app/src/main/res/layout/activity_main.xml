@@ -41,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:padding="20dp"
-                        android:text="Новый документ" />
+                        android:text="@string/caption_new_document" />
 
                     <Button
                         android:id="@+id/btnDocumentList"
@@ -49,7 +49,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:padding="20dp"
-                        android:text="Документы" />
+                        android:text="@string/caption_documents" />
 
                     <Button
                         android:id="@+id/btnGoodList"
@@ -57,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:padding="20dp"
-                        android:text="Номенклатура" />
+                        android:text="@string/caption_goods" />
 
                     <Button
                         android:id="@+id/btnSettings"
@@ -65,14 +65,14 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:padding="20dp"
-                        android:text="Настройки" />
+                        android:text="@string/caption_settings" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/swServerStart"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="20dp"
-                        android:text="Передача данных" />
+                        android:text="@string/caption_start_server" />
 
                 </LinearLayout>
 

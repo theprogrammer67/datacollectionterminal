@@ -1,13 +1,15 @@
 package ru.rarus.datacollectionterminal.db.entities
 
 import androidx.room.*
+import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.R
 import java.util.*
 
 @Entity(tableName = "good")
 class Good() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
-    var name: String = "Неизвестный товар"
+    var name: String = App.context.getString(R.string.unknown_good)
 
     constructor(barcode: String) : this() {
         name = "Товар $barcode"
@@ -33,7 +35,7 @@ class Unit() {
 
     @ColumnInfo(index = true)
     var good: String = ""
-    var name: String = "шт"
+    var name: String = App.context.getString(R.string.joke_short)
     var conversionFactor: Double = 1.0
     var price: Double = 0.0
     var baseUnit: Boolean = false

@@ -1,28 +1,28 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Общие настройки">
+    <PreferenceCategory app:title="@string/caption_common_settings">
 
         <EditTextPreference
             app:key="ipAddress"
             app:selectable="false"
-            app:title="IP адрес устройства"
+            app:title="@string/caption_ip_address"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:defaultValue="8118"
             app:key="serverPort"
-            app:title="Порт сервера"
+            app:title="@string/caption_server_port"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
             app:key="startServer"
-            app:summary="Запускать сервер обмена данными при старте приложения"
-            app:title="Передача данных" />
+            app:summary="@string/descr_start_server"
+            app:title="@string/caption_start_server" />
 
         <SwitchPreferenceCompat
             app:key="extBarcodeRead"
-            app:summary="Сканировать дополнительный штрихкод после основного"
-            app:title="Дополнительны штрихкод" />
+            app:summary="@string/descr_ext_barcode_read"
+            app:title="@string/caption_ext_barcode" />
 
     </PreferenceCategory>
 

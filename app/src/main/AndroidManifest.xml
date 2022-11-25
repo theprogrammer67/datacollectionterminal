@@ -27,7 +27,7 @@
         android:theme="@style/Theme.DataCollectionTerminal">
         <activity
             android:name=".ui.scanner.ScannerActivity"
-            android:label="Сканер"
+            android:label="@string/caption_scanner"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -35,31 +35,19 @@
         </activity>
         <activity
             android:name=".ui.SettingsActivity"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/caption_settings" />
         <activity
             android:name=".ui.good.GoodActivity"
-            android:label="Товар" />
+            android:label="@string/caption_good" />
         <activity
             android:name=".ui.goodlist.GoodListActivity"
-            android:label="Номенклатура" />
+            android:label="@string/caption_goods" />
         <activity
             android:name=".ui.documentlist.DocumentListActivity"
-            android:label="Список документов" />
-        <activity
-            android:name=".ui.BarcodeCaptureActivity"
-            android:screenOrientation="fullSensor"
-            android:stateNotNeeded="true"
-            android:theme="@style/zxing_CaptureTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".ui.ExtBarcodeCaptureActivity"
-            android:screenOrientation="fullSensor"
-            android:stateNotNeeded="true"
-            android:theme="@style/zxing_CaptureTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:label="@string/caption_doclist" />
         <activity
             android:name=".ui.document.DocumentActivity"
-            android:label="Документ" />
+            android:label="@string/caption_document" />
         <activity android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>

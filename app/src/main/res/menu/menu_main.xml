@@ -5,20 +5,20 @@
     <item
         android:id="@+id/action_select_all"
         android:orderInCategory="100"
-        android:title="@string/action_select_all"
+        android:title="@string/caption_select_all"
         android:onClick="onSelectAllClick"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/caption_settings"
         android:onClick="onSettingsClick"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_delete_selected"
         android:icon="@drawable/ic_baseline_delete_24"
         android:orderInCategory="100"
-        android:title="@string/action_delete_selected"
+        android:title="@string/caption_delete_selected"
         android:onClick="onDeleteClick"
         app:showAsAction="ifRoom" />
 </menu>

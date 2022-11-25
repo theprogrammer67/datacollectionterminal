@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">Терминал сбора данных</string>
     <string name="caption_scanbarcode">Сканировать штрихкод</string>
-    <string name="action_settings">Настройки</string>
-    <string name="action_delete_selected">Удалить выбранные</string>
-    <string name="action_select_all">Выбрать все</string>
-    <string name="caption_save">Сохранить</string>
-    <string name="caption_scanner">Сканер</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="caption_settings">Настройки</string>
+    <string name="caption_delete_selected">Удалить выбранные</string>
+    <string name="caption_select_all">Выбрать все</string>
+    <string name="caption_save_lower">записать</string>
+    <string name="caption_scanner_lower">сканер</string>
     <string name="caption_docnum">Номер документа</string>
     <string name="caption_docrows">Строки документа</string>
     <string name="caption_docheader">Шапка документа</string>
@@ -15,22 +13,28 @@
     <string name="caption_docdescription">Описание документа</string>
     <string name="caption_docid">Идентификатор документа</string>
     <string name="caption_goodname">Наименование товара</string>
-    <string name="title_activity_settings">Настройки</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="error_delete_good">Невозможно удалить товар на который есть ссылки в документах. Сначала необходимо удалить документы</string>
     <string name="error_delete_unit">Невозможно удалить единицу измерения на который есть ссылки в документах. Сначала необходимо удалить документы</string>
+    <string name="new_doc_descriprion">Новый документ</string>
+    <string name="caption_doclist">Список документов</string>
+    <string name="caption_document">Документ</string>
+    <string name="caption_goods">Номенклатура</string>
+    <string name="caption_good">Товар</string>
+    <string name="caption_scanner">Сканер</string>
+    <string name="caption_clear_lower">очистка</string>
+    <string name="caption_delete_lower">удалить</string>
+    <string name="caption_continuously_lower">непрер.</string>
+    <string name="caption_name">Наименовение</string>
+    <string name="caption_units">Единицы измерения</string>
+    <string name="joke_short">шт</string>
+    <string name="unknown_good">Неизвестный товар</string>
+    <string name="caption_new_document">Новый документ</string>
+    <string name="caption_documents">Документы</string>
+    <string name="caption_start_server">Передача данных</string>
+    <string name="caption_ip_address">IP адрес устройства</string>
+    <string name="caption_server_port">Порт сервера</string>
+    <string name="descr_start_server">Запускать сервер обмена данными при старте приложения</string>
+    <string name="descr_ext_barcode_read">Сканировать дополнительный штрихкод после основного</string>
+    <string name="caption_ext_barcode">Дополнительны штрихкод</string>
+    <string name="caption_common_settings">Общие настройки</string>
 </resources>

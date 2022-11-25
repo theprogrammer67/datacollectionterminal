@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.R
 import java.io.Serializable
 import java.util.*
 
@@ -15,7 +17,7 @@ class DocumentHeader : Serializable {
     var date: Long = System.currentTimeMillis()
     var source: Int = 0
     var state: Int = 0
-    var description: String = "Новый документ"
+    var description: String = App.context.getString(R.string.new_doc_descriprion)
 }
 
 @Entity(
