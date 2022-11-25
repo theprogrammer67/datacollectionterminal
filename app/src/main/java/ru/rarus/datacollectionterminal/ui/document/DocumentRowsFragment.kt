@@ -1,10 +1,18 @@
 package ru.rarus.datacollectionterminal.ui.document
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.InputType
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.TextView
+import androidx.core.view.marginLeft
+import androidx.core.view.marginStart
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +22,7 @@ import ru.rarus.datacollectionterminal.databinding.DocumentRowBinding
 import ru.rarus.datacollectionterminal.databinding.FragmentDocumentRowsBinding
 import ru.rarus.datacollectionterminal.db.entities.DocumentRow
 import ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow
+import ru.rarus.datacollectionterminal.notifyObserver
 
 
 class DocumentRowsFragment : Fragment() {
@@ -43,6 +52,35 @@ class DocumentRowsFragment : Fragment() {
             adapter.documentRows = it.rows
             adapter.notifyDataSetChanged()
         }
+    }
+
+    fun onQuantityClick(row: DocumentRow) {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+        builder.setTitle("Количество")
+
+        val input = EditText(activity)
+        input.hint = "Введите количество"
+        input.inputType = InputType.TYPE_CLASS_NUMBER
+        input.gravity = Gravity.END
+        (input as TextView).text = row.quantityActual.toString()
+        builder.setView(input)
+
+
+//        builder.setView(layoutInflater.inflate(R.layout.YourLayout, null))
+
+//        val binding: MyDialogBinding = MyDialogBinding.inflate(LayoutInflater.from(context))
+//        builder.setView(binding.getRoot())
+
+        builder.setPositiveButton("ОК", DialogInterface.OnClickListener { dialog, which ->
+            // Here you get get input text from the Edittext
+            row.quantityActual = input.text.toString().toDouble()
+            viewModel.document.notifyObserver()
+        })
+        builder.setNegativeButton(
+            "Отмена"
+        ) { dialog, _ -> dialog.cancel() }
+
+        builder.show()
     }
 }
 
@@ -95,6 +133,10 @@ class DocumentRowsAdapter(
                 val item = it.tag as DocumentRow
                 viewModel?.incRowQuantity(item, 1)
             }
+            binding.lyEditQuantity.tvQuantity.setOnClickListener {
+                val item = it.tag as DocumentRow
+                fragment.onQuantityClick(item)
+            }
         } else
             binding = convertView.tag as DocumentRowBinding
 
@@ -105,6 +147,7 @@ class DocumentRowsAdapter(
         binding.itmMaster.tag = item
         binding.lyEditQuantity.btnInc.tag = item
         binding.lyEditQuantity.btnDec.tag = item
+        binding.lyEditQuantity.tvQuantity.tag = item
 
         binding.viewDocumentRow = viewDocumentRow
         if (item == selectedRow)
