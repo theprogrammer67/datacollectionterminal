@@ -14,6 +14,7 @@ import ru.rarus.datacollectionterminal.db.entities.DocumentRow
 import ru.rarus.datacollectionterminal.db.entities.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.entities.ViewDocument
 import ru.rarus.datacollectionterminal.db.models.DocumentModel
+import ru.rarus.datacollectionterminal.db.models.GoodModel
 import ru.rarus.datacollectionterminal.notifyObserver
 import java.util.ArrayList
 
@@ -35,7 +36,7 @@ class DocumentViewModel : ViewModel() {
 
     fun onScanBarcode(barcode: String, addBarcode: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val goodAndUnit = App.database.getDao().getGoodAndUnitByBarcodeSync(barcode)
+            val goodAndUnit = GoodModel.getGoodAndUnit(barcode)
             withContext(Dispatchers.Main) {
                 if (goodAndUnit == null)
                     onBarcodeNotFound(barcode, addBarcode)

@@ -190,7 +190,7 @@ class Handlers(private val server: RestServer) {
                         return@HttpHandler
                     }
 
-                    App.database.getDao().insertViewGoodsSync(goodList)
+                    GoodModel.saveViewGoods(goodList)
                     server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
                 }
                 else -> server.sendResponse<Handlers.HandlerError>(

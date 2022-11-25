@@ -7,6 +7,12 @@ import java.util.*
 @Dao
 abstract class DocumentDao {
 
+    @Query("SELECT * FROM document ORDER BY date ASC")
+    abstract fun getAllDocuments(): List<DocumentHeader>
+
+    @Query("SELECT * FROM document WHERE id = :id")
+    abstract fun getDocument(id: String): DocumentHeader?
+
     @Query(
         """
         SELECT document_row.*, unit.name as unitName, unit.price as unitPrice, good.name as goodName, good.id as good
@@ -22,10 +28,13 @@ abstract class DocumentDao {
     abstract fun deleteDocumentRows(id: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun saveDocument(document: DocumentHeader): Long
+    abstract fun insertDocument(document: DocumentHeader): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun saveDocuments(documents: List<DocumentHeader>): List<Long>
+    abstract fun insertDocuments(documents: List<DocumentHeader>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertDocumentRows(items: List<DocumentRow>): List<Long>
 
     @Query("DELETE FROM document")
     abstract fun deleteAllDocuments()

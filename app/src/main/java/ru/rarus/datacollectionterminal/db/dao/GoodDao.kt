@@ -2,13 +2,18 @@ package ru.rarus.datacollectionterminal.db.dao
 
 import androidx.room.*
 import ru.rarus.datacollectionterminal.db.entities.Good
+import ru.rarus.datacollectionterminal.db.entities.GoodAndUnit
 import ru.rarus.datacollectionterminal.db.entities.Unit
+import ru.rarus.datacollectionterminal.db.entities.ViewGood
 
 @Dao
 abstract class GoodDao {
 
     @Query("SELECT * FROM good ORDER BY name ASC")
     abstract fun getAllGoods(): List<Good>
+
+    @Query("SELECT * FROM good WHERE id = :id")
+    abstract fun getGood(id: String): Good?
 
     @Query("DELETE FROM good  WHERE id IN (:id)")
     abstract fun deleteGoods(id: List<String>)
@@ -48,6 +53,9 @@ abstract class GoodDao {
 
         if (updateList.isNotEmpty()) updateGoods(updateList)
     }
+
+    @Query("SELECT * FROM unit WHERE barcode = :barcode")
+    abstract fun getUnit(barcode: String): Unit?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertUnit(unit: Unit): Long

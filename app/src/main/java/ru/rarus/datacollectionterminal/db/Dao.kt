@@ -148,7 +148,7 @@ abstract class DctDao : BaseDao {
     }
 
     open fun insertViewGoodsSync(goodList: List<ViewGood>) {
-        goodList.forEach() {
+        goodList.forEach {
             insertViewGoodSync(it)
         }
     }
