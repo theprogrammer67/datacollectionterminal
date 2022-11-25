@@ -23,7 +23,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:gravity="end"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:selectAllOnFocus="true"
             android:text="@{String.valueOf(quantity)}"
             tools:text="32.57">
