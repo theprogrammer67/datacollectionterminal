@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{viewDocumentRow.goodName}"
                     android:textColor="@color/black"
-                    tools:text="Неизвестный товар" />
+                    tools:text="@string/unknown_good" />
 
                 <TextView
                     android:id="@+id/tvBarcode"
@@ -84,7 +84,7 @@
                 android:layout_height="match_parent"
                 android:padding="10dp"
                 android:textColor="@color/grey"
-                android:text="Факт. количество:"/>
+                android:text="@string/actual_quantity"/>
 
             <include
                 android:id="@+id/lyEditQuantity"

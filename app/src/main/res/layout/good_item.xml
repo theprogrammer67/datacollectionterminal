@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{good.name}"
                 android:textColor="@color/black"
-                tools:text="Неизвестный товар" />
+                tools:text="@string/unknown_good" />
         </LinearLayout>
 
         <CheckBox

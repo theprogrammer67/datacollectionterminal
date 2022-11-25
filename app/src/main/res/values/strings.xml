@@ -37,4 +37,10 @@
     <string name="descr_ext_barcode_read">Сканировать дополнительный штрихкод после основного</string>
     <string name="caption_ext_barcode">Дополнительны штрихкод</string>
     <string name="caption_common_settings">Общие настройки</string>
+    <string name="caption_good_barcode">Штрихкод товара</string>
+    <string name="caption_pause">Пауза</string>
+    <string name="caption_scan">Сканировать</string>
+    <string name="caption_cancel">Отмена</string>
+    <string name="actual_quantity">Факт. количество:</string>
+    <string name="caption_unit">Единица измерения</string>
 </resources>

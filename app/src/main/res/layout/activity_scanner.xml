@@ -50,7 +50,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="Штрихкод товара" />
+                    android:text="@string/caption_good_barcode" />
 
                 <EditText
                     android:id="@+id/etBarcode"
@@ -76,7 +76,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:onClick="pause"
-                android:text="Пауза" />
+                android:text="@string/caption_pause" />
 
             <Button
                 android:id="@+id/btnResume"
@@ -85,7 +85,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:onClick="resume"
-                android:text="Сканировать" />
+                android:text="@string/caption_scan" />
         </LinearLayout>
 
 
@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:onClick="cancel"
-            android:text="Отмена" />
+            android:text="@string/caption_cancel" />
     </LinearLayout>
 
 </layout>

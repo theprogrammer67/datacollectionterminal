@@ -44,7 +44,7 @@
                     android:layout_weight="1"
                     android:text="@{unit.name}"
                     android:textColor="@color/black"
-                    tools:text="Единица измерения" />
+                    tools:text="@string/caption_unit" />
 
                 <TextView
                     android:id="@+id/tvBarcode"
