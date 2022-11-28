@@ -19,8 +19,6 @@ import ru.rarus.datacollectionterminal.db.models.GoodModel
 
 class Handlers(private val server: RestServer) {
 
-    annotation class RequestHandler(val path: String)
-
     data class HandlerError(val code: Int, val message: String)
 
     private fun makeOkError(): HandlerError {

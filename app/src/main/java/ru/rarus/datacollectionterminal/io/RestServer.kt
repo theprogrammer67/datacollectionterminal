@@ -1,5 +1,6 @@
 package ru.rarus.datacollectionterminal.io
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sun.net.httpserver.HttpExchange
@@ -14,8 +15,14 @@ import java.net.InetSocketAddress
 import java.net.URI
 import java.util.*
 import java.util.concurrent.Executors
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
+
+annotation class RequestHandler(val path: String)
+annotation class PathHandler
 
 class RestServer {
     private var mHttpServer: HttpServer? = null
@@ -25,6 +32,9 @@ class RestServer {
     private var serverPort = SERVER_PORT
     val serverStarted get() = mHttpServer != null
 
+    // Path handlers (endpoints)
+    @PathHandler
+    val classDocumentsHandler = DocumentsPathHandler::class
 
     private fun startServer(port: Int) {
         if ((mHttpServer == null) || (serverPort != port)) {
@@ -93,11 +103,18 @@ class RestServer {
     }
 
     private fun addHandlers() {
+        val props =
+            this.javaClass.kotlin.memberProperties.filter { it.findAnnotation<PathHandler>() != null }
+        props.forEach { prop ->
+            val handlerClass  = prop.get(this) as KClass<BasePathHandler>
+            val instance = handlerClass.primaryConstructor!!.call(this)
+        }
+
         val handlerProps =
-            Handlers::class.memberProperties.filter { it.findAnnotation<Handlers.RequestHandler>() != null }
+            Handlers::class.memberProperties.filter { it.findAnnotation<RequestHandler>() != null }
         handlerProps.forEach { handler ->
             mHttpServer!!.createContext(
-                handler.findAnnotation<Handlers.RequestHandler>()!!.path,
+                handler.findAnnotation<RequestHandler>()!!.path,
                 handler.get(handlers) as HttpHandler
             )
         }
@@ -115,3 +132,4 @@ fun URI.getFileName(): String {
     else
         ""
 }
+
