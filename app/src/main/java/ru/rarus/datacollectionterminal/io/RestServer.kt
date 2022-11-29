@@ -1,6 +1,5 @@
 package ru.rarus.datacollectionterminal.io
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sun.net.httpserver.HttpExchange
@@ -9,14 +8,14 @@ import com.sun.net.httpserver.HttpServer
 import kotlinx.coroutines.*
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.SERVER_PORT
-import java.io.IOException
+import ru.rarus.datacollectionterminal.io.handlers.BasePathHandler
+import ru.rarus.datacollectionterminal.io.handlers.DocumentsPathHandler
 import java.io.InputStream
 import java.net.InetSocketAddress
 import java.net.URI
 import java.util.*
 import java.util.concurrent.Executors
 import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -25,7 +24,7 @@ annotation class RequestHandler(val path: String)
 annotation class PathHandler
 
 class RestServer {
-    private var mHttpServer: HttpServer? = null
+    var mHttpServer: HttpServer? = null
     val state = MutableLiveData<Boolean>()
     private val gson = Gson()
     private val handlers = Handlers(this)
@@ -79,6 +78,12 @@ class RestServer {
         return if (s.hasNext()) s.next() else ""
     }
 
+    fun makeServerError(text: String?): Handlers.HandlerError {
+        val errorDescr = text ?: "Неизвестная ошибка"
+        return Handlers.HandlerError(500, "Ошибка сервера: $errorDescr")
+    }
+
+
     fun sendResponse(httpExchange: HttpExchange, responseText: String, code: Int = 200) {
         val rawBody = responseText.toByteArray(Charsets.UTF_8)
         httpExchange.responseHeaders.add("Content-Type", "text/html")
@@ -90,7 +95,7 @@ class RestServer {
         os.close()
     }
 
-    fun <T> sendResponse(httpExchange: HttpExchange, obj: T) {
+    fun sendResponse(httpExchange: HttpExchange, obj: Any) {
         val jsonObj = gson.toJson(obj)
         val rawBody = jsonObj.toByteArray(Charsets.UTF_8)
         httpExchange.responseHeaders.add("Content-Type", "application/json")
@@ -106,7 +111,7 @@ class RestServer {
         val props =
             this.javaClass.kotlin.memberProperties.filter { it.findAnnotation<PathHandler>() != null }
         props.forEach { prop ->
-            val handlerClass  = prop.get(this) as KClass<BasePathHandler>
+            val handlerClass = prop.get(this) as KClass<BasePathHandler>
             val instance = handlerClass.primaryConstructor!!.call(this)
         }
 

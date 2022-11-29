@@ -87,7 +87,7 @@ class Handlers(private val server: RestServer) {
     @RequestHandler("/info")
     val infoHandler = HttpHandler { exchange ->
         if (exchange!!.requestMethod.equals("GET")) {
-            server.sendResponse<AppInfo>(exchange, AppInfo())
+            server.sendResponse(exchange, AppInfo())
         } else server.sendResponse(exchange, makeNotImplementedError())
     }
 
@@ -100,11 +100,11 @@ class Handlers(private val server: RestServer) {
                 "GET" -> {
                     if (documentID == "") {
                         val documents = DocumentModel.getAllHeaders()
-                        server.sendResponse<List<DocumentHeader>>(exchange, documents)
+                        server.sendResponse(exchange, documents)
                     } else {
                         val document =
                             DocumentModel.getDocumentRows(documentID)
-                        server.sendResponse<List<ViewDocumentRow>>(exchange, document)
+                        server.sendResponse(exchange, document)
                     }
                 }
                 "DELETE" -> {
@@ -113,7 +113,7 @@ class Handlers(private val server: RestServer) {
                     } else {
                         DocumentModel.deleteDocument(documentID)
                     }
-                    server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
+                    server.sendResponse(exchange, makeOkError())
                 }
                 "POST" -> {
                     val listType = object : TypeToken<List<ViewDocument>>() {}.type
@@ -122,19 +122,19 @@ class Handlers(private val server: RestServer) {
                     try {
                         documentList = Gson().fromJson(json, listType)
                     } catch (e: Exception) {
-                        server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
+                        server.sendResponse(exchange, makeBadRequestError())
                         return@HttpHandler
                     }
                     DocumentModel.saveDocuments(documentList)
-                    server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
+                    server.sendResponse(exchange, makeOkError())
                 }
-                else -> server.sendResponse<Handlers.HandlerError>(
+                else -> server.sendResponse(
                     exchange,
                     makeNotImplementedError()
                 )
             }
         } catch (e: Exception) {
-            server.sendResponse<Handlers.HandlerError>(
+            server.sendResponse(
                 exchange, makeServerError(e.message)
             )
             return@HttpHandler
@@ -151,13 +151,13 @@ class Handlers(private val server: RestServer) {
                 "GET" -> {
                     if (goodID == "") {
                         val goods = GoodModel.getAllViewGoods()
-                        server.sendResponse<List<ViewGood>>(exchange, goods)
+                        server.sendResponse(exchange, goods)
                     } else {
                         val good = GoodModel.getViewGood(goodID)
                         if (good != null)
-                            server.sendResponse<ViewGood>(exchange, good)
+                            server.sendResponse(exchange, good)
                         else
-                            server.sendResponse<Handlers.HandlerError>(
+                            server.sendResponse(
                                 exchange,
                                 makeNotFoundError()
                             )
@@ -171,11 +171,13 @@ class Handlers(private val server: RestServer) {
                             GoodModel.deleteGood(goodID)
                         }
                     } catch (e: SQLiteConstraintException) {
-                        server.sendResponse<Handlers.HandlerError>(
-                            exchange, makeServerError(App.context.getString(R.string.error_delete_good)))
+                        server.sendResponse(
+                            exchange,
+                            makeServerError(App.context.getString(R.string.error_delete_good))
+                        )
 
                     }
-                    server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
+                    server.sendResponse(exchange, makeOkError())
                 }
                 "POST" -> {
                     val listType = object : TypeToken<List<ViewGood>>() {}.type
@@ -184,20 +186,20 @@ class Handlers(private val server: RestServer) {
                     try {
                         goodList = Gson().fromJson(json, listType)
                     } catch (e: Exception) {
-                        server.sendResponse<Handlers.HandlerError>(exchange, makeBadRequestError())
+                        server.sendResponse(exchange, makeBadRequestError())
                         return@HttpHandler
                     }
 
                     GoodModel.saveViewGoods(goodList)
-                    server.sendResponse<Handlers.HandlerError>(exchange, makeOkError())
+                    server.sendResponse(exchange, makeOkError())
                 }
-                else -> server.sendResponse<Handlers.HandlerError>(
+                else -> server.sendResponse(
                     exchange,
                     makeNotImplementedError()
                 )
             }
         } catch (e: Exception) {
-            server.sendResponse<Handlers.HandlerError>(
+            server.sendResponse(
                 exchange, makeServerError(e.message)
             )
             return@HttpHandler
