@@ -11,7 +11,7 @@ import ru.rarus.datacollectionterminal.io.RestServer
 
 const val DOCUMENT_PATH = "/document"
 
-class DocumentsPathHandler(server: RestServer) : BasePathHandler(server, DOCUMENT_PATH) {
+class DocumentPathHandler(server: RestServer) : BasePathHandler(server, DOCUMENT_PATH) {
 
     override fun onMethGet(id: String): Any? {
         return if (id == "") {

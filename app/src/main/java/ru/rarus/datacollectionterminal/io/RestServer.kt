@@ -9,7 +9,8 @@ import kotlinx.coroutines.*
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.SERVER_PORT
 import ru.rarus.datacollectionterminal.io.handlers.BasePathHandler
-import ru.rarus.datacollectionterminal.io.handlers.DocumentsPathHandler
+import ru.rarus.datacollectionterminal.io.handlers.DocumentPathHandler
+import ru.rarus.datacollectionterminal.io.handlers.GoodPathHandler
 import java.io.InputStream
 import java.net.InetSocketAddress
 import java.net.URI
@@ -33,7 +34,10 @@ class RestServer {
 
     // Path handlers (endpoints)
     @PathHandler
-    val classDocumentsHandler = DocumentsPathHandler::class
+    val classDocumentHandler = DocumentPathHandler::class
+
+    @PathHandler
+    val classGoodHandler = GoodPathHandler::class
 
     private fun startServer(port: Int) {
         if ((mHttpServer == null) || (serverPort != port)) {
