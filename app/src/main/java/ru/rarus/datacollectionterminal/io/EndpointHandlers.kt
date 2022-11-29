@@ -116,9 +116,9 @@ class Handlers(private val server: RestServer) {
                     server.sendResponse(exchange, makeOkError())
                 }
                 "POST" -> {
-                    val listType = object : TypeToken<List<ViewDocument>>() {}.type
                     val json = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
                     val documentList: List<ViewDocument>
+                    val listType = object : TypeToken<List<ViewDocument>>() {}.type
                     try {
                         documentList = Gson().fromJson(json, listType)
                     } catch (e: Exception) {
@@ -170,14 +170,13 @@ class Handlers(private val server: RestServer) {
                         } else {
                             GoodModel.deleteGood(goodID)
                         }
+                        server.sendResponse(exchange, makeOkError())
                     } catch (e: SQLiteConstraintException) {
                         server.sendResponse(
                             exchange,
                             makeServerError(App.context.getString(R.string.error_delete_good))
                         )
-
                     }
-                    server.sendResponse(exchange, makeOkError())
                 }
                 "POST" -> {
                     val listType = object : TypeToken<List<ViewGood>>() {}.type

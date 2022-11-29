@@ -1,12 +1,11 @@
 package ru.rarus.datacollectionterminal.io.handlers
 
-import com.google.gson.Gson
-import com.sun.net.httpserver.HttpExchange
+import android.database.sqlite.SQLiteConstraintException
 import com.sun.net.httpserver.HttpHandler
-import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
-import ru.rarus.datacollectionterminal.io.RestServer
-import ru.rarus.datacollectionterminal.io.getFileName
-import ru.rarus.datacollectionterminal.io.Errors
+import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.R
+import ru.rarus.datacollectionterminal.io.*
+import ru.rarus.datacollectionterminal.io.Errors.Companion.createHttpException
 
 
 open class BasePathHandler(private val server: RestServer, val path: String) {
@@ -16,16 +15,28 @@ open class BasePathHandler(private val server: RestServer, val path: String) {
         try {
             when (exchange!!.requestMethod) {
                 "GET" -> {
-                    var obj = onMethGet(exchange, id)
+                    var obj = onMethGet(id)
                     if (obj == null)
                         obj = Errors.makeNotFoundError()
                     server.sendResponse(exchange, obj)
                 }
                 "DELETE" -> {
-                    onMethDelete(exchange, id)
+                    try {
+                        onMethDelete(id)
+                        server.sendResponse(exchange, Errors.makeOkError())
+                    } catch (e: SQLiteConstraintException) {
+                        server.sendResponse(
+                            exchange,
+                            Errors.makeServerError(App.context.getString(R.string.error_delete_good))
+                        )
+                    }
                 }
                 "POST" -> {
-                    onMethPost(exchange, id)
+                    val json = String(exchange.requestBody.readBytes(), Charsets.UTF_8)
+                    if (json.isEmpty())
+                        throw createHttpException(HTTP_CODE_BAD_REQUEST)
+                    onMethPost(json, id)
+                    server.sendResponse(exchange, Errors.makeOkError())
                 }
                 else -> {
                     server.sendResponse(
@@ -34,6 +45,11 @@ open class BasePathHandler(private val server: RestServer, val path: String) {
                     )
                 }
             }
+        } catch (e: HttpException) {
+            val message: String = e.message ?: "Неизвестная ошибка"
+            server.sendResponse(
+                exchange, Errors.HandlerError(e.code, message)
+            )
         } catch (e: Exception) {
             server.sendResponse(
                 exchange, Errors.makeServerError(e.message)
@@ -47,16 +63,16 @@ open class BasePathHandler(private val server: RestServer, val path: String) {
     }
 
 
-    open fun onMethGet(exchange: HttpExchange, id: String): Any? {
-        return null
+    open fun onMethGet(id: String): Any? {
+        throw createHttpException(HTTP_CODE_NOT_ACCEPTABLE)
     }
 
-    open fun onMethDelete(exchange: HttpExchange, id: String) {
-
+    open fun onMethDelete(id: String) {
+        throw createHttpException(HTTP_CODE_NOT_ACCEPTABLE)
     }
 
-    open fun onMethPost(exchange: HttpExchange, id: String) {
-
+    open fun onMethPost(json: String, id: String) {
+        throw createHttpException(HTTP_CODE_NOT_ACCEPTABLE)
     }
 
 }

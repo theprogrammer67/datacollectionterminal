@@ -100,7 +100,7 @@ class RestServer {
         val rawBody = jsonObj.toByteArray(Charsets.UTF_8)
         httpExchange.responseHeaders.add("Content-Type", "application/json")
         httpExchange.responseHeaders.add("charset", "utf-8")
-        val code = if (obj is Handlers.HandlerError) (obj as Handlers.HandlerError).code else 200
+        val code = if (obj is Handlers.HandlerError) (obj as Errors.HandlerError).code else 200
         httpExchange.sendResponseHeaders(code, rawBody.size.toLong())
         val os = httpExchange.responseBody
         os.write(rawBody)
