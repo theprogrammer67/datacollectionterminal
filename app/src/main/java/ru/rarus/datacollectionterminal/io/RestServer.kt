@@ -11,6 +11,7 @@ import ru.rarus.datacollectionterminal.SERVER_PORT
 import ru.rarus.datacollectionterminal.io.handlers.BasePathHandler
 import ru.rarus.datacollectionterminal.io.handlers.DocumentPathHandler
 import ru.rarus.datacollectionterminal.io.handlers.GoodPathHandler
+import ru.rarus.datacollectionterminal.io.handlers.InfoPathHandler
 import java.io.InputStream
 import java.net.InetSocketAddress
 import java.net.URI
@@ -33,6 +34,10 @@ class RestServer {
     val serverStarted get() = mHttpServer != null
 
     // Path handlers (endpoints)
+
+    @PathHandler
+    val classInfoHandler = InfoPathHandler::class
+
     @PathHandler
     val classDocumentHandler = DocumentPathHandler::class
 

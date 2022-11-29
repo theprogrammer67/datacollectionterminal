@@ -10,7 +10,6 @@ import ru.rarus.datacollectionterminal.io.RestServer
 
 const val GOOD_PATH = "/good"
 
-
 class GoodPathHandler(server: RestServer) : BasePathHandler(server, GOOD_PATH) {
 
     override fun onMethGet(id: String): Any? {
