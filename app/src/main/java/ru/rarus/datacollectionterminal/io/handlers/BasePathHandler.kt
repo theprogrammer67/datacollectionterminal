@@ -6,6 +6,7 @@ import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.io.*
 import ru.rarus.datacollectionterminal.io.Errors.Companion.createHttpException
+import java.net.URI
 
 
 open class BasePathHandler(private val server: BaseRestServer, val path: String) {
@@ -75,4 +76,16 @@ open class BasePathHandler(private val server: BaseRestServer, val path: String)
         throw createHttpException(HTTP_CODE_NOT_ACCEPTABLE)
     }
 
+}
+
+fun URI.getFileName(): String {
+    var _path = this.path
+    while (_path.startsWith("/")) _path = _path.substring(1)
+    while (_path.endsWith("/")) _path = _path.substring(0, _path.length - 1)
+
+    val segments: List<String> = _path.split("/")
+    return if (segments.size > 1)
+        segments[1]
+    else
+        ""
 }

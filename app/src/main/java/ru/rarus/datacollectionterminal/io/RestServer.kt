@@ -23,12 +23,12 @@ class RestServer : BaseRestServer() {
     override fun beforeStart() {
         super.beforeStart()
 
-        // add root handler (http)
+        // add root handler (http information page)
         httpServer!!.createContext("/", rootHandler)
     }
 
     // root endpoint
-    val rootHandler = HttpHandler { exchange ->
+    private val rootHandler = HttpHandler { exchange ->
         if ((exchange!!.requestURI.toString() == "/") && (exchange.requestMethod.equals("GET"))) {
             val hardInfo = StringBuffer()
             hardInfo.append("Модель: " + Build.MODEL + "</br>")

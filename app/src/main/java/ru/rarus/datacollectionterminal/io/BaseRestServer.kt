@@ -3,7 +3,6 @@ package ru.rarus.datacollectionterminal.io
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.sun.net.httpserver.HttpExchange
-import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer
 import kotlinx.coroutines.*
 import ru.rarus.datacollectionterminal.App
@@ -11,7 +10,6 @@ import ru.rarus.datacollectionterminal.SERVER_PORT
 import ru.rarus.datacollectionterminal.io.handlers.BasePathHandler
 import java.io.InputStream
 import java.net.InetSocketAddress
-import java.net.URI
 import java.util.*
 import java.util.concurrent.Executors
 import kotlin.reflect.KClass
@@ -19,7 +17,6 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
-annotation class RequestHandler(val path: String)
 annotation class PathHandler
 
 open class BaseRestServer {
@@ -79,12 +76,6 @@ open class BaseRestServer {
         return if (s.hasNext()) s.next() else ""
     }
 
-    fun makeServerError(text: String?): Handlers.HandlerError {
-        val errorDescr = text ?: "Неизвестная ошибка"
-        return Handlers.HandlerError(500, "Ошибка сервера: $errorDescr")
-    }
-
-
     fun sendResponse(httpExchange: HttpExchange, responseText: String, code: Int = 200) {
         val rawBody = responseText.toByteArray(Charsets.UTF_8)
         httpExchange.responseHeaders.add("Content-Type", "text/html")
@@ -101,7 +92,7 @@ open class BaseRestServer {
         val rawBody = jsonObj.toByteArray(Charsets.UTF_8)
         httpExchange.responseHeaders.add("Content-Type", "application/json")
         httpExchange.responseHeaders.add("charset", "utf-8")
-        val code = if (obj is Handlers.HandlerError) (obj as Errors.HandlerError).code else 200
+        val code = if (obj is Errors.HandlerError) (obj as Errors.HandlerError).code else 200
         httpExchange.sendResponseHeaders(code, rawBody.size.toLong())
         val os = httpExchange.responseBody
         os.write(rawBody)
@@ -114,22 +105,9 @@ open class BaseRestServer {
         val props =
             this.javaClass.kotlin.memberProperties.filter { it.findAnnotation<PathHandler>() != null }
         props.forEach { prop ->
-            val handlerClass = prop.get(this) as KClass<BasePathHandler>
+            val handlerClass = prop.get(this) as KClass<*>
             val instance = handlerClass.primaryConstructor!!.call(this)
-            handlers.add(instance)
+            handlers.add(instance as BasePathHandler)
         }
     }
 }
-
-fun URI.getFileName(): String {
-    var _path = this.path
-    while (_path.startsWith("/")) _path = _path.substring(1)
-    while (_path.endsWith("/")) _path = _path.substring(0, _path.length - 1)
-
-    val segments: List<String> = _path.split("/")
-    return if (segments.size > 1)
-        segments[1]
-    else
-        ""
-}
-
