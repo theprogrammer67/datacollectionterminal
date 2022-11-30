@@ -6,12 +6,12 @@ import ru.rarus.datacollectionterminal.db.entities.ViewDocument
 import ru.rarus.datacollectionterminal.db.models.DocumentModel
 import ru.rarus.datacollectionterminal.io.Errors
 import ru.rarus.datacollectionterminal.io.HTTP_CODE_BAD_REQUEST
-import ru.rarus.datacollectionterminal.io.RestServer
+import ru.rarus.datacollectionterminal.io.BaseRestServer
 
 
 const val DOCUMENT_PATH = "/document"
 
-class DocumentPathHandler(server: RestServer) : BasePathHandler(server, DOCUMENT_PATH) {
+class DocumentPathHandler(server: BaseRestServer) : BasePathHandler(server, DOCUMENT_PATH) {
 
     override fun onMethGet(id: String): Any? {
         return if (id == "") {

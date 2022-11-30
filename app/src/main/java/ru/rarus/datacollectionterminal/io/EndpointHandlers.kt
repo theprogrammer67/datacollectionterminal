@@ -9,15 +9,13 @@ import com.sun.net.httpserver.HttpHandler
 import ru.rarus.datacollectionterminal.App
 import ru.rarus.datacollectionterminal.BuildConfig
 import ru.rarus.datacollectionterminal.R
-import ru.rarus.datacollectionterminal.db.entities.DocumentHeader
 import ru.rarus.datacollectionterminal.db.entities.ViewDocument
-import ru.rarus.datacollectionterminal.db.entities.ViewDocumentRow
 import ru.rarus.datacollectionterminal.db.entities.ViewGood
 import ru.rarus.datacollectionterminal.db.models.DocumentModel
 import ru.rarus.datacollectionterminal.db.models.GoodModel
 
 
-class Handlers(private val server: RestServer) {
+class Handlers(private val server: BaseRestServer) {
 
     data class HandlerError(val code: Int, val message: String)
 

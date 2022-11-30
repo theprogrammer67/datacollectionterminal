@@ -6,11 +6,11 @@ import ru.rarus.datacollectionterminal.db.entities.ViewGood
 import ru.rarus.datacollectionterminal.db.models.GoodModel
 import ru.rarus.datacollectionterminal.io.Errors
 import ru.rarus.datacollectionterminal.io.HTTP_CODE_BAD_REQUEST
-import ru.rarus.datacollectionterminal.io.RestServer
+import ru.rarus.datacollectionterminal.io.BaseRestServer
 
 const val GOOD_PATH = "/good"
 
-class GoodPathHandler(server: RestServer) : BasePathHandler(server, GOOD_PATH) {
+class GoodPathHandler(server: BaseRestServer) : BasePathHandler(server, GOOD_PATH) {
 
     override fun onMethGet(id: String): Any? {
         return if (id == "") {

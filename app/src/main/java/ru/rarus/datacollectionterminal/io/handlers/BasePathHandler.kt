@@ -8,7 +8,7 @@ import ru.rarus.datacollectionterminal.io.*
 import ru.rarus.datacollectionterminal.io.Errors.Companion.createHttpException
 
 
-open class BasePathHandler(private val server: RestServer, val path: String) {
+open class BasePathHandler(private val server: BaseRestServer, val path: String) {
 
     private val handler = HttpHandler { exchange ->
         val id = exchange.requestURI.getFileName()
@@ -59,7 +59,7 @@ open class BasePathHandler(private val server: RestServer, val path: String) {
     }
 
     init {
-        server.mHttpServer?.createContext(path, handler)
+        server.httpServer?.createContext(path, handler)
     }
 
 
