@@ -26,7 +26,7 @@ open class BaseRestServer {
     var httpServer: HttpServer? = null
     val state = MutableLiveData<Boolean>()
     private val gson = Gson()
-    private val handlers = Handlers(this)
+    private val handlers: MutableList<BasePathHandler> = ArrayList()
     private var serverPort = SERVER_PORT
     val serverStarted get() = httpServer != null
 
@@ -109,20 +109,14 @@ open class BaseRestServer {
     }
 
     private fun addHandlers() {
+        handlers.clear()
+
         val props =
             this.javaClass.kotlin.memberProperties.filter { it.findAnnotation<PathHandler>() != null }
         props.forEach { prop ->
             val handlerClass = prop.get(this) as KClass<BasePathHandler>
             val instance = handlerClass.primaryConstructor!!.call(this)
-        }
-
-        val handlerProps =
-            Handlers::class.memberProperties.filter { it.findAnnotation<RequestHandler>() != null }
-        handlerProps.forEach { handler ->
-            httpServer!!.createContext(
-                handler.findAnnotation<RequestHandler>()!!.path,
-                handler.get(handlers) as HttpHandler
-            )
+            handlers.add(instance)
         }
     }
 }
