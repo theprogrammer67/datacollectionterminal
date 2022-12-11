@@ -13,7 +13,7 @@ class Errors {
 
     companion object {
         @JvmStatic
-        fun createHttpException(code: Int):HttpException  {
+        fun createHttpException(code: Int, msg: String? = ""):HttpException  {
             var message = "Неизвестная ошибка: $code"
             when (code) {
                 HTTP_CODE_BAD_REQUEST -> message = "Некорректный запрос"
@@ -21,7 +21,10 @@ class Errors {
                 HTTP_CODE_NOT_ACCEPTABLE -> message = "Метод не поддерживается"
                 HTTP_CODE_SERVER_UNKNOWN -> message = "Ошибка сервера: $code"
             }
-            return HttpException(code, message)
+            if (msg != null) {
+                if (msg.isNotEmpty()) message = "$message ($msg)"
+            }
+            return HttpException(code, message )
         }
 
         @JvmStatic

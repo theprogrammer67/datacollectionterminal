@@ -1,7 +1,12 @@
 package ru.rarus.datacollectionterminal.io.handlers
 
+import android.database.sqlite.SQLiteConstraintException
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import ru.rarus.datacollectionterminal.App
+import ru.rarus.datacollectionterminal.R
 import ru.rarus.datacollectionterminal.db.entities.ViewDocument
 import ru.rarus.datacollectionterminal.db.models.DocumentModel
 import ru.rarus.datacollectionterminal.io.Errors
@@ -37,6 +42,11 @@ class DocumentPathHandler(server: BaseRestServer) : BasePathHandler(server, DOCU
         } catch (e: Exception) {
             throw Errors.createHttpException(HTTP_CODE_BAD_REQUEST)
         }
-        DocumentModel.saveDocuments(documentList)
+        try {
+            DocumentModel.saveDocuments(documentList)
+        } catch (e: SQLiteConstraintException) {
+            val msg = "В документах есть ссылки на отсутствующие товары [${e.message}]";
+            throw Errors.createHttpException(HTTP_CODE_BAD_REQUEST, msg)
+        }
     }
 }
